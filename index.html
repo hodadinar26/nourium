@@ -8290,5 +8290,27 @@ function showIhtisabDoneBanner() {
 
   });
 </script>
+<!-- Firebase v8 -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDorbb8nLo4y_YK4o3DGx1aQFS4DmJ6yK4",
+    authDomain: "nourium-study-app-8eadd.firebaseapp.com",
+    projectId: "nourium-study-app-8eadd",
+    storageBucket: "nourium-study-app-8eadd.appspot.com",
+    messagingSenderId: "520628377794",
+    appId: "1:520628377794:web:cc099110b4f23d51fc035b"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  console.log("Firebase Connected ✅");
+</script>
 </body>
 </html>
