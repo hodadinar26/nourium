@@ -1,0 +1,8611 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0A0F1F">
+    <meta name="description" content="Nourium — نظام تركيز علمي لطالب الطب. Focus. Discipline. Rise.">
+    <title>Nourium | Focus · Discipline · Rise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=DM+Sans:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+    /* ══════════════════════════════════════════════
+       NOURIUM v1.0 — Calm Interface · Deep System
+    ══════════════════════════════════════════════ */
+    :root {
+        /* Nourium v1.0 — Cool Sky System (Light Mode) */
+        --primary:      #1D4ED8;
+        --primary-mid:  #2563EB;
+        --primary-soft: #DBEAFE;
+        --accent:       #38BDF8;
+        --accent-light: #7DD3FC;
+        --danger:       #DC2626;
+        --success:      #059669;
+        --break:        #6366F1;
+
+        --bg:           #F4F9FF;
+        --card-bg:      #FFFFFF;
+        --text:         #0F172A;
+        --text-muted:   #475569;
+        --border:       #E0ECFF;
+
+        /* Unified radius */
+        --radius:       16px;
+
+        /* Minimal shadows */
+        --shadow-xs:    0 1px 3px rgba(29,78,216,0.06);
+        --shadow-sm:    0 2px 8px rgba(29,78,216,0.10);
+        --shadow:       0 4px 16px rgba(29,78,216,0.14);
+
+        /* Beam glow — use sparingly */
+        --beam-glow:    0 0 30px rgba(99,102,241,0.25);
+    }
+    body.dark-mode {
+        /* Nourium v1.0 — Indigo Depth System (Dark Mode) */
+        --primary:      #3B82F6;
+        --primary-mid:  #60A5FA;
+        --primary-soft: #16204D;
+        --accent:       #6366F1;
+        --accent-light: rgba(99,102,241,0.25);
+        --bg:           #0A0F1F;
+        --card-bg:      #11183A;
+        --text:         #E6EDFF;
+        --text-muted:   #A5B4FC;
+        --border:       #24306B;
+        --shadow-xs:    0 1px 3px rgba(0,0,0,0.4);
+        --shadow-sm:    0 2px 8px rgba(0,0,0,0.5);
+        --shadow:       0 4px 16px rgba(0,0,0,0.6);
+        --beam-glow:    0 0 30px rgba(99,102,241,0.25);
+    }
+
+    /* ── Reset ── */
+    * { box-sizing: border-box; margin: 0; padding: 0;
+        font-family: 'Tajawal', sans-serif;
+        -webkit-tap-highlight-color: transparent; }
+
+    body {
+        background: var(--bg);
+        background-image: linear-gradient(135deg, #F4F9FF 0%, #DBEAFE 40%, #93C5FD 75%, #38BDF8 100%);
+        background-attachment: fixed;
+        color: var(--text);
+        padding-bottom: 72px;
+        overflow-x: hidden;
+        transition: background 0.3s, color 0.3s;
+    }
+    body.dark-mode {
+        background: #0A0F1F;
+        background-image: linear-gradient(135deg, #0A0F1F 0%, #11183A 40%, #1E2A78 75%, #6366F1 100%);
+        background-attachment: fixed;
+    }
+
+    /* ── Header ── */
+    header {
+        background: var(--card-bg);
+        padding: 12px 18px;
+        display: flex; justify-content: space-between; align-items: center;
+        position: sticky; top: 0; z-index: 100;
+        border-bottom: 1px solid var(--border);
+        box-shadow: var(--shadow-xs);
+    }
+    .logo { display: flex; align-items: center; gap: 9px; cursor: default; }
+    .logo-mark {
+        width: 34px; height: 34px;
+        background: var(--primary);
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+    }
+    .logo-mark svg { width: 20px; height: 20px; }
+    .logo-wordmark { font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px; color: var(--primary); }
+    .logo-wordmark em { font-style: normal; color: var(--accent); }
+    .header-actions { display: flex; gap: 8px; align-items: center; }
+    .btn-icon {
+        background: none; border: none;
+        color: var(--text-muted); font-size: 1.05rem;
+        cursor: pointer; padding: 7px; border-radius: 9px;
+        transition: background 0.2s, color 0.2s;
+    }
+    .btn-icon:hover { background: var(--primary-soft); color: var(--primary); }
+
+    /* ── Side Panel ── */
+    .side-panel { position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.5); z-index: 200;
+        opacity: 0; visibility: hidden; transition: 0.3s; }
+    .side-panel.open { opacity: 1; visibility: visible; }
+    .panel-content {
+        position: absolute; top: 0; left: 0;
+        width: 85%; max-width: 340px; height: 100%;
+        background: var(--card-bg); padding: 20px;
+        transform: translateX(-100%); transition: 0.3s cubic-bezier(.4,0,.2,1);
+        overflow-y: auto; border-right: 1px solid var(--border);
+        box-shadow: var(--shadow);
+    }
+    .side-panel.open .panel-content { transform: translateX(0); }
+    .close-panel { float: left; font-size: 1.4rem; cursor: pointer;
+        color: var(--text-muted); line-height: 1; transition: color 0.2s; }
+    .close-panel:hover { color: var(--primary); }
+
+    /* ── Panel Tabs ── */
+    .panel-tabs {
+        display: flex; gap: 6px; margin: 16px 0;
+        background: var(--bg); border-radius: var(--radius);
+        padding: 4px;
+    }
+    .panel-tab {
+        flex: 1; padding: 8px; text-align: center;
+        border-radius: 12px; cursor: pointer;
+        font-size: 0.82rem; font-weight: 600;
+        color: var(--text-muted); transition: all 0.2s;
+        border: none; background: none; font-family: 'Tajawal', sans-serif;
+    }
+    .panel-tab.active {
+        background: var(--card-bg); color: var(--primary);
+        box-shadow: var(--shadow-xs);
+    }
+    .panel-tab-content { display: none; }
+    .panel-tab-content.active { display: block; }
+
+    /* ── Level Card (Panel) ── */
+    .level-card {
+        background: var(--primary);
+        color: white; padding: 18px; border-radius: var(--radius);
+        text-align: center; margin-bottom: 14px;
+        box-shadow: var(--shadow-sm);
+    }
+    .level-badge { font-size: 2.4rem; margin-bottom: 6px; }
+    .progress-bar { background: rgba(255,255,255,0.25); height: 6px; border-radius: 3px;
+        margin-top: 10px; overflow: hidden; }
+    .progress-fill { background: var(--accent-light);
+        height: 100%; width: 0%; transition: width 0.6s ease; }
+
+    /* ── Streak Row ── */
+    .streak-row {
+        display: flex; align-items: center; justify-content: space-between;
+        background: var(--bg); border-radius: var(--radius);
+        padding: 12px 16px; margin-bottom: 14px;
+        border: 1px solid var(--border);
+    }
+    .streak-count { font-size: 1.8rem; font-weight: 800; color: var(--primary); }
+
+    /* ── Sections ── */
+    .section { display: none; padding: 16px; animation: fadeIn 0.2s ease; }
+    .section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); }
+                        to   { opacity: 1; transform: translateY(0); } }
+
+    /* ── Cards ── */
+    .card {
+        background: var(--card-bg); border-radius: var(--radius);
+        padding: 18px 20px; margin-bottom: 14px;
+        box-shadow: var(--shadow-xs); border: 1px solid var(--border);
+        transition: box-shadow 0.2s;
+    }
+    .card:hover { box-shadow: var(--shadow-sm); }
+
+    /* ── Typography ── */
+    h2 { font-size: 1rem; margin-bottom: 14px; color: var(--text);
+        display: flex; align-items: center; gap: 8px;
+        font-weight: 700; }
+    h2 i { color: var(--primary-mid); font-size: 0.9rem; }
+
+    /* ── Timer — Hero Element ── */
+    .timer-hero {
+        text-align: center; padding: 28px 0 20px;
+    }
+    .timer-display {
+        font-size: 5.5rem; font-weight: 800; text-align: center;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 4px; color: var(--primary);
+        transition: color 0.3s;
+        line-height: 1;
+    }
+    .timer-display.running { color: var(--accent); }
+    .timer-display.break-mode { color: var(--break); }
+
+    .timer-mode { text-align: center; margin-bottom: 14px; display: flex; justify-content: center; gap: 8px; }
+    .mode-btn {
+        padding: 7px 20px; border: 1.5px solid var(--border);
+        background: var(--bg); border-radius: 50px; 
+        cursor: pointer; color: var(--text-muted); font-family: 'Tajawal', sans-serif;
+        font-size: 0.88rem; font-weight: 600; transition: all 0.2s;
+    }
+    .mode-btn.active { border-color: var(--primary-mid);
+        background: var(--primary); color: white; }
+    .mode-btn.break.active { background: var(--break); border-color: var(--break); }
+
+    .duration-selector { display: flex; justify-content: center; gap: 7px;
+        margin-bottom: 20px; flex-wrap: wrap; }
+    .dur-btn {
+        padding: 6px 14px; border: 1.5px solid var(--border);
+        background: var(--bg); border-radius: 50px;
+        cursor: pointer; color: var(--text-muted); font-weight: 600;
+        font-family: 'Tajawal', sans-serif; font-size: 0.85rem; transition: all 0.2s;
+    }
+    .dur-btn.active { background: var(--primary-mid); color: white;
+        border-color: var(--primary-mid); }
+
+    .timer-subject-badge { display: inline-block; padding: 4px 12px;
+        border-radius: 50px; font-size: 0.82rem; color: white;
+        margin: 0 auto 12px; text-align: center; }
+    .timer-controls { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+
+    /* ── Main Start Button ── */
+    .btn-start-main {
+        padding: 16px 48px; border-radius: 50px; font-size: 1.15rem;
+        font-weight: 800; border: none; cursor: pointer;
+        background: var(--primary); color: white;
+        box-shadow: var(--beam-glow), var(--shadow-sm);
+        transition: transform 0.15s, box-shadow 0.2s;
+        font-family: 'Tajawal', sans-serif;
+    }
+    .btn-start-main:hover { transform: translateY(-1px); box-shadow: var(--beam-glow), var(--shadow); }
+    .btn-start-main:active { transform: scale(0.96) !important; }
+
+    /* ── Buttons ── */
+    .btn {
+        border: none; padding: 11px 22px; border-radius: 50px;
+        font-weight: 700; cursor: pointer; font-size: 0.92rem;
+        transition: transform 0.15s, box-shadow 0.2s;
+        font-family: 'Tajawal', sans-serif;
+    }
+    .btn-primary {
+        background: var(--primary); color: #fff;
+        box-shadow: var(--shadow-sm);
+    }
+    .btn-primary:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+    .btn-resume  { background: var(--success); color: #fff; }
+    .btn-break   { background: var(--break); color: #fff; }
+    .btn-secondary { background: var(--bg); color: var(--text);
+        border: 1.5px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--primary-mid); color: var(--primary); }
+    .btn-danger  { background: #FEE2E2; color: #DC2626; border: 1.5px solid #FECACA; }
+    .btn:active  { transform: scale(0.94) !important; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+    /* ── Accordion ── */
+    .accordion {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        margin-bottom: 10px;
+        overflow: hidden;
+    }
+    .accordion-header {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 14px 18px; cursor: pointer;
+        font-weight: 700; font-size: 0.95rem;
+        color: var(--text); user-select: none;
+        transition: background 0.2s;
+    }
+    .accordion-header:hover { background: var(--primary-soft); }
+    .accordion-arrow {
+        color: var(--text-muted); font-size: 0.8rem;
+        transition: transform 0.25s;
+    }
+    .accordion.open .accordion-arrow { transform: rotate(90deg); }
+    .accordion-body {
+        max-height: 0; overflow: hidden;
+        transition: max-height 0.3s ease, padding 0.2s;
+        padding: 0 18px;
+    }
+    .accordion.open .accordion-body {
+        max-height: 1000px;
+        padding: 0 18px 16px;
+    }
+
+    /* ── Inputs ── */
+    input, select, textarea {
+        width: 100%; padding: 11px 13px;
+        border: 1.5px solid var(--border);
+        border-radius: 12px; background: var(--bg);
+        color: var(--text); outline: none; margin-bottom: 10px;
+        font-family: 'Tajawal', sans-serif; font-size: 0.97rem;
+        transition: border-color 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+        border-color: var(--primary-mid);
+        box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+    }
+    input[type="color"] { width: 48px; height: 40px; padding: 3px;
+        border: none; cursor: pointer; border-radius: 8px; }
+    input[type="date"], input[type="number"] { direction: ltr; text-align: right; }
+    select { appearance: auto; }
+
+    /* ── Subject Tags ── */
+    .subject-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 12px; }
+    .subject-tag { padding: 5px 12px; border-radius: 50px; font-size: 0.83rem;
+        color: white; display: flex; align-items: center; gap: 7px; }
+    .subject-tag .remove-sub { cursor: pointer; opacity: 0.75; transition: opacity 0.2s; }
+    .subject-tag .remove-sub:hover { opacity: 1; }
+
+    /* ── Todo Items ── */
+    .todo-item {
+        background: var(--card-bg); padding: 13px 15px;
+        border-radius: var(--radius); margin-bottom: 9px;
+        display: flex; justify-content: space-between; align-items: center;
+        border: 1px solid var(--border);
+        border-right: 3px solid var(--primary-mid);
+        transition: opacity 0.3s, box-shadow 0.2s;
+    }
+    .todo-item:hover { box-shadow: var(--shadow-xs); }
+    .todo-item.completed { opacity: 0.5; border-right-color: var(--success); }
+    .todo-item.completed .task-text { text-decoration: line-through; }
+    .task-info { flex: 1; cursor: pointer; }
+    .task-subject { padding: 2px 8px; border-radius: 50px; font-size: 0.7rem;
+        color: white; margin-left: 6px; display: inline-block; }
+
+    /* ── Weekly Chart ── */
+    .chart-container { margin: 16px 0; display: flex; justify-content: space-around;
+        align-items: flex-end; height: 130px; gap: 5px; }
+    .chart-bar-wrapper { display: flex; flex-direction: column; align-items: center;
+        flex: 1; height: 100%; justify-content: flex-end; }
+    .chart-bar { width: 100%; max-width: 36px; background: var(--primary-mid);
+        border-radius: 5px 5px 0 0; position: relative;
+        transition: height 0.5s ease; min-height: 4px; opacity: 0.7; }
+    .chart-bar.today-bar { background: var(--accent); opacity: 1; }
+    .chart-bar:hover { opacity: 1; }
+    .chart-value { position: absolute; top: -18px; left: 50%;
+        transform: translateX(-50%); font-size: 0.6rem; font-weight: 700;
+        color: var(--primary); white-space: nowrap; }
+    .chart-label { text-align: center; font-size: 0.65rem;
+        color: var(--text-muted); margin-top: 4px; }
+
+    /* ── Stats Grid ── */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .stat-card {
+        background: var(--bg); padding: 14px; border-radius: var(--radius);
+        text-align: center; border: 1px solid var(--border);
+    }
+    .stat-val { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+    .stat-label { font-size: 0.68rem; color: var(--text-muted); margin-top: 4px; }
+
+    /* ── Calendar ── */
+    .calendar-header { display: flex; justify-content: space-between;
+        align-items: center; margin-bottom: 12px; }
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+    .calendar-day-name { text-align: center; font-size: 0.65rem;
+        color: var(--text-muted); padding: 4px 0; }
+    .calendar-day { aspect-ratio: 1; display: flex; align-items: center;
+        justify-content: center; font-size: 0.8rem; border-radius: 8px;
+        background: var(--bg); position: relative; border: 1px solid transparent;
+        transition: background 0.2s; }
+    .calendar-day.today { border: 2px solid var(--primary-mid);
+        font-weight: 800; background: var(--primary-soft); }
+    .calendar-day.has-study::after { content: ''; position: absolute;
+        bottom: 2px; left: 50%; transform: translateX(-50%);
+        width: 4px; height: 4px; background: var(--success); border-radius: 50%; }
+    .calendar-day.has-study.many::after { background: var(--accent); }
+    .calendar-day.streak-day { background: rgba(29,78,216,0.08);
+        border-color: rgba(29,78,216,0.3); }
+    .calendar-day.exam-day { background: rgba(220,38,38,0.08);
+        border-color: rgba(220,38,38,0.3); font-weight: 700; }
+    .calendar-day.exam-day::before { content: '📌'; position: absolute;
+        top: -2px; right: -2px; font-size: 0.5rem; }
+
+    /* ── Insight Cards ── */
+    .insight-card { padding: 13px 16px; border-radius: var(--radius); margin-bottom: 11px;
+        border: 1px solid var(--border); }
+    .insight-card.green   { background: rgba(5,150,105,0.08); color: var(--text); border-color: rgba(5,150,105,0.25); }
+    .insight-card.warning { background: rgba(99,102,241,0.08); color: var(--text); border-color: rgba(99,102,241,0.25); }
+    .insight-card.streak-insight { background: rgba(99,102,241,0.08); color: var(--text); border-color: rgba(99,102,241,0.25); }
+    .insight-card.info    { background: var(--primary-soft); color: var(--text); border-color: var(--border); }
+    .insight-card.purple  { background: rgba(124,58,237,0.08); color: var(--text); border-color: rgba(124,58,237,0.2); }
+    .insight-card.danger  { background: rgba(220,38,38,0.08); color: var(--text); border-color: rgba(220,38,38,0.2); }
+    .insight-title { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px; }
+    .insight-value { font-size: 0.97rem; font-weight: 700; }
+
+    /* ── Bottom Nav ── */
+    .bottom-nav {
+        position: fixed; bottom: 0; width: 100%;
+        background: var(--card-bg);
+        display: flex; justify-content: space-around;
+        padding: 8px 0 12px;
+        border-top: 1px solid var(--border);
+        box-shadow: var(--shadow-xs);
+        z-index: 90;
+    }
+    .nav-item { text-align: center; color: var(--text-muted); font-size: 0.54rem;
+        cursor: pointer; padding: 4px 6px; border-radius: 9px;
+        transition: color 0.2s;
+        display: flex; flex-direction: column; align-items: center; gap: 3px; }
+    .nav-item i { font-size: 1.1rem; display: block; }
+    .nav-item.active { color: var(--primary-mid); }
+    .nav-item:active { transform: scale(0.88); }
+
+    /* ── Notification Toast ── */
+    .notification { position: fixed; top: 20px; left: 50%;
+        transform: translateX(-50%); color: white;
+        padding: 10px 22px; border-radius: 50px; z-index: 1000;
+        animation: slideDown 0.3s forwards;
+        box-shadow: var(--shadow);
+        font-weight: 600; white-space: nowrap;
+        max-width: 90vw; text-align: center; font-size: 0.88rem; }
+    @keyframes slideDown { from{top:-60px;opacity:0} to{top:20px;opacity:1} }
+    .notification.fade-out { animation: slideUp 0.3s forwards; }
+    @keyframes slideUp { from{top:20px;opacity:1} to{top:-60px;opacity:0} }
+
+    /* ── Form helpers ── */
+    .add-subject-form { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+    .add-subject-form input[type="text"] { flex: 1; margin-bottom: 0; }
+    .add-subject-form input[type="color"] { margin-bottom: 0; flex-shrink: 0; }
+    .subject-select { margin-bottom: 12px; }
+    .goal-progress-wrapper { margin-top: 8px; }
+    .goal-bar-bg { background: var(--border); height: 6px; border-radius: 3px;
+        overflow: hidden; margin-top: 5px; }
+    .goal-bar-fill { background: var(--primary-mid);
+        height: 100%; border-radius: 3px; transition: width 0.5s; }
+    .goal-label { display: flex; justify-content: space-between;
+        font-size: 0.76rem; color: var(--text-muted); }
+    .goal-input-row { display: flex; gap: 10px; align-items: center; }
+    .goal-input-row input { flex: 1; margin-bottom: 0; }
+    .empty-state { text-align: center; color: var(--text-muted); padding: 28px 0; }
+    .empty-state i { font-size: 2.2rem; margin-bottom: 8px; display: block; opacity: 0.3; }
+
+    /* ── Review Items ── */
+    .review-item { background: var(--card-bg); border: 1px solid var(--border);
+        border-right: 3px solid var(--primary-mid); border-radius: var(--radius);
+        padding: 13px; margin-bottom: 9px;
+        display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .review-item.due-today { border-right-color: var(--danger); }
+    .review-item.due-soon  { border-right-color: var(--accent); }
+    .review-badge { padding: 3px 9px; border-radius: 50px; font-size: 0.7rem;
+        font-weight: 700; color: white; white-space: nowrap; }
+    .review-badge.overdue  { background: var(--danger); }
+    .review-badge.today    { background: var(--accent); }
+    .review-badge.upcoming { background: var(--primary-mid); }
+    .review-badge.done     { background: var(--success); }
+    .review-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .review-btn { padding: 5px 10px; border-radius: 8px; font-size: 0.78rem;
+        font-weight: 700; border: none; cursor: pointer;
+        font-family: 'Tajawal', sans-serif; transition: 0.2s; }
+    .review-btn:active { transform: scale(0.93); }
+    .add-review-form { display: grid; gap: 8px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .form-row input, .form-row select { margin-bottom: 0; }
+
+    /* ── Exam Items ── */
+    .exam-item { background: var(--card-bg); border: 1px solid var(--border);
+        border-radius: var(--radius); padding: 15px; margin-bottom: 12px;
+        position: relative; overflow: hidden; }
+    .exam-item::before { content: ''; position: absolute; top: 0; right: 0;
+        width: 3px; height: 100%; background: var(--danger); }
+    .exam-countdown { font-size: 2rem; font-weight: 800; color: var(--danger); line-height: 1; }
+    .exam-countdown.safe { color: var(--success); }
+    .exam-countdown.warn { color: var(--accent); }
+    .exam-daily-hours { font-size: 1rem; font-weight: 700; color: var(--primary); margin-top: 4px; }
+    .exam-detail { font-size: 0.76rem; color: var(--text-muted); margin-top: 3px; }
+    .exam-header { display: flex; justify-content: space-between; align-items: flex-start; }
+    .exam-name { font-weight: 700; font-size: 0.95rem; }
+    .exam-progress-fill { height: 5px; border-radius: 3px;
+        background: var(--primary-mid); transition: width 0.5s; }
+
+    /* ── Balance Chart ── */
+    .balance-chart { display: flex; gap: 7px; align-items: flex-end;
+        height: 100px; margin: 12px 0; }
+    .balance-bar-wrap { flex: 1; display: flex; flex-direction: column;
+        align-items: center; justify-content: flex-end; height: 100%; }
+    .balance-bar { width: 100%; border-radius: 5px 5px 0 0; min-height: 4px;
+        position: relative; transition: height 0.5s ease; }
+    .balance-bar .b-val { position: absolute; top: -16px; left: 50%;
+        transform: translateX(-50%); font-size: 0.6rem; font-weight: 700; white-space: nowrap; }
+    .balance-label { font-size: 0.58rem; text-align: center;
+        margin-top: 4px; color: var(--text-muted); word-break: break-all; }
+    .balance-score-card { border-radius: var(--radius); padding: 14px; margin-bottom: 12px; text-align: center;
+        border: 1px solid var(--border); }
+    .balance-score-card.excellent { background: rgba(5,150,105,0.08); }
+    .balance-score-card.good      { background: var(--primary-soft); }
+    .balance-score-card.fair      { background: rgba(99,102,241,0.08); }
+    .balance-score-card.poor      { background: rgba(220,38,38,0.08); }
+    .balance-score-num   { font-size: 2.5rem; font-weight: 800; color: var(--primary); }
+    .balance-score-label { font-size: 0.88rem; color: var(--text-muted); }
+    .balance-subject-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .balance-subject-name { font-size: 0.86rem; font-weight: 600; }
+    .balance-subject-pct  { font-size: 0.78rem; color: var(--text-muted); }
+    .balance-subject-bar-bg { flex: 1; height: 6px; background: var(--border);
+        border-radius: 3px; margin: 0 10px; overflow: hidden; }
+    .balance-subject-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s; }
+    .balance-alert { border-radius: 10px; padding: 9px 13px; margin-bottom: 7px;
+        font-size: 0.82rem; display: flex; align-items: center; gap: 8px; }
+    .balance-alert.over    { background: rgba(220,38,38,0.07); color:#991B1B; border: 1px solid rgba(220,38,38,0.15); }
+    .balance-alert.under   { background: rgba(29,78,216,0.07); color:#1D4ED8; border: 1px solid rgba(29,78,216,0.15); }
+    .balance-alert.perfect { background: rgba(5,150,105,0.07); color:#065F46; border: 1px solid rgba(5,150,105,0.15); }
+    body.dark-mode .balance-alert.over    { color:#FCA5A5; }
+    body.dark-mode .balance-alert.under   { color:#A5B4FC; }
+    body.dark-mode .balance-alert.perfect { color:#6EE7B7; }
+
+    /* ── Drag & Drop ── */
+    .todo-item[draggable="true"] { cursor: grab; }
+    .todo-item[draggable="true"]:active { cursor: grabbing; }
+    .todo-item.drag-over {
+        border-color: var(--accent) !important;
+        background: rgba(56,189,248,0.05) !important;
+        transform: scale(1.01);
+    }
+    .todo-item.dragging { opacity: 0.4; transform: scale(0.97); }
+    .drag-handle { color: var(--text-muted); font-size: 1rem; padding: 0 8px 0 0;
+        cursor: grab; flex-shrink: 0; opacity: 0.4; transition: opacity 0.2s; }
+    .drag-handle:hover { opacity: 0.8; }
+
+    /* ── Lux Panel (simplified) ── */
+    .lux-panel {
+        background: var(--primary);
+        border-radius: var(--radius); padding: 18px 20px; margin-bottom: 14px;
+        color: white; box-shadow: var(--shadow-sm);
+    }
+    /* Keep lux-N classes but remove glow animations */
+    .lux-panel.lux-0 { background: var(--primary); }
+    .lux-panel.lux-1 { background: var(--primary); }
+    .lux-panel.lux-2 { background: var(--primary); }
+    .lux-panel.lux-3 { background: linear-gradient(135deg, var(--primary), var(--primary-mid)); }
+    .lux-panel.lux-4 { background: linear-gradient(135deg, var(--primary), var(--break)); }
+    .lux-panel.lux-5 { background: linear-gradient(135deg, var(--primary), var(--break) 70%, var(--accent)); }
+    .lux-aura { display: none; } /* removed */
+    .lux-beam { display: none; } /* removed */
+    .lux-label { font-size: 0.72rem; opacity: 0.8; margin-bottom: 4px; }
+    .lux-title { font-size: 1.05rem; font-weight: 800; margin-bottom: 10px; }
+    .lux-bar-track { background: rgba(255,255,255,0.2); height: 6px;
+        border-radius: 3px; overflow: hidden; margin: 6px 0; }
+    .lux-bar-fill { background: rgba(255,255,255,0.6);
+        height: 100%; border-radius: 3px;
+        transition: width 0.6s ease; }
+    .lux-stats { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+    .lux-stat { text-align: center; }
+    .lux-stat-val { font-size: 1.3rem; font-weight: 800; line-height: 1; }
+    .lux-stat-label { font-size: 0.62rem; opacity: 0.75; margin-top: 2px; }
+
+    /* ── Storage Warning ── */
+    .storage-warning { background: rgba(220,38,38,0.07); border: 1px solid rgba(220,38,38,0.2);
+        border-radius: 10px; padding: 9px 13px; margin-bottom: 10px;
+        font-size: 0.8rem; color: var(--danger); display: flex; align-items: center; gap: 7px; }
+
+    /* ── Wake Lock Badge ── */
+    .wakelocked-badge { display: inline-flex; align-items: center; gap: 4px;
+        padding: 3px 9px; background: rgba(5,150,105,0.1); color: var(--success);
+        border-radius: 50px; font-size: 0.72rem; font-weight: 700;
+        border: 1px solid rgba(5,150,105,0.25); margin-top: 7px; }
+
+    /* ── XP Limit badge ── */
+    .xp-cap-note { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; text-align: center; }
+
+    /* ── Share Modal ── */
+    .share-overlay {
+        position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+        z-index: 500; display: flex; align-items: center; justify-content: center;
+        padding: 20px; animation: fadeIn 0.2s ease;
+    }
+    .share-modal {
+        background: var(--card-bg); border-radius: 20px; width: 100%; max-width: 360px;
+        padding: 22px; border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+    }
+    .share-card-preview {
+        border-radius: var(--radius); padding: 20px; margin-bottom: 16px; color: white; text-align: center;
+        background: var(--primary); position: relative; overflow: hidden;
+    }
+    .share-logo { font-size: 0.78rem; opacity: 0.6; margin-bottom: 12px; letter-spacing: 2px; }
+    .share-achievement { font-size: 2.6rem; margin-bottom: 7px; }
+    .share-title { font-size: 1.05rem; font-weight: 800; margin-bottom: 3px; }
+    .share-subtitle { font-size: 0.8rem; opacity: 0.8; }
+    .share-stats-row { display: flex; justify-content: center; gap: 18px; margin-top: 14px; }
+    .share-stat-item { text-align: center; }
+    .share-stat-val { font-size: 1.3rem; font-weight: 800; }
+    .share-stat-lbl { font-size: 0.58rem; opacity: 0.7; }
+    .share-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    .share-btn {
+        padding: 11px; border-radius: var(--radius); border: none; cursor: pointer;
+        font-weight: 700; font-size: 0.85rem; font-family: 'Tajawal', sans-serif;
+        display: flex; align-items: center; justify-content: center; gap: 5px;
+        transition: transform 0.15s;
+    }
+    .share-btn:active { transform: scale(0.94); }
+    .share-btn-copy { background: var(--primary-soft); color: var(--primary); border: 1px solid var(--border); }
+    .share-btn-img  { background: var(--primary); color: white; }
+    .share-btn-wa   { background: #25D366; color: white; }
+    .share-btn-close{ background: var(--bg); color: var(--text); border: 1px solid var(--border); grid-column: 1/-1; }
+
+    /* ── Share FAB ── */
+    .share-fab {
+        position: fixed; bottom: 82px; left: 16px;
+        width: 46px; height: 46px; border-radius: 50%;
+        background: var(--primary); color: white; border: none; cursor: pointer;
+        box-shadow: var(--shadow-sm); z-index: 80;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.05rem; transition: transform 0.2s;
+    }
+    .share-fab:hover { transform: scale(1.08); }
+    .share-fab:active { transform: scale(0.93); }
+
+    /* ── Quran Verse Card ── */
+
+    /* ══════════════════════════════════════════════
+       🌙 SPIRITUAL REGULATION SYSTEM
+       عالم الروح — أهدأ، أعمق، أكثر مساحة
+    ══════════════════════════════════════════════ */
+
+    /* Custom calm palette */
+    .spirit-world { --sp-deep: #0d1117; --sp-navy: #0f172a; --sp-indigo: #1e1b4b;
+        --sp-mid: #312e81; --sp-soft: #4338ca; --sp-glow: rgba(99,102,241,0.12);
+        --sp-text: #e0e7ff; --sp-muted: rgba(224,231,255,0.55); }
+
+    #spiritual { background: var(--bg); padding: 0 0 100px; }
+
+    /* ── Hero Card ── */
+
+    .spirit-hero::before {
+        content: ''; position: absolute; top: -80px; left: -60px;
+        width: 260px; height: 260px; border-radius: 50%;
+        background: radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%);
+    }
+    .spirit-hero::after {
+        content: ''; position: absolute; bottom: -40px; right: -30px;
+        width: 180px; height: 180px; border-radius: 50%;
+        background: radial-gradient(circle, rgba(167,139,250,0.06) 0%, transparent 70%);
+    }
+    .spirit-bismillah {
+        font-size: 0.7rem; letter-spacing: 3px; color: rgba(199,210,254,0.5);
+        text-align: center; margin-bottom: 16px; position: relative; z-index: 1;
+        text-transform: uppercase;
+    }
+    .spirit-verse {
+        font-size: 1.15rem; font-weight: 700; color: #e0e7ff;
+        text-align: center; line-height: 1.8; margin-bottom: 8px;
+        position: relative; z-index: 1; direction: rtl;
+    }
+    .spirit-verse-ref {
+        font-size: 0.68rem; color: rgba(199,210,254,0.5);
+        text-align: center; margin-bottom: 24px; position: relative; z-index: 1;
+    }
+    /* Serene pills row */
+    .spirit-hero-pills {
+        display: flex; gap: 8px; justify-content: center;
+        flex-wrap: wrap; margin-bottom: 20px; position: relative; z-index: 1;
+    }
+    .spirit-hero-pill {
+        background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 50px; padding: 6px 14px; font-size: 0.72rem; font-weight: 700;
+        color: rgba(224,231,255,0.8); cursor: default;
+        display: flex; align-items: center; gap: 6px;
+    }
+    .spirit-hero-pill .dot {
+        width: 7px; height: 7px; border-radius: 50%;
+        background: #818cf8; animation: spiritPulse 2.4s ease-in-out infinite;
+    }
+    @keyframes spiritPulse {
+        0%,100% { opacity: 1; transform: scale(1); }
+        50%      { opacity: 0.4; transform: scale(0.7); }
+    }
+    /* Emergency button — calm, full */
+    .spirit-sos-btn {
+        width: calc(100% - 0px); padding: 14px 20px; border: none; border-radius: 14px;
+        background: rgba(239,68,68,0.1); border: 1.5px solid rgba(239,68,68,0.25);
+        color: #fca5a5; font-size: 0.9rem; font-weight: 800;
+        font-family: 'Tajawal', sans-serif; cursor: pointer;
+        display: flex; align-items: center; justify-content: center; gap: 10px;
+        transition: background 0.2s, transform 0.15s;
+        position: relative; z-index: 1;
+    }
+    .spirit-sos-btn:hover  { background: rgba(239,68,68,0.18); }
+    .spirit-sos-btn:active { transform: scale(0.97); }
+
+    /* ── Now Mode — 4 action buttons ── */
+    .spirit-now-wrap { padding: 20px 20px 0; }
+    .spirit-now-title {
+        font-size: 0.68rem; font-weight: 800; letter-spacing: 2px;
+        text-transform: uppercase; color: var(--text-muted);
+        margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+    }
+    .spirit-now-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .spirit-now-grid {
+        display: grid; grid-template-columns: 1fr 1fr;
+        gap: 10px; margin-bottom: 0;
+    }
+    .spirit-now-btn {
+        background: var(--card-bg); border: 1px solid var(--border);
+        border-radius: 16px; padding: 16px 14px;
+        cursor: pointer; font-family: 'Tajawal', sans-serif;
+        display: flex; flex-direction: column; align-items: flex-start;
+        gap: 8px; transition: box-shadow 0.2s, transform 0.15s, border-color 0.2s;
+        box-shadow: var(--shadow-xs); text-align: right;
+    }
+    .spirit-now-btn:hover  { box-shadow: var(--shadow-sm); transform: translateY(-2px); border-color: var(--primary-mid); }
+    .spirit-now-btn:active { transform: scale(0.96); }
+    .spirit-now-icon { font-size: 1.5rem; line-height: 1; }
+    .spirit-now-label { font-size: 0.78rem; font-weight: 800; color: var(--text); line-height: 1.3; }
+    .spirit-now-sub   { font-size: 0.62rem; color: var(--text-muted); }
+
+    /* ── Dua Categories (Mood-based) ── */
+    .spirit-duas-wrap { padding: 20px 20px 0; }
+    .spirit-cat-scroll {
+        display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;
+        margin-bottom: 14px; scrollbar-width: none;
+    }
+    .spirit-cat-scroll::-webkit-scrollbar { display: none; }
+    .spirit-cat-pill {
+        white-space: nowrap; padding: 8px 14px; border-radius: 50px;
+        border: 1.5px solid var(--border); background: var(--card-bg);
+        font-size: 0.75rem; font-weight: 700; color: var(--text-muted);
+        cursor: pointer; font-family: 'Tajawal', sans-serif;
+        transition: all 0.2s; flex-shrink: 0;
+    }
+    .spirit-cat-pill.active {
+        border-color: var(--primary-mid); background: var(--primary-soft);
+        color: var(--primary);
+    }
+    .spirit-cat-pill:hover { border-color: var(--primary-mid); }
+    /* Dua card — calmer version */
+    .sdua-card {
+        background: var(--card-bg); border: 1px solid var(--border);
+        border-radius: 14px; padding: 16px 18px; margin-bottom: 10px;
+        position: relative; overflow: hidden;
+        transition: box-shadow 0.2s;
+    }
+    .sdua-card:hover { box-shadow: var(--shadow-sm); }
+    .sdua-accent { position: absolute; top: 0; right: 0; width: 3px; height: 100%; }
+    .sdua-emoji  { font-size: 1.2rem; margin-bottom: 8px; }
+    .sdua-text   {
+        font-size: 0.95rem; font-weight: 700; color: var(--text);
+        line-height: 1.8; direction: rtl; margin-bottom: 10px;
+    }
+    .sdua-actions { display: flex; gap: 8px; }
+    .sdua-btn {
+        background: var(--bg); border: 1px solid var(--border);
+        border-radius: 50px; padding: 5px 12px;
+        font-size: 0.68rem; font-weight: 700; color: var(--text-muted);
+        cursor: pointer; font-family: 'Tajawal', sans-serif;
+        transition: background 0.2s, color 0.2s;
+        display: flex; align-items: center; gap: 4px;
+    }
+    .sdua-btn:hover { background: var(--primary-soft); color: var(--primary); border-color: var(--primary-mid); }
+    .sdua-btn.fav-on { background: rgba(245,158,11,0.1); color: #f59e0b; border-color: rgba(245,158,11,0.3); }
+
+    /* ✅ FIX: Duas collapsed by default - expand on click */
+    .sdua-card { cursor: pointer; }
+    .sdua-body {
+        max-height: 0; overflow: hidden;
+        transition: max-height 0.4s cubic-bezier(.4,0,.2,1), opacity 0.3s ease;
+        opacity: 0;
+    }
+    .sdua-card.expanded .sdua-body {
+        max-height: 200px; opacity: 1;
+    }
+    .sdua-card.expanded { box-shadow: var(--shadow-sm); border-color: var(--primary-mid) !important; }
+    .sdua-preview {
+        font-size: 0.85rem; color: var(--text-muted);
+        direction: rtl; line-height: 1.5;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        padding: 4px 0 8px;
+    }
+    .sdua-expand-icon {
+        margin-right: auto; font-size: 0.7rem; color: var(--text-muted);
+        transition: transform 0.3s ease; display: inline-block;
+    }
+    .sdua-card.expanded .sdua-expand-icon { transform: rotate(180deg); }
+
+    /* Celebration sparkle burst */
+    @keyframes duaSparkle {
+        0%   { opacity: 1; transform: translate(0,0) scale(1); }
+        100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0.3); }
+    }
+    .dua-sparkle {
+        position: fixed; pointer-events: none; z-index: 9999;
+        font-size: 1.2rem; animation: duaSparkle 0.8s ease-out forwards;
+    }
+
+    /* ── Spiritual Tracker ── */
+    .spirit-tracker-wrap { padding: 20px 20px 0; }
+    .spirit-tracker-card {
+        background: var(--card-bg); border: 1px solid var(--border);
+        border-radius: var(--radius); padding: 18px 18px 14px;
+        box-shadow: var(--shadow-xs);
+    }
+    .spirit-tracker-title { font-size: 0.88rem; font-weight: 800; color: var(--text); margin-bottom: 14px; }
+    .strack-row {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 10px 0; border-bottom: 1px solid var(--border);
+    }
+    .strack-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .strack-left { display: flex; align-items: center; gap: 10px; }
+    .strack-icon { font-size: 1.1rem; }
+    .strack-label { font-size: 0.82rem; font-weight: 700; color: var(--text); }
+    .strack-check {
+        width: 28px; height: 28px; border-radius: 50%;
+        border: 2px solid var(--border); background: var(--bg);
+        cursor: pointer; display: flex; align-items: center; justify-content: center;
+        font-size: 0.85rem; transition: all 0.2s; flex-shrink: 0;
+    }
+    .strack-check.done { background: #22c55e; border-color: #22c55e; color: white; }
+    /* Tranquility slider */
+    .spirit-tranq-wrap { margin-top: 14px; }
+    .spirit-tranq-hdr { display: flex; justify-content: space-between; font-size: 0.78rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .spirit-tranq-emojis { display: flex; justify-content: space-between; margin-top: 6px; font-size: 1rem; }
+    /* Tracker chart */
+    .spirit-tracker-chart {
+        margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border);
+    }
+    .spirit-tracker-chart-title { font-size: 0.72rem; color: var(--text-muted); font-weight: 700; margin-bottom: 8px; }
+    .stchart-bars { display: flex; align-items: flex-end; gap: 5px; height: 56px; }
+    .stchart-col { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; gap: 3px; }
+    .stchart-bar { width: 100%; border-radius: 4px 4px 0 0; min-height: 3px; transition: height 0.5s ease; }
+    .stchart-day { font-size: 0.55rem; color: var(--text-muted); }
+
+    /* ── Context Banner (Smart linking) ── */
+    .spirit-context-banner {
+        margin: 16px 20px 0;
+        border-radius: 14px; padding: 14px 16px;
+        display: flex; align-items: flex-start; gap: 12px;
+        border: 1px solid rgba(99,102,241,0.2);
+        background: linear-gradient(135deg, rgba(30,27,75,0.4), rgba(49,46,129,0.3));
+    }
+    .spirit-context-banner.hidden { display: none; }
+    .scb-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
+    .scb-title { font-size: 0.82rem; font-weight: 800; color: var(--text); margin-bottom: 3px; }
+    .scb-text  { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; }
+    .scb-dua   { font-size: 0.85rem; font-weight: 700; color: #a5b4fc; margin-top: 6px; line-height: 1.7; direction: rtl; }
+
+    /* ── SOS full-screen modal ── */
+    .spirit-sos-overlay {
+        position: fixed; inset: 0; z-index: 2000;
+        background: linear-gradient(175deg, #040810 0%, #0a0f1e 50%, #0f1630 100%);
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        padding: 32px 24px;
+        animation: sosFadeIn 0.4s ease;
+    }
+    @keyframes sosFadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .sos-close {
+        position: absolute; top: 20px; left: 20px;
+        background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 50%; width: 38px; height: 38px;
+        color: rgba(255,255,255,0.6); cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1rem; transition: background 0.2s;
+    }
+    .sos-close:hover { background: rgba(255,255,255,0.14); }
+    .sos-title { font-size: 1.1rem; font-weight: 800; color: #e0e7ff; margin-bottom: 6px; text-align: center; }
+    .sos-sub   { font-size: 0.78rem; color: rgba(199,210,254,0.55); margin-bottom: 36px; text-align: center; }
+    /* Breathing ring */
+    .sos-breath-ring {
+        width: 120px; height: 120px; border-radius: 50%;
+        border: 2px solid rgba(99,102,241,0.3);
+        display: flex; align-items: center; justify-content: center;
+        margin-bottom: 12px; position: relative;
+    }
+    .sos-breath-ring::before {
+        content: ''; position: absolute; inset: -8px; border-radius: 50%;
+        border: 1px solid rgba(99,102,241,0.15);
+    }
+    .sos-breath-ring.inhale  { animation: breatheIn  4s ease-in-out forwards; }
+    .sos-breath-ring.hold    { animation: breatheHold 4s ease-in-out forwards; }
+    .sos-breath-ring.exhale  { animation: breatheOut  4s ease-in-out forwards; }
+    @keyframes breatheIn   { from { transform: scale(0.85); opacity: 0.6; } to { transform: scale(1.15); opacity: 1; } }
+    @keyframes breatheHold { from { transform: scale(1.15); opacity: 1; } to { transform: scale(1.15); opacity: 1; } }
+    @keyframes breatheOut  { from { transform: scale(1.15); opacity: 1; } to { transform: scale(0.85); opacity: 0.6; } }
+    .sos-breath-label { font-size: 1.1rem; font-weight: 800; color: #c7d2fe; margin-bottom: 28px; }
+    .sos-step-label { font-size: 0.82rem; color: rgba(199,210,254,0.5); }
+    .sos-verse-box {
+        background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 16px; padding: 16px 18px; text-align: center;
+        margin-bottom: 14px; width: 100%;
+    }
+    .sos-verse-text { font-size: 0.95rem; font-weight: 700; color: #e0e7ff; line-height: 1.8; direction: rtl; }
+    .sos-verse-ref  { font-size: 0.65rem; color: rgba(199,210,254,0.45); margin-top: 6px; }
+    .sos-dua-box {
+        background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.18);
+        border-radius: 14px; padding: 14px 16px; text-align: center;
+        margin-bottom: 20px; width: 100%;
+    }
+    .sos-dua-text { font-size: 0.9rem; font-weight: 700; color: #a5b4fc; line-height: 1.8; direction: rtl; }
+    .sos-msg-box  { font-size: 0.8rem; color: rgba(199,210,254,0.55); text-align: center; margin-bottom: 28px; line-height: 1.6; }
+    .sos-done-btn {
+        width: 100%; padding: 14px; border: none; border-radius: 50px;
+        background: rgba(99,102,241,0.2); border: 1px solid rgba(99,102,241,0.3);
+        color: #a5b4fc; font-size: 0.9rem; font-weight: 800;
+        cursor: pointer; font-family: 'Tajawal', sans-serif;
+        transition: background 0.2s;
+    }
+    .sos-done-btn:hover { background: rgba(99,102,241,0.3); }
+    /* Mute notifications pill */
+    .sos-mute-hint {
+        font-size: 0.65rem; color: rgba(199,210,254,0.35);
+        margin-top: 12px; text-align: center;
+    }
+
+    /* ══════════════════════════════════════════════
+       SPIRIT WORLD v2 — نظام الاستقرار النفسي
+    ══════════════════════════════════════════════ */
+
+    /* spirit bg v3 */
+
+    /* ── Breath Orb (new animated element) ── */
+    .spirit-orb-wrap {
+        display: flex; justify-content: center; margin: 28px 0 16px;
+        position: relative;
+    }
+    .spirit-orb {
+        width: 130px; height: 130px; border-radius: 50%; position: relative;
+        background: radial-gradient(circle at 38% 35%, rgba(139,92,246,0.18), rgba(99,102,241,0.08) 55%, transparent 70%);
+        border: 1.5px solid rgba(99,102,241,0.2);
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; transition: transform 0.2s;
+    }
+    .spirit-orb::before {
+        content: ''; position: absolute; inset: -12px; border-radius: 50%;
+        border: 1px solid rgba(99,102,241,0.08);
+        animation: orbPulse 4s ease-in-out infinite;
+    }
+    .spirit-orb::after {
+        content: ''; position: absolute; inset: -24px; border-radius: 50%;
+        border: 1px solid rgba(99,102,241,0.04);
+        animation: orbPulse 4s ease-in-out infinite 1s;
+    }
+    .spirit-orb:hover { transform: scale(1.04); }
+    @keyframes orbPulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50%       { transform: scale(1.08); opacity: 0.5; }
+    }
+    .spirit-orb-inner {
+        font-size: 2.2rem; text-align: center; line-height: 1;
+        animation: orbFloat 5s ease-in-out infinite;
+    }
+    @keyframes orbFloat {
+        0%, 100% { transform: translateY(0); }
+        50%       { transform: translateY(-6px); }
+    }
+    .spirit-orb-hint {
+        position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%);
+        font-size: 0.6rem; color: rgba(199,210,254,0.3); white-space: nowrap;
+        letter-spacing: 1.5px; text-transform: uppercase;
+    }
+
+    /* ── NOW MODE: 2x2 grid upgraded ── */
+    .spirit-now-grid { gap: 12px !important; }
+    .spirit-now-btn {
+        background: var(--card-bg) !important;
+        border: 1px solid var(--border) !important;
+        border-radius: 18px !important;
+        transition: background 0.2s, border-color 0.2s, transform 0.15s !important;
+    }
+    .spirit-now-btn:hover {
+        background: var(--primary-soft) !important;
+        border-color: var(--primary-mid) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 4px 16px rgba(99,102,241,0.12) !important;
+    }
+
+    .spirit-now-label { color: var(--text) !important; }
+    .spirit-now-sub   { color: var(--text-muted) !important; }
+
+    /* ── DUA LIBRARY ── */
+    .spirit-duas-wrap { padding: 24px 20px 0 !important; }
+    .spirit-cat-pill {
+        background: rgba(255,255,255,0.03) !important;
+        border: 1px solid rgba(255,255,255,0.08) !important;
+        color: rgba(199,210,254,0.6) !important;
+    }
+    .spirit-cat-pill.active {
+        background: rgba(99,102,241,0.15) !important;
+        border-color: rgba(99,102,241,0.35) !important;
+        color: #a5b4fc !important;
+    }
+    .sdua-card {
+        background: var(--card-bg) !important;
+        border: 1px solid var(--border) !important;
+        border-radius: 18px !important;
+    }
+    body.dark-mode .sdua-card {
+        background: rgba(255,255,255,0.025) !important;
+        border: 1px solid rgba(255,255,255,0.06) !important;
+    }
+    .sdua-text { color: var(--text) !important; }
+    body.dark-mode .sdua-text { color: rgba(224,231,255,0.85) !important; }
+    .sdua-btn {
+        background: var(--bg) !important;
+        border-color: var(--border) !important;
+        color: var(--text-muted) !important;
+    }
+    body.dark-mode .sdua-btn {
+        background: rgba(255,255,255,0.04) !important;
+        border-color: rgba(255,255,255,0.07) !important;
+        color: rgba(199,210,254,0.5) !important;
+    }
+    .sdua-btn:hover {
+        background: rgba(99,102,241,0.12) !important;
+        color: #a5b4fc !important;
+        border-color: rgba(99,102,241,0.3) !important;
+    }
+
+    /* ── SPIRITUAL TRACKER: dark style ── */
+    .spirit-tracker-wrap { padding: 24px 20px 0 !important; }
+    .spirit-tracker-card {
+        background: rgba(255,255,255,0.025) !important;
+        border: 1px solid rgba(255,255,255,0.06) !important;
+    }
+    .spirit-tracker-title { color: rgba(224,231,255,0.85) !important; }
+    .strack-label { color: rgba(224,231,255,0.8) !important; }
+    .strack-row { border-bottom-color: rgba(255,255,255,0.05) !important; }
+    .strack-check { border-color: rgba(255,255,255,0.15) !important; background: rgba(255,255,255,0.03) !important; }
+    .spirit-tranq-hdr { color: rgba(224,231,255,0.7) !important; }
+    .spirit-tracker-chart-title { color: rgba(199,210,254,0.4) !important; }
+    .stchart-day { color: rgba(199,210,254,0.35) !important; }
+
+    /* ── Section title in spirit world ── */
+    .spirit-now-title {
+        color: rgba(199,210,254,0.35) !important;
+    }
+    .spirit-now-title::after { background: rgba(255,255,255,0.06) !important; }
+
+    /* ── Context Banner: spirit dark ── */
+    .spirit-context-banner {
+        background: rgba(30,27,75,0.5) !important;
+        border-color: rgba(99,102,241,0.15) !important;
+        margin: 16px 20px 0 !important;
+    }
+    .scb-title { color: rgba(224,231,255,0.9) !important; }
+    .scb-text  { color: rgba(199,210,254,0.55) !important; }
+
+    /* ── Spirit section padding ── */
+
+
+
+    .quran-verse-card {
+        background: var(--primary);
+        border-radius: var(--radius); padding: 16px 18px; margin-bottom: 10px;
+        color: white;
+        animation: fadeIn 0.4s ease;
+    }
+    .quran-bismillah {
+        font-size: 0.7rem; color: rgba(255,255,255,0.6);
+        text-align: center; margin-bottom: 8px;
+    }
+    .quran-verse-text {
+        font-size: 1rem; line-height: 2; text-align: center;
+        color: #A5B4FC; font-weight: 700;
+    }
+    .quran-verse-ref {
+        font-size: 0.7rem; color: rgba(255,255,255,0.5);
+        text-align: center; margin-top: 8px;
+    }
+
+
+    /* ── Spiritual Nav Grid ── */
+    .spirit-nav-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+    .spirit-nav-btn {
+        display: flex; flex-direction: column; align-items: center;
+        gap: 5px; padding: 12px 6px;
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--card-bg);
+        cursor: pointer; font-family: 'Tajawal', sans-serif;
+        transition: all 0.2s;
+    }
+    .spirit-nav-btn:active { transform: scale(0.95); }
+    .spirit-nav-btn.active {
+        background: var(--primary-soft);
+        border-color: var(--primary-mid);
+        color: var(--primary);
+    }
+    .spirit-nav-icon { font-size: 1.4rem; line-height: 1; }
+    .spirit-nav-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-align: center; line-height: 1.2; }
+    .spirit-nav-btn.active .spirit-nav-label { color: var(--primary); }
+
+    /* ── Section Header (spirit) ── */
+    .spirit-section-header {
+        display: flex; align-items: center; gap: 10px;
+        padding: 0 0 12px; margin-bottom: 14px;
+        border-bottom: 1px solid var(--border);
+    }
+    .spirit-section-icon { font-size: 1.5rem; }
+    .spirit-section-title { font-size: 0.97rem; font-weight: 800; color: var(--text); }
+    .spirit-section-sub { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* ── Dua Card (simplified) ── */
+    .dua-card {
+        background: var(--card-bg); border-radius: var(--radius);
+        border: 1px solid var(--border); margin-bottom: 10px;
+        overflow: hidden;
+    }
+    .dua-header {
+        display: flex; align-items: flex-start; gap: 10px;
+        padding: 14px 16px;
+    }
+    .dua-icon {
+        width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1rem; background: var(--primary-soft);
+    }
+    .dua-text {
+        flex: 1; font-size: 0.94rem; line-height: 2;
+        color: var(--text); font-weight: 500;
+        direction: rtl; text-align: right;
+    }
+    .dua-actions {
+        display: flex; gap: 6px; padding: 0 14px 12px;
+        justify-content: flex-end; border-top: 1px solid var(--border);
+        padding-top: 10px; margin: 0 14px;
+    }
+    .dua-action-btn {
+        padding: 4px 10px; border-radius: 8px; border: 1px solid var(--border);
+        background: var(--bg); color: var(--text-muted);
+        font-size: 0.72rem; font-weight: 700; cursor: pointer;
+        font-family: 'Tajawal', sans-serif; transition: all 0.2s;
+        display: flex; align-items: center; gap: 4px;
+    }
+    .dua-action-btn:hover { border-color: var(--primary-mid); color: var(--primary); }
+    .dua-action-btn.fav-active { background: var(--primary-soft); border-color: var(--primary); color: var(--primary); }
+
+    /* ── Emergency Button ── */
+    .emergency-btn {
+        width: 100%; padding: 13px; border-radius: var(--radius); border: 1.5px solid rgba(220,38,38,0.3);
+        background: rgba(220,38,38,0.06); color: var(--danger);
+        font-size: 0.92rem; font-weight: 700;
+        font-family: 'Tajawal', sans-serif; cursor: pointer;
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+        transition: background 0.2s; margin-top: 4px;
+    }
+    .emergency-btn:hover { background: rgba(220,38,38,0.12); }
+    .emergency-btn:active { transform: scale(0.97); }
+
+    /* ── Yaseen Card ── */
+    .yaseen-card {
+        background: var(--success); border-radius: var(--radius);
+        padding: 13px 16px; margin-bottom: 14px; color: white;
+    }
+    .yaseen-dismiss {
+        background: rgba(255,255,255,0.2); border: none; border-radius: 50px;
+        padding: 4px 12px; color: white; font-size: 0.75rem; font-weight: 700;
+        cursor: pointer; font-family: 'Tajawal', sans-serif; margin-top: 8px; display: inline-block;
+    }
+    .smart-notif-banner {
+        position: fixed; top: 68px; left: 50%; transform: translateX(-50%);
+        width: calc(100% - 30px); max-width: 400px;
+        background: var(--card-bg); border: 1px solid var(--border);
+        border-radius: var(--radius); padding: 14px 16px;
+        box-shadow: var(--shadow);
+        z-index: 200; animation: bannerSlide 0.35s cubic-bezier(.4,0,.2,1);
+        display: flex; gap: 12px; align-items: flex-start;
+    }
+    @keyframes bannerSlide {
+        from { top: 48px; opacity: 0; }
+        to   { top: 68px; opacity: 1; }
+    }
+    .smart-notif-banner.hiding { animation: bannerHide 0.25s forwards; }
+    @keyframes bannerHide { to { top: 40px; opacity: 0; } }
+    .smart-notif-icon { font-size: 1.6rem; line-height: 1; flex-shrink: 0; }
+    .smart-notif-body { flex: 1; }
+    .smart-notif-title { font-weight: 800; font-size: 0.9rem; margin-bottom: 3px; }
+    .smart-notif-text  { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
+    .smart-notif-close { background: none; border: none; font-size: 1rem; cursor: pointer;
+        color: var(--text-muted); padding: 0; line-height: 1; flex-shrink: 0; }
+    .smart-notif-banner.type-streak  { border-right: 3px solid var(--accent); }
+    .smart-notif-banner.type-dua     { border-right: 3px solid var(--success); }
+    .smart-notif-banner.type-motiv   { border-right: 3px solid var(--primary-mid); }
+    .smart-notif-banner.type-session { border-right: 3px solid var(--success); }
+    .smart-notif-banner.type-daily   { border-right: 3px solid var(--primary-mid); }
+
+    /* ── Toggle Switch ── */
+    .toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+        position: absolute; cursor: pointer; inset: 0;
+        background: var(--border); border-radius: 24px; transition: 0.3s;
+    }
+    .toggle-slider::before {
+        content: ''; position: absolute;
+        width: 18px; height: 18px; border-radius: 50%; background: white;
+        bottom: 3px; right: 3px; transition: 0.3s;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .toggle-switch input:checked + .toggle-slider { background: var(--primary-mid); }
+    .toggle-switch input:checked + .toggle-slider::before { transform: translateX(-20px); }
+
+    /* ── Notif System ── */
+    .notif-row {
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 12px; padding: 4px 0;
+    }
+    .notif-row-info { flex: 1; }
+    .notif-row-title { font-size: 0.86rem; font-weight: 700; color: var(--text); }
+    .notif-row-sub   { font-size: 0.71rem; color: var(--text-muted); margin-top: 2px; }
+    .notif-divider   { height: 1px; background: var(--border); margin: 11px 0; }
+    .notif-sub-row   {
+        display: flex; align-items: center; gap: 10px;
+        margin-top: -5px; margin-bottom: 7px; padding-right: 4px;
+    }
+
+    /* ── Focus Mode (during session) ── */
+    body.focus-mode header,
+    body.focus-mode .bottom-nav,
+    body.focus-mode .share-fab { display: none !important; }
+    body.focus-mode .section { padding: 0; }
+    body.focus-mode #home { 
+        display: flex; flex-direction: column;
+        justify-content: center; align-items: center;
+        min-height: 100vh; padding: 20px;
+    }
+    body.focus-mode .home-accordions,
+    body.focus-mode .home-alerts,
+    body.focus-mode .home-level-card { display: none !important; }
+    body.focus-mode .timer-card { 
+        border: none; box-shadow: none; background: transparent;
+        width: 100%; max-width: 380px;
+    }
+    .focus-exit-btn {
+        display: none; position: fixed; top: 14px; left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0,0,0,0.5); color: white;
+        border: none; border-radius: 50px; padding: 7px 16px;
+        font-family: 'Tajawal', sans-serif; font-size: 0.82rem; font-weight: 700;
+        cursor: pointer; z-index: 999;
+    }
+    body.focus-mode .focus-exit-btn { display: block; }
+
+    /* ══════════════════════════════════════════════
+       NOURIUM BRAND IDENTITY SYSTEM — Injected v1.0
+    ══════════════════════════════════════════════ */
+
+    /* ── Splash Screen ── */
+    .splash-screen {
+        position: fixed; inset: 0; z-index: 9999;
+        background: linear-gradient(135deg, #0A0F1F 0%, #16204D 40%, #1E2A78 70%, #6366F1 100%);
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 20px;
+        transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .splash-screen.hiding {
+        opacity: 0; transform: scale(1.04);
+        pointer-events: none;
+    }
+    .splash-logo-wrap {
+        display: flex; align-items: center; gap: 14px;
+        animation: splashEntry 0.8s cubic-bezier(.4,0,.2,1) forwards;
+        opacity: 0;
+    }
+    @keyframes splashEntry {
+        from { opacity: 0; transform: translateY(20px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    .splash-wordmark {
+        font-family: 'DM Sans', 'Tajawal', sans-serif;
+        font-size: 2.8rem; font-weight: 300; letter-spacing: -1px;
+        color: rgba(255,255,255,0.92);
+        animation: splashEntry 0.9s cubic-bezier(.4,0,.2,1) 0.15s forwards;
+        opacity: 0;
+    }
+    .splash-wordmark strong { font-weight: 800; color: #A5B4FC; }
+    .splash-tagline {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.72rem; letter-spacing: 5px; text-transform: uppercase;
+        color: rgba(255,255,255,0.4);
+        animation: splashEntry 0.9s cubic-bezier(.4,0,.2,1) 0.3s forwards;
+        opacity: 0;
+    }
+    .splash-beam {
+        width: 120px; height: 2px; border-radius: 1px;
+        background: linear-gradient(90deg, transparent, #6366F1, transparent);
+        animation: splashEntry 0.9s cubic-bezier(.4,0,.2,1) 0.1s forwards,
+                   beamSweep 1.8s ease-in-out 0.4s infinite;
+        opacity: 0;
+    }
+    @keyframes beamSweep {
+        0%, 100% { transform: scaleX(0.5); opacity: 0.3; }
+        50%       { transform: scaleX(1.2); opacity: 1; }
+    }
+
+    /* ── Enhanced Logo ── */
+    .logo-wordmark {
+        font-family: 'DM Sans', 'Tajawal', sans-serif;
+        font-weight: 300; font-size: 1.2rem; letter-spacing: -0.5px;
+        color: var(--text);
+    }
+    .logo-wordmark strong { font-weight: 800; color: var(--primary); }
+
+    /* ── Brand Greeting Banner (first visit) ── */
+    .brand-banner {
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        border-radius: var(--radius); padding: 14px 18px; margin-bottom: 14px;
+        color: white; text-align: center; position: relative; overflow: hidden;
+        display: none;
+    }
+    .brand-banner.visible { display: block; }
+    .brand-banner::before {
+        content: '';
+        position: absolute; top: -20px; right: -20px;
+        width: 100px; height: 100px; border-radius: 50%;
+        background: rgba(255,255,255,0.08);
+    }
+    .brand-banner-title {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.9rem; font-weight: 700; margin-bottom: 4px;
+    }
+    .brand-banner-sub { font-size: 0.78rem; opacity: 0.85; }
+
+    /* ── Version badge in footer ── */
+    .version-badge {
+        display: inline-flex; align-items: center; gap: 5px;
+        padding: 3px 10px; border-radius: 50px;
+        background: rgba(99,102,241,0.12);
+        border: 1px solid rgba(99,102,241,0.2);
+        color: var(--text-muted); font-size: 0.68rem;
+        font-family: 'IBM Plex Mono', monospace;
+    }
+
+    /* ── IBM Plex Mono for code/version text ── */
+    .mono { font-family: 'IBM Plex Mono', monospace; }
+
+    /* ══════════════════════════════════════════════
+       CHALLENGES — نظام التحديات
+    ══════════════════════════════════════════════ */
+    .challenges-hero {
+        background: linear-gradient(135deg, #1a0533 0%, #2d1b69 45%, #1e3a8a 100%);
+        border-radius: var(--radius); padding: 20px; margin-bottom: 14px;
+        color: white; position: relative; overflow: hidden;
+    }
+    body:not(.dark-mode) .challenges-hero {
+        background: linear-gradient(135deg, #312e81 0%, #4338ca 50%, #1d4ed8 100%);
+    }
+    .challenges-hero::before {
+        content: ''; position: absolute; top: -50px; left: -50px;
+        width: 180px; height: 180px; border-radius: 50%;
+        background: radial-gradient(circle, rgba(167,139,250,0.15) 0%, transparent 70%);
+    }
+    .challenges-hero::after {
+        content: ''; position: absolute; bottom: -30px; right: -20px;
+        width: 140px; height: 140px; border-radius: 50%;
+        background: radial-gradient(circle, rgba(96,165,250,0.12) 0%, transparent 70%);
+    }
+    .challenges-hero-title {
+        font-size: 1.15rem; font-weight: 800;
+        display: flex; align-items: center; gap: 9px;
+        margin-bottom: 5px; position: relative; z-index: 1;
+    }
+    .challenges-hero-sub { font-size: 0.77rem; opacity: 0.75; position: relative; z-index: 1; }
+    .challenges-hero-stats {
+        display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap;
+        position: relative; z-index: 1;
+    }
+    .ch-stat-pill {
+        background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 50px; padding: 6px 14px;
+        font-size: 0.78rem; font-weight: 700;
+        display: flex; align-items: center; gap: 6px;
+    }
+    .ch-stat-pill span { opacity: 0.75; font-weight: 400; font-size: 0.72rem; }
+
+    .ch-section-label {
+        font-size: 0.72rem; font-weight: 800; letter-spacing: 1.5px;
+        text-transform: uppercase; color: var(--text-muted);
+        margin: 18px 0 10px; display: flex; align-items: center; gap: 8px;
+    }
+    .ch-section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .ch-card {
+        background: var(--card-bg); border: 1px solid var(--border);
+        border-radius: var(--radius); padding: 16px 18px; margin-bottom: 10px;
+        box-shadow: var(--shadow-xs); transition: box-shadow 0.2s, transform 0.15s;
+        position: relative; overflow: hidden;
+    }
+    .ch-card:active { transform: scale(0.985); }
+    .ch-card.ch-done {
+        border-color: rgba(34,197,94,0.3);
+        background: linear-gradient(135deg, var(--card-bg), rgba(34,197,94,0.04));
+    }
+    .ch-card-accent {
+        position: absolute; top: 0; right: 0;
+        width: 4px; height: 100%;
+    }
+    .ch-top {
+        display: flex; align-items: flex-start;
+        justify-content: space-between; gap: 12px; margin-bottom: 10px;
+    }
+    .ch-icon-wrap {
+        width: 44px; height: 44px; border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.4rem; flex-shrink: 0;
+    }
+    .ch-info { flex: 1; }
+    .ch-title  { font-size: 0.9rem; font-weight: 800; color: var(--text); margin-bottom: 3px; }
+    .ch-desc   { font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; }
+    .ch-reward {
+        display: flex; align-items: center; gap: 5px;
+        background: var(--primary-soft); border-radius: 50px;
+        padding: 4px 10px; font-size: 0.72rem; font-weight: 700;
+        color: var(--primary); flex-shrink: 0; white-space: nowrap;
+    }
+    .ch-progress-row { display: flex; align-items: center; gap: 10px; }
+    .ch-bar-bg { flex: 1; background: var(--border); height: 6px; border-radius: 3px; overflow: hidden; }
+    .ch-bar-fill {
+        height: 100%; border-radius: 3px;
+        transition: width 0.6s cubic-bezier(.4,0,.2,1);
+        position: relative; overflow: hidden;
+    }
+    .ch-bar-fill:not(.done)::after {
+        content: '';
+        position: absolute; top: 0; left: -100%;
+        width: 60%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        animation: chShimmer 1.8s ease-in-out infinite;
+    }
+    @keyframes chShimmer { 0% { left: -60%; } 100% { left: 120%; } }
+    .ch-pct { font-size: 0.7rem; font-weight: 800; color: var(--text-muted); min-width: 32px; text-align: left; }
+    .ch-done-badge {
+        display: inline-flex; align-items: center; gap: 5px;
+        background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3);
+        border-radius: 50px; padding: 3px 10px;
+        font-size: 0.72rem; font-weight: 800; color: #16a34a;
+    }
+    .ch-weekly-card {
+        background: var(--card-bg); border: 1px solid var(--border);
+        border-radius: var(--radius); overflow: hidden;
+        margin-bottom: 10px; box-shadow: var(--shadow-xs);
+    }
+    .ch-weekly-header { padding: 14px 18px 10px; display: flex; align-items: center; gap: 10px; }
+    .ch-weekly-icon {
+        width: 40px; height: 40px; border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.3rem; flex-shrink: 0;
+    }
+    .ch-weekly-title { font-size: 0.9rem; font-weight: 800; color: var(--text); }
+    .ch-weekly-sub   { font-size: 0.73rem; color: var(--text-muted); margin-top: 2px; }
+    .ch-weekly-body  { padding: 0 18px 14px; }
+    .ch-weekly-subject-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .ch-weekly-dot   { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .ch-weekly-name  { flex: 1; font-size: 0.82rem; font-weight: 600; color: var(--text); }
+    .ch-weekly-val   { font-size: 0.78rem; font-weight: 700; color: var(--primary); }
+    .ch-weekly-bar-bg { width: 80px; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+    .ch-weekly-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+    .ch-ring-wrap    { display: flex; align-items: center; gap: 16px; padding: 4px 0; }
+    .ch-ring-pct     { font-size: 1.6rem; font-weight: 800; color: var(--primary); line-height: 1; }
+    .ch-ring-label   { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+    .ch-ring-days    { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 8px; }
+    .ch-ring-day {
+        width: 22px; height: 22px; border-radius: 6px;
+        font-size: 0.55rem; display: flex; align-items: center; justify-content: center;
+    }
+    .ch-ring-day.studied { background: var(--primary); color: white; }
+    .ch-ring-day.empty   { background: var(--border); color: var(--text-muted); }
+    .ch-ring-day.today   { outline: 2px solid var(--primary-mid); outline-offset: 1px; }
+    .ch-claim-btn {
+        display: inline-flex; align-items: center; gap: 6px;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: white; border: none; border-radius: 50px;
+        padding: 7px 16px; font-size: 0.8rem; font-weight: 800;
+        cursor: pointer; font-family: 'Tajawal', sans-serif;
+        box-shadow: 0 2px 8px rgba(99,102,241,0.3);
+        transition: transform 0.15s, box-shadow 0.2s; margin-top: 8px;
+    }
+    .ch-claim-btn:hover  { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(99,102,241,0.4); }
+    .ch-claim-btn:active { transform: scale(0.94); }
+    .ch-confetti {
+        position: fixed; pointer-events: none; z-index: 9999; font-size: 1.4rem;
+        animation: chConfettiUp 1.8s ease-out forwards;
+    }
+    @keyframes chConfettiUp {
+        0%   { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+        100% { transform: translateY(-140px) rotate(400deg) scale(0.2); opacity: 0; }
+    }
+    .ch-reset-badge {
+        font-size: 0.68rem; color: var(--text-muted);
+        text-align: center; margin-top: 14px; padding-bottom: 4px;
+        display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .ch-reset-badge i { color: var(--primary-mid); }
+
+    /* ══════════════════════════════════════════════
+       MOOD TRACKER — تتبع الحالة النفسية
+    ══════════════════════════════════════════════ */
+    .mood-overlay {
+        position: fixed; inset: 0; z-index: 1000;
+        background: rgba(0,0,0,0.55); backdrop-filter: blur(6px);
+        display: flex; align-items: flex-end; justify-content: center;
+        animation: moodFadeIn 0.25s ease;
+    }
+    @keyframes moodFadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .mood-sheet {
+        background: var(--card-bg); border-radius: 24px 24px 0 0;
+        padding: 24px 20px 36px; width: 100%; max-width: 480px;
+        box-shadow: 0 -8px 40px rgba(0,0,0,0.25);
+        animation: moodSlideUp 0.32s cubic-bezier(.4,0,.2,1);
+    }
+    @keyframes moodSlideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .mood-handle {
+        width: 40px; height: 4px; border-radius: 2px;
+        background: var(--border); margin: 0 auto 18px;
+    }
+    .mood-sheet-title { font-size: 1.05rem; font-weight: 800; color: var(--text); text-align: center; margin-bottom: 3px; }
+    .mood-sheet-sub   { font-size: 0.78rem; color: var(--text-muted); text-align: center; margin-bottom: 20px; }
+    .mood-emoji-row { display: flex; justify-content: space-around; margin-bottom: 20px; gap: 4px; }
+    .mood-emoji-btn {
+        display: flex; flex-direction: column; align-items: center; gap: 4px;
+        background: var(--bg); border: 2px solid transparent;
+        border-radius: 16px; padding: 12px 6px; cursor: pointer;
+        flex: 1; transition: all 0.18s; font-family: 'Tajawal', sans-serif;
+    }
+    .mood-emoji-btn:hover { transform: translateY(-3px); }
+    .mood-emoji-btn.selected {
+        border-color: var(--primary-mid); background: var(--primary-soft);
+        box-shadow: 0 4px 12px rgba(99,102,241,0.2);
+        transform: translateY(-4px) scale(1.06);
+    }
+    .mood-emoji-icon  { font-size: 1.9rem; line-height: 1; }
+    .mood-emoji-label { font-size: 0.6rem; color: var(--text-muted); font-weight: 700; }
+    .mood-slider-row  { margin-bottom: 14px; }
+    .mood-slider-hdr  { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .mood-slider-val  { color: var(--primary); }
+    input.mood-slider {
+        -webkit-appearance: none; width: 100%; height: 6px;
+        border-radius: 3px; outline: none; cursor: pointer;
+        background: var(--border); margin: 0; padding: 0; border: none; box-shadow: none;
+    }
+    input.mood-slider::-webkit-slider-thumb {
+        -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%;
+        background: var(--primary); cursor: pointer;
+        box-shadow: 0 2px 8px rgba(99,102,241,0.4);
+        transition: transform 0.15s;
+    }
+    input.mood-slider:active::-webkit-slider-thumb { transform: scale(1.3); }
+    textarea.mood-note {
+        width: 100%; border: 1.5px solid var(--border); border-radius: 12px;
+        padding: 10px 13px; background: var(--bg); color: var(--text);
+        font-family: 'Tajawal', sans-serif; font-size: 0.88rem;
+        resize: none; outline: none; margin-bottom: 16px; transition: border-color 0.2s;
+    }
+    textarea.mood-note:focus { border-color: var(--primary-mid); }
+    .mood-save-btn {
+        width: 100%; padding: 14px; border: none; border-radius: 50px;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: white; font-size: 1rem; font-weight: 800;
+        cursor: pointer; font-family: 'Tajawal', sans-serif;
+        box-shadow: 0 4px 14px rgba(99,102,241,0.35);
+        transition: transform 0.15s, box-shadow 0.2s;
+    }
+    .mood-save-btn:hover  { transform: translateY(-1px); }
+    .mood-save-btn:active { transform: scale(0.96); }
+
+    #mood-section { padding: 16px; animation: fadeIn 0.2s ease; }
+    .mood-hero {
+        background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+        border-radius: var(--radius); padding: 20px; margin-bottom: 14px;
+        color: white; position: relative; overflow: hidden;
+    }
+    body:not(.dark-mode) .mood-hero {
+        background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 60%, #7c3aed 100%);
+    }
+    .mood-hero::before {
+        content: ''; position: absolute; top: -60px; right: -40px;
+        width: 200px; height: 200px; border-radius: 50%;
+        background: radial-gradient(circle, rgba(196,181,253,0.12) 0%, transparent 70%);
+    }
+    .mood-hero-title {
+        font-size: 1.1rem; font-weight: 800; display: flex; align-items: center; gap: 9px;
+        margin-bottom: 4px; position: relative; z-index: 1;
+    }
+    .mood-hero-sub  { font-size: 0.77rem; opacity: 0.75; margin-bottom: 14px; position: relative; z-index: 1; }
+    .mood-today-pill {
+        display: inline-flex; align-items: center; gap: 8px;
+        background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
+        border-radius: 50px; padding: 8px 16px; font-size: 0.82rem; font-weight: 700;
+        position: relative; z-index: 1;
+    }
+    .mood-today-big { font-size: 1.5rem; }
+    .mood-chart-wrap {
+        display: flex; align-items: flex-end; gap: 5px;
+        height: 90px; margin: 10px 0 6px;
+    }
+    .mood-bar-col {
+        flex: 1; display: flex; flex-direction: column;
+        align-items: center; height: 100%; justify-content: flex-end;
+    }
+    .mood-bar { width: 100%; border-radius: 6px 6px 0 0; min-height: 4px; }
+    .mood-bar-emoji { font-size: 0.85rem; line-height: 1; margin-bottom: 2px; }
+    .mood-bar-day   { font-size: 0.58rem; color: var(--text-muted); margin-top: 2px; }
+    .mood-corr-row  { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
+    .mood-corr-label { font-size: 0.75rem; color: var(--text-muted); min-width: 80px; }
+    .mood-corr-bg   { flex: 1; height: 7px; background: var(--border); border-radius: 4px; overflow: hidden; }
+    .mood-corr-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+    .mood-corr-val  { font-size: 0.72rem; font-weight: 700; color: var(--primary); min-width: 34px; text-align: left; }
+    .mood-log-item {
+        display: flex; align-items: flex-start; gap: 12px;
+        padding: 12px 14px; border-radius: 12px;
+        background: var(--bg); border: 1px solid var(--border); margin-bottom: 8px;
+    }
+    .mood-log-emoji { font-size: 1.6rem; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+    .mood-log-info  { flex: 1; }
+    .mood-log-top   { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
+    .mood-log-label { font-size: 0.85rem; font-weight: 700; color: var(--text); }
+    .mood-log-date  { font-size: 0.68rem; color: var(--text-muted); }
+    .mood-log-note  { font-size: 0.75rem; color: var(--text-muted); margin-top: 3px; line-height: 1.4; }
+    .mood-log-pills { display: flex; gap: 6px; margin-top: 5px; flex-wrap: wrap; }
+    .mood-log-pill  {
+        font-size: 0.65rem; font-weight: 700; padding: 2px 8px;
+        border-radius: 50px; background: var(--primary-soft); color: var(--primary);
+    }
+    .mood-tip-card {
+        border-radius: 14px; padding: 14px 16px; margin-bottom: 9px;
+        border: 1px solid var(--border); cursor: pointer;
+        transition: box-shadow 0.2s, transform 0.15s;
+        background: var(--card-bg); position: relative; overflow: hidden;
+    }
+    .mood-tip-card:hover { box-shadow: var(--shadow-sm); transform: translateY(-1px); }
+    .mood-tip-accent { position: absolute; top: 0; right: 0; width: 3px; height: 100%; }
+    .mood-tip-top { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+    .mood-tip-icon  { font-size: 1.3rem; }
+    .mood-tip-title { font-size: 0.87rem; font-weight: 800; color: var(--text); flex: 1; }
+    .mood-tip-dur   { font-size: 0.68rem; font-weight: 700; background: var(--primary-soft); color: var(--primary); border-radius: 50px; padding: 2px 8px; }
+    .mood-tip-desc  { font-size: 0.76rem; color: var(--text-muted); line-height: 1.5; margin-right: 34px; margin-bottom: 6px; }
+    .mood-tip-steps { display: none; background: var(--bg); border-radius: 10px; padding: 10px 12px; margin-top: 4px; }
+    .mood-tip-steps.open { display: block; }
+    .mood-tip-step  { font-size: 0.74rem; color: var(--text); padding: 3px 0; display: flex; gap: 7px; }
+    .mood-tip-step::before { content: '◦'; color: var(--primary); flex-shrink: 0; }
+
+
+
+    /* ══════════════════════════════════════════════
+       NOURI — الأرنب المرافق
+    ══════════════════════════════════════════════ */
+    .nouri-wrap {
+        display: flex; flex-direction: column; align-items: center;
+        margin: 14px auto 4px; position: relative; width: fit-content;
+        z-index: 10;
+    }
+    .nouri-bubble {
+        background: var(--card-bg);
+        border: 2px solid var(--primary-soft);
+        border-radius: 18px 18px 18px 4px;
+        padding: 10px 15px; font-size: 0.82rem; font-weight: 700;
+        color: var(--text); max-width: 220px; text-align: center;
+        box-shadow: var(--shadow-sm); margin-bottom: 10px;
+        opacity: 0; transform: translateY(8px) scale(0.95);
+        transition: opacity 0.35s ease, transform 0.35s cubic-bezier(.4,0,.2,1);
+        pointer-events: none; line-height: 1.45;
+    }
+    .nouri-bubble.visible {
+        opacity: 1; transform: translateY(0) scale(1);
+    }
+    .nouri-bubble::after {
+        content: '';
+        position: absolute; bottom: -10px; left: 28px;
+        border-width: 10px 8px 0; border-style: solid;
+        border-color: var(--card-bg) transparent transparent;
+    }
+    .nouri-svg-wrap {
+        cursor: pointer; position: relative;
+        animation: nouriFloat 3.2s ease-in-out infinite;
+        transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        filter: drop-shadow(0 6px 12px rgba(99,102,241,0.18));
+    }
+    .nouri-svg-wrap:hover { transform: scale(1.18) rotate(6deg); animation-play-state: paused; }
+    .nouri-svg-wrap:active { transform: scale(0.92) rotate(-4deg); }
+    @keyframes nouriFloat {
+        0%, 100% { transform: translateY(0); }
+        50%       { transform: translateY(-9px); }
+    }
+    /* Ear wiggle on speak */
+    .nouri-svg-wrap.speaking .nouri-ear-l { animation: earWiggleL 0.4s ease-in-out 2; }
+    .nouri-svg-wrap.speaking .nouri-ear-r { animation: earWiggleR 0.4s ease-in-out 2 0.1s; }
+    @keyframes earWiggleL {
+        0%,100% { transform: rotate(0); transform-origin: 50% 100%; }
+        50%      { transform: rotate(-14deg); transform-origin: 50% 100%; }
+    }
+    @keyframes earWiggleR {
+        0%,100% { transform: rotate(0); transform-origin: 50% 100%; }
+        50%      { transform: rotate(14deg); transform-origin: 50% 100%; }
+    }
+    /* Happy bounce on session complete */
+    @keyframes nouriBounce {
+        0%,100% { transform: translateY(0) scale(1); }
+        25%      { transform: translateY(-18px) scale(1.05); }
+        50%      { transform: translateY(-4px) scale(0.97); }
+        75%      { transform: translateY(-12px) scale(1.03); }
+    }
+    .nouri-svg-wrap.celebrate { animation: nouriBounce 0.8s cubic-bezier(.4,0,.2,1) 2; }
+    /* Mood color tint on body */
+    .nouri-body-fill { transition: fill 0.6s ease; }
+
+    /* ── Session Light Wave (on timer start) ── */
+    @keyframes lightWave {
+        0%   { transform: translateX(-100%); opacity: 0; }
+        20%  { opacity: 0.6; }
+        100% { transform: translateX(200%); opacity: 0; }
+    }
+    .timer-card { position: relative; overflow: hidden; }
+    .timer-card.session-active::before {
+        content: '';
+        position: absolute; top: 0; left: 0;
+        width: 50%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(99,102,241,0.06), transparent);
+        animation: lightWave 1.8s ease-out forwards;
+        pointer-events: none;
+    }
+
+    /* ── Bottom Nav Active indicator ── */
+    .nav-item.active::after {
+        content: '';
+        display: block; width: 18px; height: 2px;
+        background: var(--primary-mid);
+        border-radius: 1px; margin: 2px auto 0;
+    }
+
+    /* ── Yaseen / dua card  ── */
+    .yaseen-card {
+        background: linear-gradient(135deg, var(--primary), var(--break));
+        border-radius: var(--radius); padding: 16px 18px; margin-bottom: 14px;
+        color: white; animation: fadeIn 0.4s ease;
+    }
+    .yaseen-dismiss {
+        background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+        border-radius: 50px; padding: 5px 12px; color: white;
+        font-family: 'Tajawal', sans-serif; font-weight: 700; font-size: 0.8rem;
+        cursor: pointer; transition: background 0.2s;
+    }
+    .yaseen-dismiss:hover { background: rgba(255,255,255,0.25); }
+
+    /* ── Dua action buttons enhanced ── */
+    .dua-action-btn {
+        padding: 7px 14px; border-radius: 50px;
+        background: var(--bg); color: var(--text-muted);
+        border: 1px solid var(--border);
+        font-family: 'Tajawal', sans-serif; font-size: 0.8rem; font-weight: 700;
+        cursor: pointer; transition: all 0.18s;
+        display: inline-flex; align-items: center; gap: 5px;
+    }
+    .dua-action-btn:hover { border-color: var(--primary-mid); color: var(--primary); }
+    .dua-action-btn.fav-active {
+        background: rgba(99,102,241,0.12);
+        border-color: rgba(99,102,241,0.3);
+        color: #6366F1;
+    }
+
+    /* ── Emergency button ── */
+    .emergency-btn {
+        display: block; width: 100%; margin: 20px 0 8px;
+        padding: 13px; border-radius: var(--radius);
+        background: transparent; color: var(--danger);
+        border: 1.5px dashed rgba(220,38,38,0.3);
+        font-family: 'Tajawal', sans-serif; font-weight: 700;
+        cursor: pointer; font-size: 0.9rem;
+        transition: all 0.2s;
+    }
+    .emergency-btn:hover {
+        background: rgba(220,38,38,0.06);
+        border-style: solid;
+    }
+
+    /* ── Quran verse animation ── */
+    @keyframes verseAppear {
+        from { opacity: 0; transform: translateY(8px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+
+    /* ══════════════════════════════════════════════
+       REDESIGN v2 — Three Worlds Layout
+    ══════════════════════════════════════════════ */
+
+    /* Refined spacing */
+    .card { margin-bottom: 18px; }
+    .section { padding: 18px 16px; }
+
+    /* Softer shadows */
+    :root {
+        --shadow-xs: 0 1px 3px rgba(29,78,216,0.04);
+        --shadow-sm: 0 2px 8px rgba(29,78,216,0.07);
+        --shadow:    0 4px 16px rgba(29,78,216,0.10);
+    }
+    body.dark-mode {
+        --shadow-xs: 0 1px 3px rgba(0,0,0,0.3);
+        --shadow-sm: 0 2px 8px rgba(0,0,0,0.38);
+        --shadow:    0 4px 16px rgba(0,0,0,0.5);
+    }
+
+    /* ── Hero Zone ── */
+    .hero-zone {
+        padding: 10px 16px 0;
+    }
+    .hero-zone .timer-hero {
+        background: transparent;
+        border: none; box-shadow: none;
+        padding: 10px 0 0;
+        margin: 0;
+    }
+
+    /* ── Today Snapshot Card ── */
+    .snapshot-card {
+        display: flex; align-items: center;
+        background: var(--card-bg); border: 1px solid var(--border);
+        border-radius: var(--radius); margin: 16px 16px 0;
+        padding: 16px 12px; box-shadow: var(--shadow-xs);
+        gap: 8px;
+    }
+    .snapshot-col {
+        flex: 1; text-align: center;
+    }
+    .snapshot-val {
+        font-size: 1.45rem; font-weight: 800; color: var(--primary);
+        line-height: 1; margin-bottom: 4px;
+        font-family: 'IBM Plex Mono', monospace;
+    }
+    .snapshot-lbl {
+        font-size: 0.62rem; color: var(--text-muted); font-weight: 600;
+    }
+    .snapshot-bar-bg {
+        height: 3px; background: var(--border); border-radius: 2px;
+        margin-top: 6px; overflow: hidden;
+    }
+    .snapshot-bar-fill {
+        height: 100%; border-radius: 2px;
+        background: linear-gradient(90deg, var(--primary), var(--accent));
+        transition: width 0.6s ease;
+    }
+    .snapshot-divider {
+        width: 1px; height: 40px; background: var(--border); flex-shrink: 0;
+    }
+
+    /* ── System Collapse ── */
+    .system-collapse {
+        margin: 14px 16px 0; border-radius: var(--radius);
+        overflow: hidden; border: 1px solid var(--border);
+        background: var(--card-bg); box-shadow: var(--shadow-xs);
+    }
+    .system-toggle {
+        width: 100%; display: flex; align-items: center;
+        justify-content: space-between; padding: 13px 16px;
+        background: none; border: none; cursor: pointer;
+        font-family: 'Tajawal', sans-serif; font-size: 0.88rem;
+        font-weight: 700; color: var(--text);
+        transition: background 0.2s;
+    }
+    .system-toggle:hover { background: var(--primary-soft); }
+    .system-chevron { color: var(--text-muted); font-size: 0.78rem; transition: transform 0.3s; }
+    .system-chevron.open { transform: rotate(180deg); }
+    .system-body {
+        max-height: 0; overflow: hidden;
+        transition: max-height 0.4s cubic-bezier(.4,0,.2,1);
+        padding: 0 16px;
+    }
+    .system-body.open {
+        max-height: 900px;
+        padding: 0 16px 14px;
+    }
+
+    /* ── Center Nav Button ── */
+    .nav-center-btn {
+        position: relative; margin-top: -20px;
+        flex-shrink: 0;
+    }
+    .nav-center-ring {
+        width: 54px; height: 54px; border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 4px 18px rgba(99,102,241,0.45);
+        transition: transform 0.2s, box-shadow 0.2s;
+        border: 3px solid var(--card-bg);
+    }
+    .nav-center-btn:active .nav-center-ring {
+        transform: scale(0.92);
+        box-shadow: 0 2px 8px rgba(99,102,241,0.3);
+    }
+    .nav-center-ring i { color: white; font-size: 1.2rem; }
+    .nav-item span { display: block; }
+    /* Active state for center button */
+    .nav-center-btn.active .nav-center-ring {
+        background: linear-gradient(135deg, var(--primary), var(--break));
+    }
+    /* Active indicator override for center */
+    .nav-center-btn.active::after { display: none; }
+
+    /* ── Share FAB — softer ── */
+    .share-fab {
+        background: var(--card-bg) !important;
+        color: var(--text-muted) !important;
+        border: 1.5px solid var(--border) !important;
+        box-shadow: var(--shadow-sm) !important;
+    }
+    .share-fab:hover {
+        color: var(--primary) !important;
+        border-color: var(--primary-mid) !important;
+        box-shadow: var(--shadow) !important;
+    }
+
+    /* ── World Headers ── */
+    .world-header {
+        border-radius: var(--radius); padding: 16px 18px; margin-bottom: 14px;
+        color: white;
+    }
+    .world-title { font-size: 1rem; font-weight: 800; margin-bottom: 3px; }
+    .world-sub   { font-size: 0.75rem; opacity: 0.75; }
+
+    /* ── Growth Grid ── */
+    .growth-grid {
+        display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+        margin-bottom: 18px;
+    }
+    .growth-tile {
+        background: var(--card-bg); border: 1px solid var(--border);
+        border-radius: 14px; padding: 14px 8px;
+        cursor: pointer; font-family: 'Tajawal', sans-serif;
+        display: flex; flex-direction: column; align-items: center; gap: 7px;
+        transition: box-shadow 0.2s, transform 0.15s;
+        box-shadow: var(--shadow-xs);
+    }
+    .growth-tile:hover  { box-shadow: var(--shadow-sm); transform: translateY(-2px); }
+    .growth-tile:active { transform: scale(0.93); }
+    .growth-tile-icon {
+        width: 38px; height: 38px; border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.2rem;
+    }
+    .growth-tile-label {
+        font-size: 0.62rem; font-weight: 700; color: var(--text-muted);
+        text-align: center;
+    }
+
+    /* ── More menu grid ── */
+    .more-tile {
+        background: var(--bg); border: 1px solid var(--border);
+        border-radius: 12px; padding: 12px 6px;
+        cursor: pointer; display: flex; flex-direction: column;
+        align-items: center; gap: 5px;
+        font-family: 'Tajawal', sans-serif;
+        transition: background 0.2s, transform 0.15s;
+    }
+    .more-tile:hover  { background: var(--primary-soft); }
+    .more-tile:active { transform: scale(0.92); }
+    .more-tile-icon  { font-size: 1.3rem; }
+    .more-tile-label { font-size: 0.6rem; font-weight: 700; color: var(--text-muted); text-align: center; }
+
+    /* ── Reduced bottom padding ── */
+    body { padding-bottom: 80px; }
+    .bottom-nav { padding: 6px 4px 10px; }
+
+    /* ── Focus ring accessibility ── */
+    button:focus-visible {
+        outline: 2px solid var(--primary-mid);
+        outline-offset: 2px;
+    }
+
+    /* ══════════════════════════════════════════════
+       KNOWLEDGE TREE — شجرة المعرفة
+    ══════════════════════════════════════════════ */
+    #tree-section {
+        padding: 16px;
+        animation: fadeIn 0.2s ease;
+    }
+
+    .tree-header-card {
+        background: linear-gradient(135deg, #0f4c2a 0%, #1a6b3a 50%, #065F46 100%);
+        border-radius: var(--radius);
+        padding: 18px 20px;
+        margin-bottom: 14px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+    body:not(.dark-mode) .tree-header-card {
+        background: linear-gradient(135deg, #14532d 0%, #166534 50%, #15803d 100%);
+    }
+    .tree-header-card::before {
+        content: '';
+        position: absolute; top: -40px; right: -40px;
+        width: 120px; height: 120px; border-radius: 50%;
+        background: rgba(255,255,255,0.05);
+    }
+    .tree-header-card::after {
+        content: '';
+        position: absolute; bottom: -30px; left: -20px;
+        width: 90px; height: 90px; border-radius: 50%;
+        background: rgba(255,255,255,0.04);
+    }
+    .tree-header-title {
+        font-size: 1.1rem; font-weight: 800; margin-bottom: 4px;
+        display: flex; align-items: center; gap: 8px;
+    }
+    .tree-header-sub {
+        font-size: 0.78rem; opacity: 0.8;
+    }
+    .tree-level-row {
+        display: flex; align-items: center; gap: 12px; margin-top: 12px;
+        background: rgba(255,255,255,0.1); border-radius: 12px; padding: 10px 14px;
+    }
+    .tree-level-icon { font-size: 1.6rem; }
+    .tree-level-text { font-size: 0.82rem; font-weight: 700; opacity: 0.95; }
+    .tree-level-sub  { font-size: 0.7rem;  opacity: 0.7; margin-top: 1px; }
+    .tree-hours-bar  { flex: 1; background: rgba(255,255,255,0.2); height: 5px; border-radius: 3px; overflow: hidden; margin-top: 5px; }
+    .tree-hours-fill { height: 100%; background: #86efac; border-radius: 3px; transition: width 0.8s cubic-bezier(.4,0,.2,1); }
+
+    /* ── Canvas wrapper ── */
+    .tree-canvas-wrap {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        margin-bottom: 14px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: var(--shadow-xs);
+    }
+    #knowledgeTreeCanvas {
+        display: block;
+        width: 100%;
+        cursor: pointer;
+    }
+    .tree-canvas-hint {
+        position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+        background: rgba(0,0,0,0.5); color: white; font-size: 0.68rem;
+        padding: 4px 10px; border-radius: 50px; pointer-events: none;
+        white-space: nowrap; opacity: 0.7;
+    }
+
+    /* ── Flower bloom animation ── */
+    @keyframes flowerBloom {
+        0%   { transform: scale(0) rotate(-180deg); opacity: 0; }
+        60%  { transform: scale(1.3) rotate(10deg); opacity: 1; }
+        100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    .flower-particle {
+        position: fixed; pointer-events: none;
+        font-size: 1.6rem; z-index: 9999;
+        animation: flowerBloom 0.6s cubic-bezier(.4,0,.2,1) forwards,
+                   flowerFloat 2s ease-out 0.3s forwards;
+    }
+    @keyframes flowerFloat {
+        0%   { transform: translateY(0) scale(1); opacity: 1; }
+        100% { transform: translateY(-80px) scale(0.5); opacity: 0; }
+    }
+
+    /* ── Branch cards ── */
+    .branches-grid {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+        margin-bottom: 14px;
+    }
+    .branch-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 13px 14px;
+        box-shadow: var(--shadow-xs);
+        transition: box-shadow 0.2s, transform 0.2s;
+        position: relative; overflow: hidden;
+    }
+    .branch-card:active { transform: scale(0.97); }
+    .branch-card::before {
+        content: '';
+        position: absolute; top: 0; right: 0;
+        width: 100%; height: 3px;
+        border-radius: 0;
+    }
+    .branch-card-color { width: 100%; height: 3px; border-radius: 3px 3px 0 0; position: absolute; top: 0; right: 0; left: 0; }
+    .branch-icon { font-size: 1.4rem; margin-bottom: 4px; }
+    .branch-name { font-size: 0.83rem; font-weight: 700; color: var(--text); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .branch-hours { font-size: 0.7rem; color: var(--text-muted); }
+    .branch-flowers { font-size: 0.75rem; margin-top: 4px; letter-spacing: 1px; }
+    .branch-bar-bg { background: var(--border); height: 4px; border-radius: 2px; margin-top: 6px; overflow: hidden; }
+    .branch-bar-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+
+    /* ── Flower grid ── */
+    .flowers-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 18px;
+        margin-bottom: 14px;
+        box-shadow: var(--shadow-xs);
+    }
+    .flowers-grid {
+        display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;
+    }
+    .flower-badge {
+        display: flex; flex-direction: column; align-items: center;
+        background: var(--bg); border: 1px solid var(--border);
+        border-radius: 12px; padding: 10px 13px; gap: 3px;
+        min-width: 70px;
+        transition: transform 0.2s;
+    }
+    .flower-badge:active { transform: scale(0.95); }
+    .flower-badge.locked { opacity: 0.35; filter: grayscale(1); }
+    .flower-emoji { font-size: 1.5rem; }
+    .flower-label { font-size: 0.62rem; color: var(--text-muted); text-align: center; }
+    .flower-req   { font-size: 0.58rem; color: var(--primary); font-weight: 700; margin-top: 1px; }
+
+    /* ── Tree milestones ── */
+    .milestones-timeline {
+        position: relative; padding-right: 22px;
+    }
+    .milestones-timeline::before {
+        content: '';
+        position: absolute; top: 0; bottom: 0; right: 8px;
+        width: 2px; background: var(--border); border-radius: 1px;
+    }
+    .milestone-item {
+        display: flex; gap: 12px; margin-bottom: 14px;
+        position: relative;
+    }
+    .milestone-dot {
+        position: absolute; right: -18px; top: 3px;
+        width: 10px; height: 10px; border-radius: 50%;
+        background: var(--border); border: 2px solid var(--card-bg);
+        flex-shrink: 0;
+    }
+    .milestone-dot.done { background: #22c55e; }
+    .milestone-dot.current { background: var(--primary); box-shadow: 0 0 0 3px rgba(99,102,241,0.2); }
+    .milestone-text { font-size: 0.83rem; font-weight: 700; color: var(--text); }
+    .milestone-sub  { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
+    .milestone-badge { font-size: 0.68rem; padding: 2px 8px; border-radius: 50px;
+        background: var(--primary-soft); color: var(--primary); font-weight: 700; display: inline-block; margin-top: 4px; }
+
+    /* ══════════════════════════════════════════════
+       SPIRIT WORLD v3 — بساطة · ثبات · روح
+    ══════════════════════════════════════════════ */
+    #spiritual.spirit-world {
+        background: #0d1526 !important;
+        padding: 0 0 110px !important;
+        min-height: 100vh;
+    }
+    body:not(.dark-mode) #spiritual.spirit-world {
+        background: #f0f4ff !important;
+    }
+    .sp-section-label {
+        font-size: 0.65rem; font-weight: 800; letter-spacing: 2.5px;
+        text-transform: uppercase; color: rgba(165,180,252,0.6);
+        margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+        padding: 0 20px;
+    }
+    body:not(.dark-mode) .sp-section-label { color: var(--text-muted); }
+    .sp-section-label::after { content: ''; flex: 1; height: 1px; background: rgba(99,102,241,0.15); }
+    body:not(.dark-mode) .sp-section-label::after { background: var(--border); }
+
+    /* 1. نية */
+    .sp-niyya-card {
+        background: linear-gradient(160deg, #1e1b4b 0%, #312e81 100%);
+        padding: 32px 24px 24px; text-align: center;
+        position: relative; overflow: hidden;
+        border-bottom: 1px solid rgba(99,102,241,0.2);
+    }
+    body:not(.dark-mode) .sp-niyya-card {
+        background: linear-gradient(160deg, #1e3a8a 0%, #1d4ed8 100%);
+    }
+    .sp-niyya-card::before {
+        content: ''; position: absolute; width: 220px; height: 220px; border-radius: 50%;
+        background: radial-gradient(circle, rgba(99,102,241,0.07), transparent 70%);
+        top: -80px; left: 50%; transform: translateX(-50%);
+    }
+    .sp-niyya-label {
+        font-size: 0.62rem; letter-spacing: 3px; text-transform: uppercase;
+        color: rgba(199,210,254,0.45); margin-bottom: 16px; position: relative;
+    }
+    .sp-niyya-text {
+        font-size: 1.08rem; font-weight: 700; color: #e0e7ff;
+        line-height: 1.9; direction: rtl; position: relative;
+        margin-bottom: 20px; min-height: 2.5em;
+        transition: opacity 0.3s ease;
+    }
+    .sp-niyya-btn {
+        background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 50px; padding: 8px 20px; color: rgba(199,210,254,0.7);
+        font-size: 0.73rem; font-weight: 700; cursor: pointer;
+        font-family: 'Tajawal', sans-serif; transition: background 0.2s, color 0.2s;
+        position: relative;
+    }
+    .sp-niyya-btn:hover { background: rgba(255,255,255,0.13); color: #e0e7ff; }
+
+    /* 2. آية الأسبوع */
+    .sp-week-verse-wrap { padding: 28px 20px 0; }
+    .sp-week-verse-card {
+        background: var(--card-bg); border: 1px solid var(--border);
+        border-radius: 18px; padding: 22px 20px;
+        box-shadow: 0 2px 12px rgba(99,102,241,0.06);
+    }
+    body.dark-mode .sp-week-verse-card {
+        background: rgba(255,255,255,0.03); border-color: rgba(99,102,241,0.15);
+    }
+    .sp-week-verse-text {
+        font-size: 1.18rem; font-weight: 700; color: var(--primary);
+        line-height: 1.9; direction: rtl; text-align: center; margin-bottom: 8px;
+    }
+    body.dark-mode .sp-week-verse-text { color: #a5b4fc; }
+    .sp-week-verse-ref {
+        font-size: 0.65rem; color: var(--text-muted); text-align: center; margin-bottom: 14px;
+    }
+    .sp-week-verse-tafsir {
+        font-size: 0.78rem; color: var(--text-muted); line-height: 1.7;
+        text-align: center; direction: rtl;
+        padding-top: 12px; border-top: 1px solid var(--border);
+    }
+    body.dark-mode .sp-week-verse-tafsir {
+        color: rgba(165,180,252,0.5); border-color: rgba(99,102,241,0.1);
+    }
+
+    /* 3. زاد طالبة العلم */
+    .sp-duas-wrap { padding: 28px 20px 0; }
+    .sp-duas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .sp-dua-card {
+        background: var(--card-bg); border: 1px solid var(--border);
+        border-radius: 16px; padding: 16px 14px;
+        cursor: pointer; position: relative; overflow: hidden;
+        transition: box-shadow 0.25s, border-color 0.25s, grid-column 0.3s;
+    }
+    body.dark-mode .sp-dua-card {
+        background: rgba(255,255,255,0.025); border-color: rgba(255,255,255,0.06);
+    }
+    .sp-dua-card:hover { box-shadow: 0 4px 16px rgba(99,102,241,0.1); }
+    .sp-dua-card.open {
+        grid-column: 1 / -1;
+        border-color: var(--primary-mid);
+        box-shadow: 0 4px 20px rgba(99,102,241,0.12);
+    }
+    body.dark-mode .sp-dua-card.open { border-color: rgba(99,102,241,0.4); }
+    .sp-dua-icon { font-size: 1.4rem; margin-bottom: 8px; }
+    .sp-dua-title { font-size: 0.82rem; font-weight: 800; color: var(--text); line-height: 1.3; }
+    body.dark-mode .sp-dua-title { color: rgba(224,231,255,0.88); }
+    .sp-dua-hint { font-size: 0.65rem; color: var(--text-muted); margin-top: 3px; }
+    body.dark-mode .sp-dua-hint { color: rgba(165,180,252,0.4); }
+    .sp-dua-body {
+        max-height: 0; overflow: hidden;
+        transition: max-height 0.45s cubic-bezier(.4,0,.2,1), opacity 0.35s;
+        opacity: 0;
+    }
+    .sp-dua-card.open .sp-dua-body { max-height: 320px; opacity: 1; }
+    .sp-dua-full-text {
+        font-size: 0.95rem; font-weight: 700; direction: rtl; line-height: 1.9;
+        color: var(--text); margin-top: 14px; padding-top: 12px;
+        border-top: 1px solid var(--border);
+    }
+    body.dark-mode .sp-dua-full-text {
+        color: rgba(224,231,255,0.88); border-color: rgba(99,102,241,0.1);
+    }
+    .sp-dua-copy-btn {
+        display: inline-flex; align-items: center; gap: 5px;
+        margin-top: 10px; padding: 5px 14px;
+        background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.2);
+        border-radius: 50px; font-size: 0.68rem; font-weight: 700;
+        color: var(--primary); cursor: pointer; font-family: 'Tajawal', sans-serif;
+        transition: background 0.2s;
+    }
+    body.dark-mode .sp-dua-copy-btn { color: #a5b4fc; }
+    .sp-dua-copy-btn:hover { background: rgba(99,102,241,0.15); }
+    @keyframes spDuaSparkle {
+        0%   { opacity: 1; transform: translate(0,0) scale(1); }
+        100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0.2); }
+    }
+    .sp-dua-sparkle {
+        position: fixed; pointer-events: none; z-index: 9999;
+        font-size: 1rem; animation: spDuaSparkle 0.75s ease-out forwards;
+    }
+
+    /* 4. عداد الذكر */
+    .sp-thikr-wrap { padding: 28px 20px 0; }
+    .sp-thikr-card {
+        background: var(--card-bg); border: 1px solid var(--border);
+        border-radius: 18px; overflow: hidden;
+        box-shadow: 0 1px 6px rgba(99,102,241,0.05);
+    }
+    body.dark-mode .sp-thikr-card {
+        background: rgba(255,255,255,0.025); border-color: rgba(255,255,255,0.06);
+    }
+    .sp-thikr-row {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 18px 20px;
+    }
+    .sp-thikr-divider { height: 1px; background: var(--border); margin: 0 20px; }
+    body.dark-mode .sp-thikr-divider { background: rgba(99,102,241,0.1); }
+    .sp-thikr-name { font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    body.dark-mode .sp-thikr-name { color: rgba(224,231,255,0.85); }
+    .sp-thikr-count {
+        font-size: 1.8rem; font-weight: 800; color: var(--primary);
+        font-variant-numeric: tabular-nums; line-height: 1;
+    }
+    body.dark-mode .sp-thikr-count { color: #818cf8; }
+    .sp-thikr-btn {
+        width: 50px; height: 50px; border-radius: 50%;
+        background: var(--primary); color: white; border: none;
+        font-size: 1.6rem; font-weight: 300; cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: transform 0.1s, box-shadow 0.2s;
+        box-shadow: 0 3px 10px rgba(99,102,241,0.3); flex-shrink: 0;
+    }
+    .sp-thikr-btn:active { transform: scale(0.88); }
+    body.dark-mode .sp-thikr-btn { background: #4f46e5; }
+    .sp-thikr-reset {
+        display: block; width: 100%; background: none; border: none;
+        font-size: 0.7rem; color: var(--text-muted); cursor: pointer;
+        font-family: 'Tajawal', sans-serif; text-align: center;
+        padding: 10px 20px 14px; transition: color 0.2s;
+    }
+    .sp-thikr-reset:hover { color: var(--danger); }
+
+    /* 5. ملجئي */
+    .sp-refuge-wrap { padding: 28px 20px 0; }
+    .sp-refuge-btn {
+        width: 100%; padding: 18px 20px;
+        background: rgba(99,102,241,0.07);
+        border: 1.5px solid rgba(99,102,241,0.18);
+        border-radius: 18px; color: rgba(165,180,252,0.85);
+        font-size: 1rem; font-weight: 800; cursor: pointer;
+        font-family: 'Tajawal', sans-serif; letter-spacing: 0.5px;
+        transition: background 0.25s, border-color 0.25s;
+    }
+    body:not(.dark-mode) .sp-refuge-btn {
+        background: var(--primary-soft); border-color: var(--primary-mid); color: var(--primary);
+    }
+    .sp-refuge-btn:hover { background: rgba(99,102,241,0.13); border-color: rgba(99,102,241,0.35); }
+    body:not(.dark-mode) .sp-refuge-btn:hover { background: #dbeafe; }
+
+    /* احتساب الأجر */
+    .ihtisab-wrap {
+        display: flex; align-items: center; gap: 10px;
+        padding: 9px 14px; margin: 8px 0 2px;
+        background: rgba(99,102,241,0.05); border-radius: 12px;
+        border: 1px solid rgba(99,102,241,0.1); cursor: pointer;
+        transition: background 0.2s;
+    }
+    .ihtisab-wrap:hover { background: rgba(99,102,241,0.09); }
+    .ihtisab-check {
+        width: 20px; height: 20px; border-radius: 6px;
+        border: 1.5px solid rgba(99,102,241,0.35);
+        background: transparent; display: flex; align-items: center;
+        justify-content: center; flex-shrink: 0; transition: all 0.2s; font-size: 0.75rem;
+    }
+    .ihtisab-check.on { background: #6366f1; border-color: #6366f1; color: white; }
+    .ihtisab-label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); flex: 1; }
+    .ihtisab-label.on { color: #6366f1; }
+    body.dark-mode .ihtisab-label.on { color: #a5b4fc; }
+    .ihtisab-done-banner {
+        background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.06));
+        border: 1px solid rgba(99,102,241,0.18); border-radius: 14px;
+        padding: 16px 18px; text-align: center; margin: 8px 0; animation: fadeIn 0.4s ease;
+    }
+    .ihtisab-done-text {
+        font-size: 0.92rem; font-weight: 700; color: #818cf8; line-height: 1.7; direction: rtl;
+    }
+    body:not(.dark-mode) .ihtisab-done-text { color: var(--primary); }
+    
+    </style>
+</head>
+<body>
+<!-- 🔐 Auth Box -->
+<div id="authBox" style="
+  background: var(--card-bg, #fff);
+  border-bottom: 2px solid var(--primary, #1D4ED8);
+  position: sticky; top: 0; z-index: 999;
+  box-shadow: 0 2px 8px rgba(29,78,216,0.10);
+  transition: background 0.3s;
+">
+  <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;padding:8px 16px;">
+    <input type="email" id="email" placeholder="البريد الإلكتروني" autocomplete="email"
+      style="padding:7px 10px;border-radius:8px;border:1px solid #E0ECFF;background:#F4F9FF;color:#0F172A;font-family:'Tajawal',sans-serif;font-size:0.87rem;min-width:160px;max-width:200px;">
+    <input type="password" id="password" placeholder="كلمة المرور" autocomplete="current-password"
+      style="padding:7px 10px;border-radius:8px;border:1px solid #E0ECFF;background:#F4F9FF;color:#0F172A;font-family:'Tajawal',sans-serif;font-size:0.87rem;min-width:130px;max-width:165px;">
+    <button onclick="fbLogin()"    style="padding:6px 14px;background:#1D4ED8;color:white;border:none;border-radius:8px;cursor:pointer;font-family:'Tajawal',sans-serif;font-weight:600;">دخول</button>
+    <button onclick="fbRegister()" style="padding:6px 14px;background:#059669;color:white;border:none;border-radius:8px;cursor:pointer;font-family:'Tajawal',sans-serif;font-weight:600;">إنشاء حساب</button>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;padding:4px 16px 10px;border-top:1px solid #E0ECFF;">
+    <a href="javascript:void(0)" onclick="fbForgotPassword()"
+      style="font-size:0.82rem;color:#1D4ED8;text-decoration:none;font-family:'Tajawal',sans-serif;">🔑 نسيت كلمة المرور؟</a>
+  </div>
+</div>
+<!-- ═══════════ Splash Screen ═══════════ -->
+<div class="splash-screen" id="splashScreen">
+    <svg width="64" height="64" viewBox="0 0 72 72" fill="none" class="splash-logo-wrap">
+        <rect width="72" height="72" rx="18" fill="url(#splashIconGrad)"/>
+        <path d="M20 52V20L52 52V20" stroke="url(#splashBeamGrad)" stroke-width="5"
+              stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="36" y1="36" x2="56" y2="16" stroke="#6366F1" stroke-width="1.8"
+              stroke-dasharray="2 3" opacity="0.8"/>
+        <circle cx="56" cy="16" r="3" fill="#A5B4FC"/>
+        <defs>
+            <linearGradient id="splashIconGrad" x1="0" y1="0" x2="72" y2="72" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#16204D"/>
+                <stop offset="100%" stop-color="#1E2A78"/>
+            </linearGradient>
+            <linearGradient id="splashBeamGrad" x1="20" y1="20" x2="52" y2="52" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#60A5FA"/>
+                <stop offset="100%" stop-color="#A5B4FC"/>
+            </linearGradient>
+        </defs>
+    </svg>
+    <div class="splash-wordmark"><strong>N</strong>ourium</div>
+    <div class="splash-beam"></div>
+    <div class="splash-tagline">Focus · Discipline · Rise</div>
+</div>
+
+<!-- ═══════════ Header ═══════════ -->
+<header>
+    <div class="logo">
+        <div class="logo-mark">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 18V6L19 18V6" stroke="#7DD3FC" stroke-width="2.4"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+                <line x1="12" y1="12" x2="19" y2="5" stroke="#A5B4FC"
+                      stroke-width="1" stroke-dasharray="1.5 2" opacity="0.7"/>
+            </svg>
+        </div>
+        <span class="logo-wordmark"><strong>N</strong>ourium</span>
+    </div>
+    <div class="header-actions">
+        <button class="btn-icon" id="wakeLockBtn" onclick="toggleWakeLock()" title="منع إطفاء الشاشة" style="display:none;">
+            <i class="fas fa-eye"></i>
+        </button>
+        <button class="btn-icon" onclick="toggleSidePanel()" title="الإحصائيات">
+            <i class="fas fa-chart-pie"></i>
+        </button>
+        <button class="btn-icon" onclick="toggleTheme()" title="تغيير المظهر">
+            <i class="fas fa-moon" id="themeIcon"></i>
+        </button>
+    </div>
+</header>
+
+<!-- Focus exit button -->
+<button class="focus-exit-btn" onclick="exitFocusMode()">✕ خروج من وضع التركيز</button>
+
+<!-- ═══════════ اللوحة الجانبية ═══════════ -->
+<div class="side-panel" id="sidePanel" onclick="handlePanelClick(event)">
+    <div class="panel-content">
+        <span class="close-panel" onclick="toggleSidePanel()">&times;</span>
+        <h2 style="margin-top:16px;">لوحة القائد</h2>
+
+        <div class="panel-tabs">
+            <button class="panel-tab active" onclick="switchPanelTab('progress', this)">تقدمي</button>
+            <button class="panel-tab" onclick="switchPanelTab('settings', this)">الهدف</button>
+            <button class="panel-tab" onclick="switchPanelTab('subjects', this)">المواد</button>
+        </div>
+
+        <!-- Tab 1: Progress -->
+        <div class="panel-tab-content active" id="panelTab-progress">
+            <div class="streak-row">
+                <div>
+                    <div style="font-size:0.75rem;color:var(--text-muted);">الأيام المتتالية</div>
+                    <div style="display:flex;align-items:baseline;gap:5px;">
+                        <span class="streak-count" id="streakCount">0</span>
+                        <span style="font-size:0.85rem;color:var(--text-muted);">يوم</span>
+                        <span id="streakFire" style="font-size:1.4rem;">🔥</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="level-card">
+                <div class="level-badge" id="levelIcon">🎓</div>
+                <h3 id="levelName" style="font-size:0.95rem;margin-bottom:3px;">طالب سنة 1</h3>
+                <p style="font-size:0.82rem;opacity:0.8;">النقاط: <span id="xpPoints">0</span></p>
+                <div class="progress-bar"><div class="progress-fill" id="xpBar"></div></div>
+                <p style="font-size:0.7rem;opacity:0.7;margin-top:6px;" id="xpToNext"></p>
+            </div>
+
+            <h3 style="margin-bottom:9px;font-size:0.9rem;color:var(--text-muted);">إحصائيات سريعة</h3>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-val" id="statDailySessions">0</div><div class="stat-label">جلسات اليوم</div></div>
+                <div class="stat-card"><div class="stat-val" id="statWeeklySessions">0</div><div class="stat-label">جلسات الأسبوع</div></div>
+                <div class="stat-card"><div class="stat-val" id="statMonthlyMins">0</div><div class="stat-label">دقائق الشهر</div></div>
+                <div class="stat-card"><div class="stat-val" id="totalSessions">0</div><div class="stat-label">إجمالي الجلسات</div></div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Goal -->
+        <div class="panel-tab-content" id="panelTab-settings">
+            <h3 style="margin-bottom:9px;font-size:0.9rem;">الهدف اليومي</h3>
+            <div class="goal-input-row" style="margin-bottom:10px;">
+                <input type="number" id="dailyGoalInput" placeholder="عدد الجلسات" min="1" max="20" style="margin-bottom:0">
+                <button class="btn btn-primary" onclick="saveDailyGoal()" style="padding:10px 14px;white-space:nowrap;">حفظ</button>
+            </div>
+            <div class="goal-progress-wrapper" id="goalProgressWrapper" style="display:none;">
+                <div class="goal-label">
+                    <span id="goalCurrentLabel">0 جلسة</span>
+                    <span id="goalTargetLabel">/ 0</span>
+                </div>
+                <div class="goal-bar-bg"><div class="goal-bar-fill" id="goalBarFill"></div></div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Subjects -->
+        <div class="panel-tab-content" id="panelTab-subjects">
+            <h3 style="margin-bottom:9px;font-size:0.9rem;">موادي الدراسية</h3>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:12px;">أضف موادك وحدد لوناً مميزاً لكل منها</p>
+            <div class="add-subject-form" style="display:flex;gap:6px;align-items:center;margin-bottom:12px;">
+                <input type="text" id="newSubjectNamePanel" placeholder="اسم المادة..." onkeypress="if(event.key==='Enter') addSubjectFromPanel()" style="flex:1;margin-bottom:0;font-size:0.85rem;padding:8px 10px;">
+                <input type="color" id="newSubjectColorPanel" value="#4F46E5" style="width:38px;height:36px;padding:2px;border:none;cursor:pointer;border-radius:8px;flex-shrink:0;margin-bottom:0;">
+                <button class="btn btn-primary" onclick="addSubjectFromPanel()" style="padding:8px 12px;flex-shrink:0;white-space:nowrap;font-size:0.82rem;">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;" id="subjectTagsContainerPanel"></div>
+            <div id="noSubjectsMsgPanel" style="display:none;text-align:center;color:var(--text-muted);font-size:0.82rem;padding:16px 0;">
+                <i class="fas fa-book-open" style="font-size:1.5rem;margin-bottom:6px;display:block;"></i>
+                لم تضف أي مادة بعد
+            </div>
+        </div>
+
+        <div id="storageWarningPanel"></div>
+    </div>
+</div>
+
+<!-- ═══════════ الرئيسية ═══════════ -->
+<div id="home" class="section active">
+    <!-- hidden alerts (still functional) -->
+    <div style="display:none">
+        <div id="homeReviewAlerts"></div>
+        <div id="homeExamAlerts"></div>
+    </div>
+
+    <!-- ── HERO ZONE: Timer only ── -->
+    <div class="hero-zone">
+
+        <!-- Mode pills -->
+        <div class="timer-mode">
+            <button class="mode-btn active" id="focusBtn" onclick="setTimerMode('focus', this)">دراسة</button>
+            <button class="mode-btn break" id="breakBtn" onclick="setTimerMode('break', this)">استراحة</button>
+        </div>
+
+        <!-- Subject select -->
+        <div class="subject-select" id="subjectSelectWrapper">
+            <select id="timerSubjectSelect" onchange="updateTimerSubjectBadge()">
+                <option value="">اختر المادة (اختياري)...</option>
+            </select>
+            <div id="timerSubjectBadge" style="display:none;text-align:center;">
+                <span class="timer-subject-badge" id="timerSubjectBadgeText"></span>
+            </div>
+        </div>
+
+        <!-- Duration pills -->
+        <div class="duration-selector" id="durationSelector">
+            <button class="dur-btn active" onclick="setDuration(25, this)">25 د</button>
+            <button class="dur-btn" onclick="setDuration(45, this)">45 د</button>
+            <button class="dur-btn" onclick="setDuration(50, this)">50 د</button>
+            <button class="dur-btn" onclick="setDuration(90, this)">90 د</button>
+        </div>
+
+        <!-- Nouri + Timer -->
+        <div class="timer-hero timer-card">
+            <div class="nouri-wrap" id="nouriWrap">
+                <div class="nouri-bubble" id="nouriBubble">أهلاً! أنا نوري، رفيقك في رحلة الطب 🐇</div>
+                <div class="nouri-svg-wrap" id="nouriSvg" onclick="nouriSpeakManual()" title="انقر لأسمع نوري!">
+                    <svg width="88" height="90" viewBox="0 0 88 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse class="nouri-ear-l" cx="28" cy="22" rx="8" ry="18" fill="#c084fc" opacity="0.9" transform="rotate(-12 28 22)"/>
+                        <ellipse cx="28" cy="22" rx="4" ry="11" fill="#f0abfc" opacity="0.8" transform="rotate(-12 28 22)"/>
+                        <ellipse class="nouri-ear-r" cx="60" cy="20" rx="8" ry="18" fill="#c084fc" opacity="0.9" transform="rotate(12 60 20)"/>
+                        <ellipse cx="60" cy="20" rx="4" ry="11" fill="#f0abfc" opacity="0.8" transform="rotate(12 60 20)"/>
+                        <ellipse class="nouri-body-fill" cx="44" cy="64" rx="26" ry="22" fill="#a78bfa"/>
+                        <circle class="nouri-body-fill" cx="44" cy="42" r="22" fill="#c4b5fd"/>
+                        <ellipse cx="36" cy="40" rx="3.5" ry="4" fill="#1e1b4b"/>
+                        <ellipse cx="52" cy="40" rx="3.5" ry="4" fill="#1e1b4b"/>
+                        <circle cx="37.5" cy="38.5" r="1.2" fill="white"/>
+                        <circle cx="53.5" cy="38.5" r="1.2" fill="white"/>
+                        <ellipse cx="44" cy="47" rx="2.5" ry="1.8" fill="#f472b6"/>
+                        <path d="M39 50 Q44 54 49 50" stroke="#7c3aed" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+                        <ellipse cx="33" cy="46" rx="4" ry="2.5" fill="#f9a8d4" opacity="0.5"/>
+                        <ellipse cx="55" cy="46" rx="4" ry="2.5" fill="#f9a8d4" opacity="0.5"/>
+                        <ellipse cx="24" cy="74" rx="7" ry="5" fill="#a78bfa" opacity="0.8"/>
+                        <ellipse cx="64" cy="74" rx="7" ry="5" fill="#a78bfa" opacity="0.8"/>
+                        <circle cx="70" cy="72" r="6" fill="#e9d5ff" opacity="0.9"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="timer-display" id="timer">25:00</div>
+            <div id="wakeLockStatus" style="text-align:center;margin-top:6px;"></div>
+        </div>
+
+        <!-- احتساب الأجر -->
+        <div class="ihtisab-wrap" id="ihtisabWrap" onclick="toggleIhtisab()">
+            <div class="ihtisab-check" id="ihtisabCheck"></div>
+            <div class="ihtisab-label" id="ihtisabLabel">☑ أحتسب هذه الجلسة لله</div>
+        </div>
+
+        <!-- Controls -->
+        <div class="timer-controls">
+            <button class="btn-start-main" id="startBtn" onclick="toggleTimer()">
+                <i class="fas fa-play"></i> ابدأ
+            </button>
+            <button class="btn btn-secondary" id="pauseBtn" onclick="pauseTimer()" style="display:none;">
+                <i class="fas fa-pause"></i> إيقاف
+            </button>
+            <button class="btn btn-secondary" onclick="resetTimer()" style="padding:11px 16px;">
+                <i class="fas fa-redo"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- ── TODAY SNAPSHOT CARD ── -->
+    <div class="snapshot-card" id="snapshotCard">
+        <div class="snapshot-col">
+            <div class="snapshot-val" id="snapHours">0.0</div>
+            <div class="snapshot-lbl">ساعات اليوم</div>
+            <div class="snapshot-bar-bg"><div class="snapshot-bar-fill" id="snapHoursBar" style="width:0%"></div></div>
+        </div>
+        <div class="snapshot-divider"></div>
+        <div class="snapshot-col">
+            <div class="snapshot-val" id="snapStreak">0 🔥</div>
+            <div class="snapshot-lbl">أيام متتالية</div>
+        </div>
+        <div class="snapshot-divider"></div>
+        <div class="snapshot-col">
+            <div class="snapshot-val" id="snapLevel">🎓</div>
+            <div class="snapshot-lbl" id="snapLevelName">ابدأ رحلتك</div>
+        </div>
+    </div>
+
+    <!-- ── MY SYSTEM (Collapsible) ── -->
+    <div class="system-collapse" id="systemCollapse">
+        <button class="system-toggle" onclick="toggleSystemCollapse()" id="systemToggleBtn">
+            <span>📊 نظامي</span>
+            <i class="fas fa-chevron-down system-chevron" id="systemChevron"></i>
+        </button>
+        <div class="system-body" id="systemBody">
+            <!-- Lux -->
+            <div class="lux-panel lux-0" id="luxPanel" style="margin-bottom:12px;">
+                <div class="lux-aura lux-aura-1"></div>
+                <div class="lux-aura lux-aura-2"></div>
+                <div class="lux-beam"></div>
+                <div class="lux-label" id="luxLabel">مستوى النور</div>
+                <div class="lux-title" id="luxTitle">🌑 ابدأ رحلتك</div>
+                <div class="lux-bar-track"><div class="lux-bar-fill" id="luxBarFill" style="width:0%"></div></div>
+                <div class="lux-stats">
+                    <div class="lux-stat"><div class="lux-stat-val" id="luxTodaySessions">0</div><div class="lux-stat-label">جلسات اليوم</div></div>
+                    <div class="lux-stat"><div class="lux-stat-val" id="luxStreak">0</div><div class="lux-stat-label">يوم متتالي 🔥</div></div>
+                    <div class="lux-stat"><div class="lux-stat-val" id="luxWeekMins">0</div><div class="lux-stat-label">دقيقة هذا الأسبوع</div></div>
+                </div>
+            </div>
+            <!-- Level + XP -->
+            <div class="home-level-card" onclick="toggleSidePanel()" style="cursor:pointer;background:var(--bg);border-radius:12px;padding:12px 14px;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <div>
+                    <div style="font-weight:700;color:var(--primary);font-size:0.9rem;" id="homeLevelName">طالب سنة 1</div>
+                    <div style="font-size:0.72rem;color:var(--text-muted);" id="homeXpLabel"></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:1.3rem;" id="homeLevelIcon">🎓</span>
+                    <i class="fas fa-chevron-left" style="color:var(--text-muted);font-size:0.8rem;"></i>
+                </div>
+            </div>
+            <div class="progress-bar" style="margin-bottom:12px;background:var(--border);border-radius:3px;">
+                <div class="progress-fill" id="homeXpBar" style="background:var(--primary-mid);"></div>
+            </div>
+            <!-- Alerts -->
+            <div id="homeReviewAlertsInner"></div>
+            <div id="homeExamAlertsInner"></div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ═══════════ النمو (Growth Hub) ═══════════ -->
+<div id="growth" class="section">
+    <div style="padding:16px 16px 0;">
+        <div class="world-header" style="background:linear-gradient(135deg,#0f172a,#1e3a8a 60%,#3730a3);">
+            <div class="world-title">📊 عالم النمو</div>
+            <div class="world-sub">إحصائياتك · توازنك · شجرتك · تحدياتك</div>
+        </div>
+        <div class="growth-grid">
+            <button class="growth-tile" onclick="switchTab('analytics',this.closest('.section').querySelector('.nav-item'))">
+                <div class="growth-tile-icon" style="background:rgba(99,102,241,0.15);">📈</div>
+                <div class="growth-tile-label">تحليلات</div>
+            </button>
+            <button class="growth-tile" onclick="switchTab('tree-section',null)">
+                <div class="growth-tile-icon" style="background:rgba(34,197,94,0.15);">🌳</div>
+                <div class="growth-tile-label">شجرتي</div>
+            </button>
+            <button class="growth-tile" onclick="switchTab('challenges',null)">
+                <div class="growth-tile-icon" style="background:rgba(245,158,11,0.15);">⚔️</div>
+                <div class="growth-tile-label">تحديات</div>
+            </button>
+            <button class="growth-tile" onclick="switchTab('mood-section',null)">
+                <div class="growth-tile-icon" style="background:rgba(139,92,246,0.15);">🧠</div>
+                <div class="growth-tile-label">مزاجي</div>
+            </button>
+            <button class="growth-tile" onclick="switchTab('balance',null)">
+                <div class="growth-tile-icon" style="background:rgba(6,182,212,0.15);">⚖️</div>
+                <div class="growth-tile-label">توازن</div>
+            </button>
+            <button class="growth-tile" onclick="switchTab('exams',null)">
+                <div class="growth-tile-icon" style="background:rgba(239,68,68,0.15);">📅</div>
+                <div class="growth-tile-label">امتحانات</div>
+            </button>
+            <button class="growth-tile" onclick="switchTab('review',null)">
+                <div class="growth-tile-icon" style="background:rgba(16,185,129,0.15);">🔄</div>
+                <div class="growth-tile-label">مراجعة</div>
+            </button>
+            <button class="growth-tile" onclick="switchTab('subjects',null)">
+                <div class="growth-tile-icon" style="background:rgba(251,146,60,0.15);">📚</div>
+                <div class="growth-tile-label">موادي</div>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- ═══════════ التحليلات ═══════════ -->
+<div id="analytics" class="section">
+    <div class="card">
+        <h2><i class="fas fa-brain"></i> تحليل التركيز</h2>
+        <div class="insight-card streak-insight" id="streakInsight" style="display:none;">
+            <div class="insight-title">🔥 إنجاز الأيام المتتالية</div>
+            <div class="insight-value" id="streakMessage"></div>
+        </div>
+        <div class="insight-card info">
+            <div class="insight-title">⏰ أفضل وقت للدراسة</div>
+            <div class="insight-value" id="bestTimeInsight">جاري التحليل...</div>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-val" id="avgSession">0</div><div class="stat-label">متوسط الجلسة (دقيقة)</div></div>
+            <div class="stat-card"><div class="stat-val" id="totalHours">0</div><div class="stat-label">إجمالي الساعات</div></div>
+        </div>
+    </div>
+    <div class="card">
+        <h2><i class="fas fa-chart-bar"></i> تطور الأسبوع الحالي</h2>
+        <div class="chart-container" id="weeklyChart"></div>
+    </div>
+    <div class="card">
+        <h2><i class="fas fa-book"></i> تحليل المواد</h2>
+        <div id="subjectAnalysis"></div>
+    </div>
+    <div class="card">
+        <h2><i class="fas fa-calendar-alt"></i> تقويم الدراسة</h2>
+        <div class="calendar-header">
+            <button class="btn btn-secondary" onclick="changeMonth(-1)" style="padding:8px 13px;">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            <span id="calendarMonth" style="font-weight:700;"></span>
+            <button class="btn btn-secondary" onclick="changeMonth(1)" style="padding:8px 13px;">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;font-size:0.72rem;color:var(--text-light);">
+            <span><span style="display:inline-block;width:9px;height:9px;background:var(--success);border-radius:50%;margin-left:4px;"></span>جلسة</span>
+            <span><span style="display:inline-block;width:9px;height:9px;background:var(--accent);border-radius:50%;margin-left:4px;box-shadow:var(--glow-gold);"></span>3+</span>
+            <span><span style="display:inline-block;width:9px;height:9px;background:rgba(99,102,241,0.3);border-radius:2px;border:1px solid var(--accent);margin-left:4px;"></span>متتالي</span>
+            <span><span style="display:inline-block;width:9px;height:9px;background:rgba(220,38,38,0.2);border-radius:2px;border:1px solid var(--danger);margin-left:4px;"></span>امتحان</span>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════ المواد ═══════════ -->
+<div id="subjects" class="section">
+    <div class="card">
+        <h2><i class="fas fa-layer-group"></i> موادي الدراسية</h2>
+        <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:16px;">أضف موادك وحدد لوناً مميزاً لكل منها — ستُربط تلقائياً بالمهام والجلسات والإحصائيات</p>
+        <div class="add-subject-form" style="display:flex;gap:8px;align-items:center;margin-bottom:16px;">
+            <input type="text" id="newSubjectName" placeholder="اسم المادة (مثل: التشريح، الفسيولوجيا...)"
+                   onkeypress="if(event.key==='Enter') addSubject()" style="flex:1;margin-bottom:0;">
+            <input type="color" id="newSubjectColor" value="#4F46E5" style="width:46px;height:42px;padding:3px;border:none;cursor:pointer;border-radius:8px;flex-shrink:0;margin-bottom:0;">
+            <button class="btn btn-primary" onclick="addSubject()" style="padding:10px 16px;flex-shrink:0;white-space:nowrap;">
+                <i class="fas fa-plus"></i> إضافة
+            </button>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;" id="subjectTagsContainer"></div>
+        <div id="noSubjectsMsg" class="empty-state" style="display:none;">
+            <i class="fas fa-book-open"></i>
+            <p>لم تضف أي مادة بعد</p>
+            <p style="font-size:0.78rem;margin-top:6px;">ابدأ بإضافة موادك الدراسية لتتبع تقدمك</p>
+        </div>
+    </div>
+    <!-- إحصائيات سريعة لكل مادة -->
+    <div id="subjectStatsContainer"></div>
+</div>
+
+<!-- ═══════════ المهام ═══════════ -->
+<div id="tasks" class="section">
+    <div class="card">
+        <h2><i class="fas fa-plus-circle"></i> مهمة جديدة</h2>
+        <input type="text" id="taskInput" placeholder="عنوان المهمة..."
+               onkeypress="if(event.key==='Enter') addTask()">
+        <select id="taskSubjectSelect"><option value="">اختر المادة (اختياري)...</option></select>
+        <button class="btn btn-primary" style="width:100%;" onclick="addTask()">
+            <i class="fas fa-plus"></i> إضافة (+10 نقاط)
+        </button>
+        <p class="xp-cap-note" id="xpCapNote"></p>
+    </div>
+    <div id="taskListContainer"></div>
+</div>
+
+<!-- ═══════════ المراجعة المتباعدة ═══════════ -->
+<div id="review" class="section">
+    <div class="card">
+        <h2><i class="fas fa-rotate"></i> المراجعة المتباعدة</h2>
+        <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:14px;">أضف موضوعاً وسيذكّرك النظام تلقائياً بمراجعته.</p>
+        <div class="add-review-form">
+            <input type="text" id="reviewTopicInput" placeholder="اسم الموضوع أو الفصل...">
+            <div class="form-row">
+                <select id="reviewSubjectSelect"><option value="">المادة...</option></select>
+                <select id="reviewIntervalSelect">
+                    <option value="3">مراجعة بعد 3 أيام</option>
+                    <option value="7" selected>مراجعة بعد 7 أيام</option>
+                    <option value="14">مراجعة بعد 14 يوم</option>
+                    <option value="30">مراجعة بعد 30 يوم</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" style="width:100%;" onclick="addReviewItem()">
+                <i class="fas fa-plus"></i> إضافة للمراجعة
+            </button>
+        </div>
+    </div>
+    <div id="reviewDueList"></div>
+    <div id="reviewUpcomingList"></div>
+</div>
+
+<!-- ═══════════ حاسبة الامتحانات ═══════════ -->
+<div id="exams" class="section">
+    <div class="card">
+        <h2><i class="fas fa-calendar-check"></i> حاسبة الامتحانات</h2>
+        <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:14px;">أدخل تاريخ الامتحان وعدد ساعات الدراسة المطلوبة.</p>
+        <div class="add-review-form">
+            <input type="text" id="examNameInput" placeholder="اسم الامتحان / المادة...">
+            <div class="form-row">
+                <input type="date" id="examDateInput" style="margin-bottom:0">
+                <input type="number" id="examHoursInput" placeholder="ساعات الدراسة الكلية" min="1" style="margin-bottom:0">
+            </div>
+            <select id="examSubjectSelect" style="margin-top:8px">
+                <option value="">ربط بمادة (اختياري)...</option>
+            </select>
+            <button class="btn btn-primary" style="width:100%;" onclick="addExam()">
+                <i class="fas fa-plus"></i> إضافة امتحان
+            </button>
+        </div>
+    </div>
+    <div id="examsList"></div>
+</div>
+
+<!-- ═══════════ التوازن ═══════════ -->
+<div id="balance" class="section">
+    <div class="card">
+        <h2><i class="fas fa-scale-balanced"></i> مؤشر التوازن الدراسي</h2>
+        <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:14px;">يكشف إذا كنت تهمل مادةً وتركز مفرطاً على أخرى.</p>
+        <div id="balanceContent"></div>
+    </div>
+</div>
+
+<!-- ═══════════ الملاحظات ═══════════ -->
+<div id="notes" class="section">
+    <div class="card">
+        <h2><i class="fas fa-sticky-note"></i> ملاحظاتي</h2>
+        <textarea id="noteInput" rows="3" placeholder="اكتب ملاحظتك هنا..."></textarea>
+        <button class="btn btn-primary" style="width:100%;" onclick="addNote()">
+            <i class="fas fa-save"></i> حفظ الملاحظة
+        </button>
+    </div>
+    <div id="notesListContainer"></div>
+</div>
+
+<!-- ═══════════ الإعدادات ═══════════ -->
+<div id="profile" class="section">
+    <div class="card">
+        <h2><i class="fas fa-cog"></i> الإعدادات</h2>
+        <button class="btn btn-secondary" style="width:100%;margin-bottom:10px;" onclick="toggleTheme()">
+            <i class="fas fa-moon"></i> تبديل الوضع الليلي
+        </button>
+        <button class="btn btn-secondary" style="width:100%;margin-bottom:10px;" onclick="exportData()">
+            <i class="fas fa-file-export"></i> تصدير البيانات
+        </button>
+        <button class="btn btn-secondary" style="width:100%;margin-bottom:10px;" onclick="importData()">
+            <i class="fas fa-file-import"></i> استيراد البيانات
+        </button>
+        <button class="btn btn-secondary" style="width:100%;margin-bottom:10px;" onclick="trimOldSessionsManual()">
+            <i class="fas fa-broom"></i> تنظيف الجلسات القديمة (+1 سنة)
+        </button>
+        <button class="btn btn-secondary" style="width:100%;margin-bottom:10px;" id="yaseenToggleBtn" onclick="toggleYaseenReminder()">
+            <i class="fas fa-bell"></i> تذكير سورة يس: <span id="yaseenStatus">مفعّل</span>
+        </button>
+        <hr style="border-color:var(--border);margin:15px 0;">
+        <button class="btn btn-danger" style="width:100%;" onclick="clearAllData()">
+            <i class="fas fa-trash"></i> حذف جميع البيانات
+        </button>
+        <div id="storageInfo" style="margin-top:16px;"></div>
+        <p style="text-align:center;margin-top:22px;font-size:0.78rem;color:var(--text-muted);">
+            <span class="version-badge">Nourium v9.0 · Brand System v1.0</span>
+        </p>
+    </div>
+
+
+</div>
+
+<!-- ═══════════ الدليل الروحي — عالم الروح ═══════════ -->
+<div id="spiritual" class="section spirit-world">
+
+    <!-- ══ 1. بطاقة النية ══ -->
+    <div class="sp-niyya-card">
+        <div class="sp-niyya-label">🕊 نية اليوم</div>
+        <div class="sp-niyya-text" id="spNiyyaText">اللهم إني أطلب العلم ابتغاءً لوجهك الكريم</div>
+        <button class="sp-niyya-btn" onclick="renewNiyya()">🔄 تجديد النية</button>
+    </div>
+
+    <!-- ══ 2. آية الأسبوع ══ -->
+    <div class="sp-week-verse-wrap">
+        <div class="sp-section-label">📖 آية الأسبوع</div>
+        <div class="sp-week-verse-card">
+            <div class="sp-week-verse-text" id="spWeekVerseText">﴿ وَقُل رَّبِّ زِدْنِي عِلْمًا ﴾</div>
+            <div class="sp-week-verse-ref" id="spWeekVerseRef">سورة طه – الآية 114</div>
+            <div class="sp-week-verse-tafsir" id="spWeekVerseTafsir">العلم نور يُضاء به القلب. اجعل طلبك له خالصاً لوجه الله.</div>
+        </div>
+    </div>
+
+    <!-- ══ 3. زاد طالبة العلم ══ -->
+    <div class="sp-duas-wrap">
+        <div class="sp-section-label">📚 زاد طالبة العلم</div>
+        <div class="sp-duas-grid" id="spStudyDuasGrid">
+            <!-- filled by JS -->
+        </div>
+    </div>
+
+    <!-- ══ 4. عداد الذكر ══ -->
+    <div class="sp-thikr-wrap">
+        <div class="sp-section-label">📿 عداد الذكر</div>
+        <div class="sp-thikr-card">
+            <div class="sp-thikr-row">
+                <div class="sp-thikr-info">
+                    <div class="sp-thikr-name">سبحان الله</div>
+                    <div class="sp-thikr-count" id="thikrTasbih">0</div>
+                </div>
+                <button class="sp-thikr-btn" onclick="incrementThikr('tasbih')">+</button>
+            </div>
+            <div class="sp-thikr-divider"></div>
+            <div class="sp-thikr-row">
+                <div class="sp-thikr-info">
+                    <div class="sp-thikr-name">الصلاة على النبي ﷺ</div>
+                    <div class="sp-thikr-count" id="thikrSalah">0</div>
+                </div>
+                <button class="sp-thikr-btn" onclick="incrementThikr('salah')">+</button>
+            </div>
+            <button class="sp-thikr-reset" onclick="resetThikr()">إعادة تعيين اليوم</button>
+        </div>
+    </div>
+
+    <!-- ══ 5. ملجئي ══ -->
+    <div class="sp-refuge-wrap">
+        <button class="sp-refuge-btn" onclick="openSpiritSOS()">
+            🤍 ملجئي
+        </button>
+    </div>
+
+    <!-- hidden IDs needed by old JS -->
+    <div style="display:none;">
+        <div id="spiritHeroVerse"></div>
+        <div id="spiritHeroRef"></div>
+        <div id="spiritTranqLabel"></div>
+        <div id="spiritTrackerSummary"></div>
+        <div id="spiritContextBanner"></div>
+        <div id="scbIcon"></div><div id="scbTitle"></div>
+        <div id="scbText"></div><div id="scbDua"></div>
+        <div id="spiritOrb"></div><div id="spiritOrbEmoji"></div>
+        <div id="spiritCatScroll"></div>
+        <div id="spiritDuaList"></div>
+        <div id="st_verse"></div><div id="st_thikr"></div><div id="st_prayer"></div>
+        <div id="spiritTranqVal"></div><div id="spiritTranqSlider"></div>
+        <div id="spiritTranqChart"></div><div id="spiritProdCard"></div>
+        <div id="spiritContent"></div><div id="spiritTabs"></div>
+        <div id="yaseenCard"></div>
+    </div>
+
+    <div style="height:30px;"></div>
+</div>
+
+
+<!-- زر المشاركة العائم -->
+<button class="share-fab" onclick="openShareModal()" title="شارك إنجازك">
+    <i class="fas fa-share-alt"></i>
+</button>
+
+<!-- canvas مخفي لتوليد صورة المشاركة -->
+<canvas id="shareCanvas" style="display:none;"></canvas>
+
+<!-- ═══════════ تتبع المزاج ═══════════ -->
+<div id="mood-section" class="section">
+
+    <!-- Hero -->
+    <div class="mood-hero">
+        <div class="mood-hero-title">🧠 تتبع حالتك النفسية</div>
+        <div class="mood-hero-sub">كيف تشعر بعد جلسة الدراسة؟ سجّل مزاجك لنكتشف أنماطك معاً</div>
+        <div class="mood-today-pill">
+            <span class="mood-today-big" id="moodTodayEmoji">—</span>
+            <div>
+                <div style="font-size:0.8rem;font-weight:800;" id="moodTodayLabel">لم تسجّل بعد اليوم</div>
+                <div style="font-size:0.68rem;opacity:0.7;" id="moodTodayTime"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick log button -->
+    <button class="btn btn-primary" style="width:100%;margin-bottom:14px;" onclick="openMoodModal()">
+        <i class="fas fa-smile"></i> سجّل مزاجك الآن
+    </button>
+
+    <!-- 7-day chart -->
+    <div class="card">
+        <h2><i class="fas fa-chart-bar" style="color:#8b5cf6;"></i> مزاجك خلال 7 أيام</h2>
+        <div class="mood-chart-wrap" id="moodChart7Days"></div>
+        <div style="font-size:0.7rem;color:var(--text-muted);text-align:center;margin-top:4px;">
+            كل شريط يمثل متوسط مزاجك ليوم كامل
+        </div>
+    </div>
+
+    <!-- Correlation card -->
+    <div class="card">
+        <h2><i class="fas fa-link" style="color:#06b6d4;"></i> المزاج والإنتاجية</h2>
+        <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:14px;">
+            تحليل العلاقة بين حالتك النفسية ومستوى تركيزك وطاقتك خلال الجلسات
+        </p>
+        <div id="moodCorrContent">
+            <div style="text-align:center;color:var(--text-muted);font-size:0.83rem;padding:10px 0;">
+                سجّل 3 جلسات أو أكثر لرؤية التحليل 📊
+            </div>
+        </div>
+    </div>
+
+    <!-- Improvement Tips -->
+    <div class="card">
+        <h2><i class="fas fa-lightbulb" style="color:#f59e0b;"></i> اقتراحات لتحسين مزاجك</h2>
+        <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:12px;">
+            اضغط على أي تمرين لعرض الخطوات التفصيلية
+        </p>
+        <div id="moodTipsList"></div>
+    </div>
+
+    <!-- Log history -->
+    <div class="card">
+        <h2><i class="fas fa-history" style="color:#64748b;"></i> سجل المزاج</h2>
+        <div id="moodLogList">
+            <div style="text-align:center;color:var(--text-muted);font-size:0.83rem;padding:14px 0;">
+                لا يوجد سجل بعد — سجّل مزاجك بعد كل جلسة 🌱
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ═══════════ التحديات ═══════════ -->
+<div id="challenges" class="section">
+
+    <!-- Hero -->
+    <div class="challenges-hero">
+        <div class="challenges-hero-title">⚔️ ساحة التحديات</div>
+        <div class="challenges-hero-sub">أكمل التحديات اليومية والأسبوعية لكسب مكافآت XP إضافية</div>
+        <div class="challenges-hero-stats">
+            <div class="ch-stat-pill">🏅 <span id="chDoneToday">0</span> / <span id="chTotalToday">3</span> <span>اليوم</span></div>
+            <div class="ch-stat-pill">🗓️ <span id="chDoneWeek">0</span> / <span id="chTotalWeek">2</span> <span>الأسبوع</span></div>
+            <div class="ch-stat-pill">⭐ <span id="chTotalXpEarned">0</span> <span>XP تحديات</span></div>
+        </div>
+    </div>
+
+    <!-- Daily Challenges -->
+    <div class="ch-section-label">📅 التحديات اليومية</div>
+    <div id="chDailyList"></div>
+
+    <!-- Weekly Challenges -->
+    <div class="ch-section-label">🗓️ التحديات الأسبوعية</div>
+    <div id="chWeeklyList"></div>
+
+    <!-- Reset note -->
+    <div class="ch-reset-badge">
+        <i class="fas fa-clock"></i>
+        التحديات اليومية تُجدَّد بعد منتصف الليل · الأسبوعية تُجدَّد كل سبت
+    </div>
+
+</div>
+
+<!-- ═══════════ شجرة المعرفة ═══════════ -->
+<div id="tree-section" class="section">
+
+    <!-- رأس الشجرة -->
+    <div class="tree-header-card">
+        <div class="tree-header-title">🌳 شجرة معرفتي</div>
+        <div class="tree-header-sub">كل جلسة دراسة تُنمي شجرتك — وكل إنجاز يُفتح أزهاراً جديدة</div>
+        <div class="tree-level-row">
+            <div class="tree-level-icon" id="treeLevelIcon">🌱</div>
+            <div style="flex:1;">
+                <div class="tree-level-text" id="treeLevelName">بذرة</div>
+                <div class="tree-level-sub" id="treeLevelSub">0 ساعة دراسة</div>
+                <div class="tree-hours-bar"><div class="tree-hours-fill" id="treeHoursFill" style="width:0%"></div></div>
+            </div>
+            <div style="text-align:left;font-size:0.7rem;opacity:0.75;" id="treeNextGoal"></div>
+        </div>
+    </div>
+
+    <!-- رسم الشجرة -->
+    <div class="tree-canvas-wrap">
+        <canvas id="knowledgeTreeCanvas" height="320"></canvas>
+        <div class="tree-canvas-hint" id="treeCanvasHint">اضغط لتشغيل أنيميشن النمو 🌿</div>
+    </div>
+
+    <!-- فروع المواد -->
+    <div class="card">
+        <h2><i class="fas fa-code-branch" style="color:#22c55e;"></i> فروع المواد</h2>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:12px;">كل مادة دراسية تُمثّل فرعاً في شجرتك — ساعاتك ترسم حجم كل فرع</p>
+        <div class="branches-grid" id="treeBranchesGrid">
+            <div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--text-muted);font-size:0.85rem;">
+                أضف موادك الدراسية من تبويب "مواد" لتظهر فروع شجرتك 🌿
+            </div>
+        </div>
+    </div>
+
+    <!-- أزهار الإنجاز -->
+    <div class="flowers-card">
+        <h2 style="margin-bottom:0;"><i class="fas fa-spa" style="color:#f472b6;"></i> أزهار الإنجاز</h2>
+        <p style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;">تُفتح الأزهار عند تحقيق إنجازات — اجمعها جميعاً!</p>
+        <div class="flowers-grid" id="treeFlowersGrid"></div>
+    </div>
+
+    <!-- مراحل النمو -->
+    <div class="card">
+        <h2><i class="fas fa-seedling" style="color:#22c55e;"></i> مراحل نمو الشجرة</h2>
+        <div class="milestones-timeline" id="treeMilestones"></div>
+    </div>
+
+</div>
+
+<!-- ═══════════ شريط التنقل ═══════════ -->
+<nav class="bottom-nav">
+    <div class="nav-item active" onclick="switchTab('home', this)" data-tab="focus">
+        <i class="fas fa-bolt"></i><span>تركيز</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('tasks', this)" data-tab="tasks">
+        <i class="fas fa-check-circle"></i><span>مهام</span>
+    </div>
+    <div class="nav-item nav-center-btn" onclick="switchTab('home', this)" data-tab="home-center" id="navCenterBtn">
+        <div class="nav-center-ring">
+            <i class="fas fa-play"></i>
+        </div>
+    </div>
+    <div class="nav-item" onclick="switchTab('growth', this)" data-tab="growth">
+        <i class="fas fa-chart-line"></i><span>نمو</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('spiritual', this)" data-tab="spirit">
+        <i class="fas fa-moon"></i><span>روح</span>
+    </div>
+</nav>
+
+<!-- More menu overlay -->
+<div id="moreMenuOverlay" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);" onclick="closeMoreMenu()">
+    <div id="moreMenuSheet" style="position:absolute;bottom:72px;left:0;right:0;background:var(--card-bg);border-radius:24px 24px 0 0;padding:20px 16px 8px;box-shadow:0 -8px 40px rgba(0,0,0,0.2);" onclick="event.stopPropagation()">
+        <div style="width:40px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 16px;"></div>
+        <div style="font-size:0.72rem;font-weight:800;letter-spacing:2px;color:var(--text-muted);margin-bottom:12px;text-align:center;">كل الأقسام</div>
+        <div id="moreMenuGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;"></div>
+    </div>
+</div>
+
+<!-- زر المشاركة العائم -->
+<button class="share-fab" onclick="openShareModal()" title="شارك إنجازك">
+    <i class="fas fa-share-alt"></i>
+</button>
+
+<!-- canvas مخفي -->
+<canvas id="shareCanvas" style="display:none;"></canvas>
+
+<script>
+'use strict';
+
+// ═══════════════════════════════════════════════════
+//  تهيئة البيانات
+// ═══════════════════════════════════════════════════
+let xp            = parseInt(localStorage.getItem('medorus_xp'))            || 0;
+let subjects      = JSON.parse(localStorage.getItem('medorus_subjects'))    || [];
+let tasks         = JSON.parse(localStorage.getItem('medorus_tasks'))       || [];
+let notes         = JSON.parse(localStorage.getItem('medorus_notes'))       || [];
+let sessions      = JSON.parse(localStorage.getItem('medorus_sessions'))    || [];
+let streak        = parseInt(localStorage.getItem('medorus_streak'))        || 0;
+let lastStudyDate = localStorage.getItem('medorus_last_study_date')         || null;
+let dailyGoal     = parseInt(localStorage.getItem('medorus_daily_goal'))    || 0;
+let reviewItems   = JSON.parse(localStorage.getItem('medorus_reviews'))     || [];
+let examItems     = JSON.parse(localStorage.getItem('medorus_exams'))       || [];
+
+let stats = JSON.parse(localStorage.getItem('medorus_stats')) || {
+    sessions: { daily: 0, weekly: 0, monthly: 0 },
+    tasks:    { daily: 0, weekly: 0, monthly: 0 },
+    minutes:  { daily: 0, weekly: 0, monthly: 0 },
+    lastUpdate: new Date().toISOString()
+};
+
+// ── المؤقت ──
+let timerInterval       = null;
+let timeLeft            = 25 * 60;
+let isRunning           = false;
+let sessionCompleted    = false;   // ✅ FIX 3: guard ضد تكرار تسجيل الجلسة
+let timerMode           = 'focus';
+let currentDuration     = 25;
+let timerStartTimestamp = null;
+let timerStartTimeLeft  = 0;
+let _lastTitleUpdate    = 0;       // ✅ FIX: تحديث عنوان الصفحة كل 5 ثوانٍ فقط
+let currentCalendarDate = new Date();
+
+// ── Wake Lock ──
+let wakeLock = null;
+
+// ═══════════════════════════════════════════════════
+//  ثوابت عامة — يجب أن تكون قبل init()
+// ═══════════════════════════════════════════════════
+const DAILY_TASK_XP_LIMIT = 100;
+
+const MOTIVATIONAL_MSGS = [
+    { icon: '🩺', title: 'رسالة لطبيب المستقبل', text: 'كل صفحة تقرؤها اليوم قد تنقذ مريضاً غداً.' },
+    { icon: '💙', title: 'أنت أكثر من طالب', text: 'أنت لا تدرس… أنت تبني إنساناً يعالج إنساناً.' },
+    { icon: '⭐', title: 'الاستمرارية سرّ النجاح', text: 'الأطباء العظماء لم يصبحوا كذلك في ليلة — بل بـ 1% يومياً.' },
+    { icon: '🌙', title: 'جهدك لا يضيع', text: 'كل دقيقة دراسة الآن هي ابتسامة مريض مستقبلاً.' },
+    { icon: '🏆', title: 'أنت في الطريق الصحيح', text: 'من أخذ طريق العلم سهّل الله له طريقاً إلى الجنة.' },
+    { icon: '🔬', title: 'العلم نور', text: 'الطب أمانة — وكل درس تذاكره هو استعداد لحمل هذه الأمانة.' },
+];
+
+const DUA_MSGS = [
+    { icon: '🤍', title: 'دعاء قبل المذاكرة', text: '«رب اشرح لي صدري ويسر لي أمري واحلل عقدة من لساني»' },
+    { icon: '📖', title: 'تذكير روحي', text: 'يُستحب قراءة سورة يس قبل المذاكرة طلبًا للتوفيق والبركة.' },
+    { icon: '🌿', title: 'دعاء العلم', text: '«اللهم انفعني بما علمتني وعلمني ما ينفعني وزدني علماً»' },
+];
+
+// دالة تُعيد رسائل الـ Streak باستخدام القيمة الحالية عند الاستدعاء
+function getStreakMsgs() {
+    return [
+        { icon: '🔥', title: 'لا تكسر سلسلتك!', text: `حافظت على ${streak} يوم متتالي — جلسة واحدة تكفي لتحميها اليوم.` },
+        { icon: '💪', title: 'إنجازك في خطر!', text: 'لا تدع تعب اليوم يُضيع تعب الأمس. جلسة صغيرة تكفي!' },
+    ];
+}
+
+const SESSION_DONE_MSGS = [
+    { icon: '✅', title: 'أحسنت يا طبيب المستقبل!', text: 'خطوة أخرى نحو هدفك. الحمد لله الذي بنعمته تتم الصالحات.' },
+    { icon: '🎯', title: 'جلسة ناجحة!', text: 'اللهم بارك لنا فيما تعلمنا وثبّته في قلوبنا.' },
+    { icon: '⭐', title: 'رائع!', text: 'لا تنسَ مراجعة ما تعلمته قريباً للتثبيت.' },
+];
+
+let notifSettings = JSON.parse(localStorage.getItem('nourium_notif_settings') || 'null') || {
+    dailyEnabled:  false,
+    dailyTime:     '08:00',
+    streakEnabled: true,
+    duaEnabled:    false,
+    motivEnabled:  false,
+    sessionDone:   true,
+};
+let notifTimers      = {};
+let smartBannerQueue = [];
+let smartBannerActive = false;
+
+const QURAN_VERSES = [
+    { text: '﴿ يَرْفَعِ اللَّهُ الَّذِينَ آمَنُوا مِنكُمْ وَالَّذِينَ أُوتُوا الْعِلْمَ دَرَجَاتٍ ﴾', ref: '📖 سورة المجادلة – الآية 11' },
+    { text: '﴿ قُلْ هَلْ يَسْتَوِي الَّذِينَ يَعْلَمُونَ وَالَّذِينَ لَا يَعْلَمُونَ ﴾', ref: '📖 سورة الزمر – الآية 9' },
+    { text: '﴿ شَهِدَ اللَّهُ أَنَّهُ لَا إِلَٰهَ إِلَّا هُوَ وَالْمَلَائِكَةُ وَأُولُو الْعِلْمِ قَائِمًا بِالْقِسْطِ ﴾', ref: '📖 سورة آل عمران – الآية 18' },
+    { text: '﴿ إِنَّمَا يَخْشَى اللَّهَ مِنْ عِبَادِهِ الْعُلَمَاءُ ﴾', ref: '📖 سورة فاطر – الآية 28' },
+    { text: '﴿ وَقُل رَّبِّ زِدْنِي عِلْمًا ﴾', ref: '📖 سورة طه – الآية 114' },
+];
+
+let currentVerseIndex = -1;
+let verseInterval     = null;
+
+const DUAS_DATA = {
+    before: {
+        icon: '🌅', title: 'تهيئة النية والقلب', subtitle: 'قبل بدء المذاكرة',
+        color: '#065F46',
+        duas: [
+            { id: 'b1', text: 'اللهم إني أسألك فهم النبيين، وحفظ المرسلين، وإلهام الملائكة المقربين.' },
+            { id: 'b2', text: 'رب اشرح لي صدري ويسر لي أمري واحلل عقدة من لساني يفقهوا قولي.' },
+            { id: 'b3', text: 'اللهم انفعني بما علمتني وعلمني ما ينفعني وزدني علما.' },
+            { id: 'b4', text: 'اللهم اجعل هذا العلم خالصًا لوجهك الكريم.' },
+            { id: 'b5', text: 'اللهم اجعلني سبب شفاء لا سبب ألم، وسبب رحمة لا سبب معاناة.' },
+        ]
+    },
+    during: {
+        icon: '📖', title: 'عند صعوبة فهم المعلومة', subtitle: 'أثناء المذاكرة',
+        color: '#4338CA',
+        duas: [
+            { id: 'd1', text: 'اللهم لا سهل إلا ما جعلته سهلا وأنت تجعل الحزن إذا شئت سهلا.' },
+            { id: 'd2', text: 'اللهم افتح عليَّ فتحًا مبينًا.' },
+            { id: 'd3', text: 'يا معلم إبراهيم علمني، ويا مفهم سليمان فهمني.' },
+            { id: 'd4', text: 'اللهم ارزقني نور الفهم وسرعة الاستيعاب.' },
+        ]
+    },
+    emergency: {
+        icon: '⚡', title: 'عند النسيان', subtitle: 'أدعية الفزع والطوارئ',
+        color: '#991B1B',
+        duas: [
+            { id: 'e1', text: 'اللهم يا جامع الناس ليوم لا ريب فيه اجمع عليَّ ضالتي.' },
+            { id: 'e2', text: 'رب لا تذرني فردًا وأنت خير الوارثين.' },
+            { id: 'e3', text: 'اللهم ذكرني منه ما نسيت ولا تنسني منه ما ذكرت.' },
+        ]
+    },
+    after: {
+        icon: '🌙', title: 'دعاء ختم جلسة الدراسة', subtitle: 'بعد الانتهاء من المذاكرة',
+        color: '#1E1B6B',
+        duas: [
+            { id: 'a1', text: 'الحمد لله الذي بنعمته تتم الصالحات.' },
+            { id: 'a2', text: 'اللهم بارك لي فيما تعلمت وثبته في قلبي.' },
+            { id: 'a3', text: 'اللهم اجعل هذا العلم حجة لي لا عليّ.' },
+            { id: 'a4', text: 'اللهم اجعل عملي هذا في ميزان حسناتي.' },
+        ]
+    },
+    time: {
+        icon: '⏳', title: 'بركة الوقت والإنتاجية', subtitle: 'دعاء تنظيم الوقت',
+        color: '#3730A3',
+        duas: [
+            { id: 't1', text: 'اللهم بارك لي في وقتي ونظم لي أيامي.' },
+            { id: 't2', text: 'اللهم أعني على ذكرك وشكرك وحسن عبادتك.' },
+            { id: 't3', text: 'اللهم إني أعوذ بك من العجز والكسل.' },
+            { id: 't4', text: 'اللهم اجعل يومي هذا مليئًا بالإنجاز والرضا.' },
+        ]
+    },
+    doctor: {
+        icon: '🩺', title: 'دعاء طالب الطب', subtitle: 'خاص بطلاب الطب والصحة',
+        color: '#065F46',
+        duas: [
+            { id: 'dr1', text: 'اللهم سخر لي أسباب العلم.' },
+            { id: 'dr2', text: 'اللهم ارزقني الإخلاص في تعلم الطب وخدمة المرضى.' },
+            { id: 'dr3', text: 'اللهم اجعلني طبيبًا رحيمًا.' },
+            { id: 'dr4', text: 'اللهم اجعل علمي نورًا وعملي أجرًا.' },
+            { id: 'dr5', text: 'اللهم اكتب لي أجر كل مريض أداويه.' },
+        ]
+    }
+};
+
+let spiritCurrentTab = 'before';
+let favoriteDuas     = JSON.parse(localStorage.getItem('nourium_fav_duas') || '[]');
+let yaseenReminderOn = localStorage.getItem('nourium_yaseen_reminder') !== 'off';
+
+// ═══════════════════════════════════════════════════
+//  XP والمستويات
+// ═══════════════════════════════════════════════════
+const LEVELS = [
+    { name: 'طالب سنة 1',   icon: '🎓', minXP: 0,    maxXP: 200  },
+    { name: 'طالب سنة 3',   icon: '📚', minXP: 200,  maxXP: 500  },
+    { name: 'طبيب عام',     icon: '👨‍⚕️', minXP: 500,  maxXP: 1000 },
+    { name: 'طبيب مقيم',    icon: '🩺', minXP: 1000, maxXP: 2000 },
+    { name: 'أستاذ محاضر',  icon: '👨‍🏫', minXP: 2000, maxXP: 3000 },
+    { name: 'خبير أكاديمي', icon: '🏆', minXP: 3000, maxXP: 5000 },
+];
+
+function getCurrentLevel() {
+    for (let i = LEVELS.length - 1; i >= 0; i--) {
+        if (xp >= LEVELS[i].minXP) return { ...LEVELS[i], index: i };
+    }
+    return { ...LEVELS[0], index: 0 };
+}
+
+// ═══════════════════════════════════════════════════
+//  التهيئة الأولية
+// ═══════════════════════════════════════════════════
+(function init() {
+    if (localStorage.getItem('medorus_theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('themeIcon').className = 'fas fa-sun';
+    }
+
+    const draft = localStorage.getItem('medorus_draft_note');
+    if (draft) document.getElementById('noteInput').value = draft;
+    if (dailyGoal > 0) document.getElementById('dailyGoalInput').value = dailyGoal;
+
+    // ✅ FIX: تنظيف الجلسات القديمة عند التشغيل
+    trimOldSessions();
+    cleanupOldTaskXP(); // ✅ تنظيف مفاتيح XP القديمة
+    checkStatsReset();
+    updateStreak(false);
+    updateLevelUI();
+    updateStatsUI();
+    renderSubjects();
+    updateSubjectSelects();
+    renderTasks();
+    renderNotes();
+    renderReviews();
+    renderExams();
+    updateTimerDisplay();
+    renderCalendar();
+    updateGoalProgress();
+    updateLuxPanel();
+    checkStorageUsage();
+    startVerseRotation(); // ✅ تشغيل الآيات القرآنية
+    updateYaseenToggleUI(); // ✅ تحديث حالة زر يس في الإعدادات
+    initNotifSystem(); // ✅ نظام الإشعارات الذكية
+
+    // ✅ FIX: تهيئة الأقسام التي تحتاج بيانات عند أول تحميل
+    setTimeout(function() {
+        initKnowledgeTree();
+        renderMoodTips();   // تحميل اقتراحات المزاج فوراً
+        initChallenges();   // تحميل التحديات فوراً
+        initSpiritV3();     // تهيئة قسم روح الجديد
+    }, 200);
+
+    // Wake Lock زر — يظهر فقط إذا كان المتصفح يدعمه
+    if ('wakeLock' in navigator) {
+        document.getElementById('wakeLockBtn').style.display = 'inline-flex';
+    }
+
+    document.getElementById('noteInput').addEventListener('input', function() {
+        localStorage.setItem('medorus_draft_note', this.value);
+    });
+})();
+
+// ═══════════════════════════════════════════════════
+//  مساعدات التاريخ (آمنة ودقيقة)
+// ═══════════════════════════════════════════════════
+function toDateKey(date) {
+    // ✅ استخدام التوقيت المحلي للمستخدم (لا UTC) لأن التطبيق محلي بطبيعته
+    const d = date instanceof Date ? date : new Date(date);
+    return d.getFullYear() + '-' +
+           String(d.getMonth() + 1).padStart(2, '0') + '-' +
+           String(d.getDate()).padStart(2, '0');
+}
+
+function isSameDay(d1, d2) {
+    return toDateKey(d1) === toDateKey(d2);
+}
+
+function isYesterday(dateStr) {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    return dateStr === toDateKey(yesterday);
+}
+
+function getTodayKey() {
+    return toDateKey(new Date());
+}
+
+// ✅ FIX 1: دالة مقارنة الأسبوع الأكثر دقة — بدون getWeekNumber() المعيبة
+function isSameCalendarWeek(d1, d2) {
+    const getWeekStart = (date) => {
+        const d = new Date(date);
+        d.setHours(0, 0, 0, 0);
+        d.setDate(d.getDate() - d.getDay()); // الأحد = بداية الأسبوع
+        return d.getTime();
+    };
+    return getWeekStart(d1) === getWeekStart(d2);
+}
+
+// ═══════════════════════════════════════════════════
+//  إعادة تعيين الإحصائيات تلقائياً — مصحَّحة
+// ═══════════════════════════════════════════════════
+function checkStatsReset() {
+    const now        = new Date();
+    const lastUpdate = stats.lastUpdate ? new Date(stats.lastUpdate) : now;
+    let   changed    = false;
+
+    // يومي
+    if (!isSameDay(now, lastUpdate)) {
+        stats.sessions.daily = 0;
+        stats.tasks.daily    = 0;
+        stats.minutes.daily  = 0;
+        changed = true;
+    }
+
+    // ✅ FIX 1: أسبوعي بالدالة الجديدة الصحيحة
+    if (!isSameCalendarWeek(now, lastUpdate)) {
+        stats.sessions.weekly = 0;
+        stats.tasks.weekly    = 0;
+        stats.minutes.weekly  = 0;
+        changed = true;
+    }
+
+    // شهري
+    if (now.getMonth()    !== lastUpdate.getMonth() ||
+        now.getFullYear() !== lastUpdate.getFullYear()) {
+        stats.sessions.monthly = 0;
+        stats.tasks.monthly    = 0;
+        stats.minutes.monthly  = 0;
+        changed = true;
+    }
+
+    if (changed) {
+        stats.lastUpdate = now.toISOString();
+        saveStats();
+    }
+}
+
+// ═══════════════════════════════════════════════════
+//  تنظيف الجلسات القديمة — FIX جديد
+// ═══════════════════════════════════════════════════
+function trimOldSessions() {
+    const cutoff = new Date();
+    cutoff.setFullYear(cutoff.getFullYear() - 1);
+    const before = sessions.length;
+    sessions = sessions.filter(s => new Date(s.date) >= cutoff);
+    if (sessions.length !== before) {
+        localStorage.setItem('medorus_sessions', JSON.stringify(sessions));
+    }
+}
+
+// ✅ FIX 5: أرشفة تلقائية للجلسات الأقدم من 30 يوماً مع تنبيه المستخدم
+function autoArchiveOldSessions() {
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - 30);
+    const old30 = sessions.filter(s => new Date(s.date) < cutoff);
+    if (old30.length === 0) return;
+
+    // تصدير الجلسات القديمة أولاً (أرشفة آمنة)
+    try {
+        const archiveData = { archivedAt: new Date().toISOString(), sessions: old30 };
+        const blob = new Blob([JSON.stringify(archiveData, null, 2)], { type: 'application/json' });
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement('a');
+        a.href     = url;
+        a.download = 'nourium-archive-' + toDateKey(new Date()) + '.json';
+        a.click();
+        URL.revokeObjectURL(url);
+    } catch(e) {}
+
+    // حذفها من الذاكرة النشطة
+    sessions = sessions.filter(s => new Date(s.date) >= cutoff);
+    localStorage.setItem('medorus_sessions', JSON.stringify(sessions));
+    showNotification(`✅ تم أرشفة ${old30.length} جلسة قديمة (أكثر من 30 يوم)`, 'success');
+    checkStorageUsage();
+}
+
+function trimOldSessionsManual() {
+    const before = sessions.length;
+    trimOldSessions();
+    const removed = before - sessions.length;
+    showNotification(removed > 0 ? `✅ تم حذف ${removed} جلسة قديمة` : 'لا توجد جلسات قديمة للحذف', 'info');
+    checkStorageUsage();
+}
+
+// ═══════════════════════════════════════════════════
+//  فحص استخدام التخزين
+// ═══════════════════════════════════════════════════
+function checkStorageUsage() {
+    try {
+        let total = 0;
+        for (let key in localStorage) {
+            if (localStorage.hasOwnProperty(key)) {
+                total += (localStorage[key].length + key.length) * 2; // bytes (UTF-16)
+            }
+        }
+        const usedKB  = Math.round(total / 1024);
+        const limitKB = 5120; // ~5MB
+        const pct     = Math.round((usedKB / limitKB) * 100);
+
+        // عرض في صفحة الإعدادات
+        const infoEl = document.getElementById('storageInfo');
+        if (infoEl) {
+            infoEl.innerHTML = `
+                <div style="font-size:0.82rem;color:var(--text-light);margin-bottom:8px;">
+                    <i class="fas fa-database"></i> التخزين المستخدم: ${usedKB} KB / ~5120 KB (${pct}%)
+                </div>
+                <div class="goal-bar-bg">
+                    <div class="goal-bar-fill" style="width:${Math.min(pct,100)}%;background:${pct>80?'var(--danger)':pct>60?'var(--warning)':'var(--success)'};"></div>
+                </div>`;
+        }
+
+        // تحذير في اللوحة الجانبية + أرشفة تلقائية عند الضرورة
+        const warningEl = document.getElementById('storageWarningPanel');
+        if (warningEl) {
+            if (pct >= 85) {
+                // ✅ FIX 5: أرشفة تلقائية عند 85% دون انتظار المستخدم
+                warningEl.innerHTML = `
+                    <div class="storage-warning" style="margin-top:14px;background:rgba(220,38,38,0.1);border:1px solid #dc2626;border-radius:12px;padding:12px;">
+                        <i class="fas fa-exclamation-triangle" style="color:#dc2626;"></i>
+                        <strong>التخزين ممتلئ ${pct}%!</strong><br>
+                        <span style="font-size:0.8rem;">تم بدء الأرشفة التلقائية للجلسات الأقدم من 30 يوماً...</span>
+                        <br><button onclick="autoArchiveOldSessions()" style="margin-top:8px;padding:6px 14px;background:#dc2626;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;">🗄️ أرشفة الآن</button>
+                    </div>`;
+            } else if (pct > 70) {
+                warningEl.innerHTML = `
+                    <div class="storage-warning" style="margin-top:14px;background:rgba(245,158,11,0.1);border:1px solid #f59e0b;border-radius:12px;padding:12px;">
+                        <i class="fas fa-exclamation-triangle" style="color:#f59e0b;"></i>
+                        التخزين ممتلئ ${pct}% — يُنصح بتصدير البيانات أو أرشفة الجلسات القديمة
+                        <br><button onclick="autoArchiveOldSessions()" style="margin-top:8px;padding:6px 14px;background:#f59e0b;color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;">🗄️ أرشفة الجلسات القديمة</button>
+                    </div>`;
+            } else {
+                warningEl.innerHTML = '';
+            }
+        }
+    } catch(e) {}
+}
+
+
+// ═══════════════════════════════════════════════════
+//  FIX: مزامنة المؤقت عند عودة التطبيق للتركيز (Page Visibility API)
+// ═══════════════════════════════════════════════════
+document.addEventListener('visibilitychange', function() {
+    if (!document.hidden && isRunning && timerStartTimestamp) {
+        // إعادة حساب الوقت الحقيقي بعد عودة التطبيق
+        const elapsed = Math.floor((Date.now() - timerStartTimestamp) / 1000);
+        timeLeft = Math.max(timerStartTimeLeft - elapsed, 0);
+        updateTimerDisplay();
+        if (timeLeft <= 0) {
+            completeTimerSession();
+        }
+    }
+});
+
+// ═══════════════════════════════════════════════════
+//  الآيات القرآنية
+// ═══════════════════════════════════════════════════
+function showRandomVerse() {
+    const card   = document.getElementById('quranVerseCard');
+    const textEl = document.getElementById('quranVerseText');
+    const refEl  = document.getElementById('quranVerseRef');
+    if (!card || !textEl || !refEl) return;
+
+    let newIndex;
+    do { newIndex = Math.floor(Math.random() * QURAN_VERSES.length); }
+    while (newIndex === currentVerseIndex && QURAN_VERSES.length > 1);
+    currentVerseIndex = newIndex;
+
+    const verse = QURAN_VERSES[currentVerseIndex];
+    card.style.animation = 'none';
+    card.offsetHeight; // reflow
+    card.style.animation = 'verseAppear 0.6s ease';
+    textEl.innerText = verse.text;
+    refEl.innerText  = verse.ref;
+}
+
+function startVerseRotation() {
+    showRandomVerse();
+    if (verseInterval) clearInterval(verseInterval);
+    verseInterval = setInterval(showRandomVerse, 45000);
+}
+
+// ═══════════════════════════════════════════════════
+//  الإشعارات
+// ═══════════════════════════════════════════════════
+function showNotification(message, type = 'success') {
+    document.querySelectorAll('.notification').forEach(n => n.remove());
+    const colors = { success:'#10B981', error:'#EF4444', info:'#3B82F6', warning:'#6366F1' };
+    const n = document.createElement('div');
+    n.className = 'notification';
+    n.style.background = colors[type] || colors.success;
+    n.innerText = message;
+    document.body.appendChild(n);
+    setTimeout(() => { n.classList.add('fade-out'); setTimeout(() => n.remove(), 300); }, 2700);
+}
+
+// ═══════════════════════════════════════════════════
+//  الصوت + الاهتزاز عند انتهاء الجلسة
+// ═══════════════════════════════════════════════════
+function playCompletionSound() {
+    // ✅ الاهتزاز على الجوال
+    if ('vibrate' in navigator) {
+        navigator.vibrate([200, 100, 200]);
+    }
+
+    try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const noteFreqs = [523, 659, 784];
+        noteFreqs.forEach((freq, i) => {
+            const osc  = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain); gain.connect(ctx.destination);
+            osc.frequency.value = freq;
+            osc.type = 'sine';
+            const start = ctx.currentTime + i * 0.2;
+            gain.gain.setValueAtTime(0.4, start);
+            gain.gain.exponentialRampToValueAtTime(0.01, start + 0.4);
+            osc.start(start); osc.stop(start + 0.4);
+        });
+    } catch(e) {}
+}
+
+// ═══════════════════════════════════════════════════
+//  Wake Lock API — منع إطفاء الشاشة
+// ═══════════════════════════════════════════════════
+async function requestWakeLock() {
+    if (!('wakeLock' in navigator)) return;
+    try {
+        wakeLock = await navigator.wakeLock.request('screen');
+        wakeLock.addEventListener('release', () => {
+            wakeLock = null;
+            updateWakeLockUI();
+        });
+        updateWakeLockUI();
+    } catch(e) {}
+}
+
+async function releaseWakeLock() {
+    if (wakeLock) {
+        try { await wakeLock.release(); } catch(e) {}
+        wakeLock = null;
+    }
+    updateWakeLockUI();
+}
+
+async function toggleWakeLock() {
+    if (wakeLock) { await releaseWakeLock(); }
+    else { await requestWakeLock(); }
+}
+
+function updateWakeLockUI() {
+    const btn    = document.getElementById('wakeLockBtn');
+    const status = document.getElementById('wakeLockStatus');
+    if (!btn) return;
+
+    if (wakeLock) {
+        btn.innerHTML = '<i class="fas fa-eye" style="color:var(--success)"></i>';
+        btn.title = 'الشاشة مُثبَّتة — اضغط للإيقاف';
+        if (status) status.innerHTML = '<div class="wakelocked-badge"><i class="fas fa-eye"></i> الشاشة مُثبَّتة</div>';
+    } else {
+        btn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+        btn.title = 'منع إطفاء الشاشة';
+        if (status) status.innerHTML = '';
+    }
+}
+
+// ═══════════════════════════════════════════════════
+//  التنقل بين الصفحات
+// ═══════════════════════════════════════════════════
+function switchTab(tabId, el) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+
+    if (tabId === 'analytics') updateAnalytics();
+    if (tabId === 'tasks')     renderTasks();
+    if (tabId === 'subjects')  renderSubjects();
+    if (tabId === 'review')    renderReviews();
+    if (tabId === 'exams')     renderExams();
+    if (tabId === 'balance')   renderBalance();
+    if (tabId === 'notes')     renderNotes();
+    if (tabId === 'profile')   { checkStorageUsage(); loadNotifSettingsUI(); updateNotifPermissionBanner(); updateNotifStatusBar(); }
+    if (tabId === 'spiritual') initSpiritualGuide();
+}
+
+// ═══════════════════════════════════════════════════
+//  الثيم
+// ═══════════════════════════════════════════════════
+function toggleTheme() {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    localStorage.setItem('medorus_theme', isDark ? 'dark' : 'light');
+    document.getElementById('themeIcon').className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+}
+
+// ═══════════════════════════════════════════════════
+//  اللوحة الجانبية
+// ═══════════════════════════════════════════════════
+function toggleSidePanel() {
+    const panel = document.getElementById('sidePanel');
+    panel.classList.toggle('open');
+    if (panel.classList.contains('open')) {
+        updateStreak(false);
+        updateStatsUI();
+        updateGoalProgress();
+        checkStorageUsage();
+    }
+}
+
+function handlePanelClick(e) {
+    if (e.target === document.getElementById('sidePanel')) toggleSidePanel();
+}
+
+// ═══════════════════════════════════════════════════
+//  XP — مع حد يومي من المهام
+// ═══════════════════════════════════════════════════
+function addXP(amount) {
+    const prevLevel = getCurrentLevel();
+    xp += amount;
+    localStorage.setItem('medorus_xp', xp);
+    const newLevel = getCurrentLevel();
+    if (newLevel.index > prevLevel.index) {
+        setTimeout(() => showNotification('🎊 ترقية! أصبحت ' + newLevel.name + '!', 'success'), 500);
+    }
+    updateLevelUI();
+}
+
+// ═══════════════════════════════════════════════════
+//  حد يومي XP من المهام
+// ═══════════════════════════════════════════════════
+function getTodayTaskXP() {
+    const key  = 'task_xp_' + getTodayKey();
+    const value = localStorage.getItem(key);
+    return value ? (parseInt(value) || 0) : 0; // ✅ التأكد من الرقم
+}
+
+function addTodayTaskXP(amount) {
+    const key = 'task_xp_' + getTodayKey();
+    const current = getTodayTaskXP();
+    localStorage.setItem(key, current + amount);
+    updateXpCapNote();
+}
+
+function updateXpCapNote() {
+    const note = document.getElementById('xpCapNote');
+    if (!note) return;
+    const used = getTodayTaskXP();
+    const remaining = Math.max(DAILY_TASK_XP_LIMIT - used, 0);
+    if (remaining === 0) {
+        note.innerText = '⚠️ وصلت للحد اليومي للنقاط من المهام (100 نقطة)';
+        note.style.color = 'var(--warning)';
+    } else {
+        note.innerText = `نقاط المهام المتبقية اليوم: ${remaining}`;
+        note.style.color = 'var(--text-light)';
+    }
+}
+
+// ═══════════════════════════════════════════════════
+//  Lux Panel
+// ═══════════════════════════════════════════════════
+function updateLuxPanel() {
+    const panel     = document.getElementById('luxPanel');
+    const barFill   = document.getElementById('luxBarFill');
+    const titleEl   = document.getElementById('luxTitle');
+    const labelEl   = document.getElementById('luxLabel');
+    const todayStat = document.getElementById('luxTodaySessions');
+    const streakStat= document.getElementById('luxStreak');
+    const weekStat  = document.getElementById('luxWeekMins');
+    if (!panel) return;
+
+    const todaySessions = stats.sessions.daily  || 0;
+    const weekMins      = stats.minutes.weekly  || 0;
+    const streakVal     = streak || 0;
+
+    const score = (todaySessions * 20) + (streakVal * 15) + Math.floor(weekMins / 60) * 10;
+
+    let luxLevel, luxTitle, luxLabelText, pct;
+    if      (score === 0)  { luxLevel = 0; luxTitle = '🌑 ابدأ رحلتك';     luxLabelText = 'النور ينتظرك';         pct = 0; }
+    else if (score < 30)   { luxLevel = 1; luxTitle = '🌒 شرارة أولى';     luxLabelText = 'النور يتقد';           pct = Math.min(score/30*100, 99); }
+    else if (score < 80)   { luxLevel = 2; luxTitle = '🌓 نور متصاعد';     luxLabelText = 'استمر في التألق';      pct = Math.min((score-30)/50*100, 99); }
+    else if (score < 160)  { luxLevel = 3; luxTitle = '🌔 إشراق قوي';      luxLabelText = 'أنت تسطع اليوم!';     pct = Math.min((score-80)/80*100, 99); }
+    else if (score < 280)  { luxLevel = 4; luxTitle = '🌕 منارة ساطعة';    luxLabelText = 'أداء استثنائي 🏆';    pct = Math.min((score-160)/120*100, 99); }
+    else                   { luxLevel = 5; luxTitle = '✨ لوميدوس الكامل'; luxLabelText = 'وصلت للقمة اليوم! 🌟'; pct = 100; }
+
+    panel.className = 'lux-panel lux-' + luxLevel;
+    barFill.style.width = pct + '%';
+    titleEl.innerText   = luxTitle;
+    labelEl.innerText   = luxLabelText;
+    if (todayStat)  todayStat.innerText  = todaySessions;
+    if (streakStat) streakStat.innerText = streakVal;
+    if (weekStat)   weekStat.innerText   = weekMins;
+}
+
+// ═══════════════════════════════════════════════════
+//  Level UI
+// ═══════════════════════════════════════════════════
+function updateLevelUI() {
+    const level     = getCurrentLevel();
+    const nextLevel = LEVELS[Math.min(level.index + 1, LEVELS.length - 1)];
+    const range     = nextLevel.minXP - level.minXP || 1;
+    const progress  = Math.min(((xp - level.minXP) / range) * 100, 100);
+    const xpToNext  = level.index < LEVELS.length - 1
+        ? (nextLevel.minXP - xp) + ' نقطة للمستوى التالي'
+        : '🏆 أعلى مستوى!';
+
+    ['levelName','homeLevelName'].forEach(id => { const el=document.getElementById(id); if(el) el.innerText=level.name; });
+    ['levelIcon','homeLevelIcon'].forEach(id => { const el=document.getElementById(id); if(el) el.innerText=level.icon; });
+
+    document.getElementById('xpPoints').innerText      = xp;
+    document.getElementById('xpBar').style.width       = progress + '%';
+    document.getElementById('homeXpBar').style.width   = progress + '%';
+    document.getElementById('xpToNext').innerText      = xpToNext;
+    document.getElementById('homeXpLabel').innerText   = xpToNext;
+}
+
+// ═══════════════════════════════════════════════════
+//  الأيام المتتالية (streak) — مصحَّحة
+// ═══════════════════════════════════════════════════
+function updateStreak(save = true) {
+    const count   = document.getElementById('streakCount');
+    const fire    = document.getElementById('streakFire');
+    const insight = document.getElementById('streakInsight');
+    const msg     = document.getElementById('streakMessage');
+
+    count.innerText = streak;
+
+    if (streak === 0) {
+        fire.innerText = '🔥';
+        if (insight) insight.style.display = 'none';
+    } else {
+        fire.innerText = streak >= 30 ? '🔥🔥🔥' : streak >= 14 ? '🔥🔥' : '🔥';
+        if (insight && streak >= 7) {
+            insight.style.display = 'block';
+            msg.innerText = streak + ' أيام متتالية! استمر في هذا الإيقاع الرائع!';
+        } else if (insight) {
+            insight.style.display = 'none';
+        }
+    }
+
+    if (save) {
+        localStorage.setItem('medorus_streak', streak);
+        localStorage.setItem('medorus_last_study_date', lastStudyDate || '');
+    }
+    updateLuxPanel();
+}
+
+function recordStudyDay() {
+    const today = getTodayKey();
+    // ✅ الحماية الأولى: إذا سجّلنا اليوم بالفعل
+    if (lastStudyDate === today) return;
+
+    // ✅ FIX: التحقق من وجود جلسة فعلية لليوم قبل تسجيل يوم دراسي
+    const hasTodaySession = sessions.some(s => toDateKey(new Date(s.date)) === today);
+    if (!hasTodaySession) return;
+
+    if (lastStudyDate && isYesterday(lastStudyDate)) {
+        streak++;
+        if (streak === 7)  { addXP(100); showNotification('🎉 7 أيام متتالية! +100 نقطة', 'success'); }
+        if (streak === 14) { addXP(200); showNotification('🌟 14 يوم متتالي! +200 نقطة', 'success'); }
+        if (streak === 30) { addXP(500); showNotification('💎 30 يوم متتالي! +500 نقطة', 'success'); }
+    } else {
+        streak = 1;
+    }
+
+    lastStudyDate = today;
+    updateStreak(true);
+}
+
+// ═══════════════════════════════════════════════════
+//  المؤقت — مصحَّح بالكامل
+// ═══════════════════════════════════════════════════
+function setTimerMode(mode, btn) {
+    clearInterval(timerInterval);
+    isRunning        = false;
+    sessionCompleted = false;
+
+    timerMode = mode;
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const durationSelector     = document.getElementById('durationSelector');
+    const subjectSelectWrapper = document.getElementById('subjectSelectWrapper');
+
+    if (mode === 'break') {
+        durationSelector.style.display    = 'none';
+        subjectSelectWrapper.style.display = 'none';
+        timeLeft = 5 * 60;
+    } else {
+        durationSelector.style.display    = 'flex';
+        subjectSelectWrapper.style.display = 'block';
+        timeLeft = currentDuration * 60;
+    }
+
+    resetTimerButtons();
+    updateTimerDisplay();
+    document.title = 'Nourium';
+    releaseWakeLock();
+}
+
+function setDuration(mins, btn) {
+    currentDuration = mins;
+    if (timerMode === 'focus') timeLeft = mins * 60;
+    document.querySelectorAll('.dur-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    if (!isRunning) updateTimerDisplay();
+}
+
+function updateTimerDisplay() {
+    const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+    const s = (timeLeft % 60).toString().padStart(2, '0');
+    document.getElementById('timer').innerText = m + ':' + s;
+    // ✅ تحديث عنوان الصفحة كل 5 ثوانٍ فقط لتحسين الأداء
+    const now = Date.now();
+    if (now - _lastTitleUpdate > 5000) {
+        document.title = isRunning ? m + ':' + s + ' — Nourium' : 'Nourium';
+        _lastTitleUpdate = now;
+    }
+}
+
+function resetTimerButtons() {
+    const startBtn = document.getElementById('startBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    startBtn.innerHTML      = '<i class="fas fa-play"></i> ابدأ';
+    startBtn.className      = 'btn-start-main';
+    startBtn.disabled       = false;
+    startBtn.style.display  = 'inline-block';
+    pauseBtn.style.display  = 'none';
+}
+
+// ✅ FIX 2: الحماية من الضغط المزدوج السريع
+function toggleTimer() {
+    const startBtn = document.getElementById('startBtn');
+    startBtn.disabled = true; // أول إجراء
+
+    if (isRunning) {
+        startBtn.disabled = false;
+        return;
+    }
+
+    isRunning           = true;
+    sessionCompleted    = false; // ✅ FIX 3: reset guard
+    timerStartTimestamp = Date.now();
+    timerStartTimeLeft  = timeLeft;
+
+    startBtn.style.display = 'none';
+    document.getElementById('pauseBtn').style.display = 'inline-block';
+
+    const td = document.getElementById('timer');
+    td.classList.remove('running', 'break-mode');
+    td.classList.add(timerMode === 'break' ? 'break-mode' : 'running');
+
+    // Enter focus mode during session
+    if (timerMode === 'focus') { enterFocusMode(); requestWakeLock(); }
+
+    timerInterval = setInterval(function() {
+        const elapsed = Math.floor((Date.now() - timerStartTimestamp) / 1000);
+        timeLeft = Math.max(timerStartTimeLeft - elapsed, 0);
+        updateTimerDisplay();
+        if (timeLeft <= 0) completeTimerSession();
+    }, 500);
+}
+
+function pauseTimer() {
+    if (!isRunning) return;
+    clearInterval(timerInterval);
+    isRunning = false;
+
+    const elapsed = Math.floor((Date.now() - timerStartTimestamp) / 1000);
+    timeLeft = Math.max(timerStartTimeLeft - elapsed, 0);
+    timerStartTimestamp = null;
+    timerStartTimeLeft  = 0;
+
+    document.getElementById('timer').classList.remove('running', 'break-mode');
+    updateTimerDisplay();
+
+    const startBtn = document.getElementById('startBtn');
+    startBtn.innerHTML     = '<i class="fas fa-play"></i> استئناف';
+    startBtn.className     = 'btn btn-start-main btn-resume';
+    startBtn.disabled      = false;
+    startBtn.style.display = 'inline-block';
+    document.getElementById('pauseBtn').style.display = 'none';
+    document.title = 'Nourium (متوقف)';
+
+    exitFocusMode();
+    // ✅ حرر Wake Lock عند الإيقاف
+    releaseWakeLock();
+}
+
+function resetTimer() {
+    clearInterval(timerInterval);
+    isRunning           = false;
+    sessionCompleted    = false;
+    timerStartTimestamp = null;
+    timerStartTimeLeft  = 0;
+    timeLeft = timerMode === 'break' ? 5 * 60 : currentDuration * 60;
+
+    resetTimerButtons();
+    document.getElementById('timer').classList.remove('running', 'break-mode');
+    updateTimerDisplay();
+    document.title = 'Nourium';
+    dismissBanner();
+    exitFocusMode();
+    releaseWakeLock();
+}
+
+// ✅ FIX 3: guard ضد تسجيل الجلسة مرتين
+function completeTimerSession() {
+    if (sessionCompleted) return; // ← الحماية الأساسية
+    sessionCompleted = true;
+
+    clearInterval(timerInterval);
+    isRunning           = false;
+    timerStartTimestamp = null;
+    timerStartTimeLeft  = 0;
+
+    document.getElementById('timer').classList.remove('running', 'break-mode');
+    resetTimerButtons();
+    exitFocusMode();
+    releaseWakeLock();
+    playCompletionSound();
+
+    if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+        try {
+            new Notification('Nourium', {
+                body: timerMode === 'focus' ? '🎉 انتهت جلسة الدراسة!' : '☕ انتهت الاستراحة!'
+            });
+        } catch(e) {}
+    }
+
+    if (timerMode === 'focus') {
+        const selectedSubject = document.getElementById('timerSubjectSelect').value;
+        const sessionData = {
+            date:     new Date().toISOString(),
+            duration: currentDuration,
+            hour:     new Date().getHours(),
+            subject:  selectedSubject || 'عام'
+        };
+        sessions.push(sessionData);
+        localStorage.setItem('medorus_sessions', JSON.stringify(sessions));
+
+        addXP(20);
+        updateSessionStats(currentDuration);
+        recordStudyDay();
+        updateGoalProgress();
+        renderCalendar();
+        checkStorageUsage();
+        sendSessionDoneNotif(); // ✅ إشعار ما بعد الجلسة
+        showPostSessionBanner('focus');
+        refreshKnowledgeTree(); // 🌳 تحديث شجرة المعرفة
+        setTimeout(function(){ nouriCelebrate(); nouriSpeak(nouriPick(NOURI_MSGS.done), 8000); }, 500);
+        if (document.getElementById('challenges')?.classList.contains('active')) renderChallenges();
+        promptMoodAfterSession(); // 🧠 طلب تسجيل المزاج
+        triggerSpiritAfterSession(currentDuration); // 🌙 إلهام روحي
+        showIhtisabDoneBanner(); // 🤍 احتساب الأجر
+    } else {
+        showPostSessionBanner('break');
+    }
+}
+
+// ═══════════════════════════════════════════════════
+//  بانر ما بعد الجلسة
+// ═══════════════════════════════════════════════════
+function showPostSessionBanner(completedMode) {
+    const old = document.getElementById('postSessionBanner');
+    if (old) { clearTimeout(old._autoClose); old.remove(); }
+
+    const isStudy = completedMode === 'focus';
+    const banner  = document.createElement('div');
+    banner.id     = 'postSessionBanner';
+    banner.style.cssText = `
+        position:fixed; bottom:85px; left:50%; transform:translateX(-50%);
+        background:var(--card-bg); border:2px solid var(--primary);
+        border-radius:16px; padding:16px 20px; z-index:500;
+        box-shadow:0 8px 30px rgba(0,0,0,0.15); text-align:center;
+        width:88%; max-width:360px; animation:bannerSlideUp 0.3s ease;`;
+
+    if (!document.getElementById('bannerAnim')) {
+        const s = document.createElement('style');
+        s.id = 'bannerAnim';
+        s.textContent = '@keyframes bannerSlideUp{from{bottom:40px;opacity:0}to{bottom:85px;opacity:1}}';
+        document.head.appendChild(s);
+    }
+
+    if (isStudy) {
+        banner.innerHTML = `
+            <div style="font-size:1.4rem;margin-bottom:6px;">🎉</div>
+            <div style="font-weight:700;font-size:1rem;margin-bottom:4px;">أكملت جلسة دراسة! +20 نقطة</div>
+            <div style="font-size:0.85rem;color:var(--text-light);margin-bottom:14px;">هل تريد أخذ استراحة؟</div>
+            <div style="display:flex;gap:10px;justify-content:center;">
+                <button onclick="startBreakFromBanner()" style="padding:10px 18px;border:none;border-radius:50px;background:var(--break);color:white;font-weight:700;cursor:pointer;font-family:'Tajawal',sans-serif;">☕ استراحة 5 د</button>
+                <button onclick="dismissBanner()" style="padding:10px 18px;border:1px solid var(--border);border-radius:50px;background:var(--bg);color:var(--text);font-weight:700;cursor:pointer;font-family:'Tajawal',sans-serif;">⏩ تخطّي</button>
+            </div>`;
+    } else {
+        banner.innerHTML = `
+            <div style="font-size:1.4rem;margin-bottom:6px;">☕</div>
+            <div style="font-weight:700;font-size:1rem;margin-bottom:4px;">انتهت الاستراحة!</div>
+            <div style="font-size:0.85rem;color:var(--text-light);margin-bottom:14px;">هل أنت مستعد لجلسة دراسة؟</div>
+            <div style="display:flex;gap:10px;justify-content:center;">
+                <button onclick="startStudyFromBanner()" style="padding:10px 18px;border:none;border-radius:50px;background:var(--primary);color:white;font-weight:700;cursor:pointer;font-family:'Tajawal',sans-serif;">🧠 ابدأ الدراسة</button>
+                <button onclick="dismissBanner()" style="padding:10px 18px;border:1px solid var(--border);border-radius:50px;background:var(--bg);color:var(--text);font-weight:700;cursor:pointer;font-family:'Tajawal',sans-serif;">لاحقاً</button>
+            </div>`;
+    }
+
+    document.body.appendChild(banner);
+    banner._autoClose = setTimeout(dismissBanner, 30000);
+}
+
+function dismissBanner() {
+    const b = document.getElementById('postSessionBanner');
+    if (b) { clearTimeout(b._autoClose); b.remove(); }
+}
+
+function startBreakFromBanner() {
+    dismissBanner();
+    const breakBtn = document.getElementById('breakBtn');
+    if (breakBtn) setTimerMode('break', breakBtn);
+}
+
+function startStudyFromBanner() {
+    dismissBanner();
+    const focusBtn = document.getElementById('focusBtn');
+    if (focusBtn) setTimerMode('focus', focusBtn);
+}
+
+// ═══════════════════════════════════════════════════
+//  شارة المادة في المؤقت
+// ═══════════════════════════════════════════════════
+function updateTimerSubjectBadge() {
+    const select = document.getElementById('timerSubjectSelect');
+    const badge  = document.getElementById('timerSubjectBadge');
+    const text   = document.getElementById('timerSubjectBadgeText');
+    if (!select || !badge || !text) return; // ✅ التحقق من وجود العناصر
+    const value  = select.value;
+
+    if (value) {
+        const sub = subjects.find(s => s.name === value);
+        badge.style.display   = 'block';
+        text.innerText        = '📌 ' + value;
+        text.style.background = sub ? sub.color : 'var(--primary)';
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+// ═══════════════════════════════════════════════════
+//  الإحصائيات
+// ═══════════════════════════════════════════════════
+function updateSessionStats(minutes) {
+    stats.sessions.daily++;
+    stats.sessions.weekly++;
+    stats.sessions.monthly++;
+    stats.minutes.daily   += minutes;
+    stats.minutes.weekly  += minutes;
+    stats.minutes.monthly += minutes;
+    stats.lastUpdate = new Date().toISOString();
+    saveStats();
+    updateStatsUI();
+}
+
+function updateTaskStats() {
+    stats.tasks.daily++;
+    stats.tasks.weekly++;
+    stats.tasks.monthly++;
+    stats.lastUpdate = new Date().toISOString();
+    saveStats();
+    updateStatsUI();
+}
+
+function saveStats() {
+    localStorage.setItem('medorus_stats', JSON.stringify(stats));
+    if (typeof window.syncToCloud === 'function') window.syncToCloud();
+}
+
+function updateStatsUI() {
+    document.getElementById('statDailySessions').innerText  = stats.sessions.daily  || 0;
+    document.getElementById('statWeeklySessions').innerText = stats.sessions.weekly || 0;
+    document.getElementById('statMonthlyMins').innerText    = stats.minutes.monthly || 0;
+    document.getElementById('totalSessions').innerText      = sessions.length;
+}
+
+// ═══════════════════════════════════════════════════
+//  الهدف اليومي
+// ═══════════════════════════════════════════════════
+function saveDailyGoal() {
+    const input = parseInt(document.getElementById('dailyGoalInput').value);
+    if (!input || input < 1) { showNotification('أدخل رقماً صحيحاً', 'error'); return; }
+    dailyGoal = input;
+    localStorage.setItem('medorus_daily_goal', dailyGoal);
+    updateGoalProgress();
+    showNotification('تم حفظ الهدف اليومي ✅', 'success');
+}
+
+function updateGoalProgress() {
+    const wrapper = document.getElementById('goalProgressWrapper');
+    if (!wrapper) return; // ✅ التحقق من وجود العنصر
+    if (!dailyGoal) { wrapper.style.display = 'none'; return; }
+    wrapper.style.display = 'block';
+    const current = stats.sessions.daily || 0;
+    const percent = Math.min((current / dailyGoal) * 100, 100);
+    document.getElementById('goalBarFill').style.width    = percent + '%';
+    document.getElementById('goalCurrentLabel').innerText = current + ' جلسة';
+    document.getElementById('goalTargetLabel').innerText  = '/ ' + dailyGoal;
+    updateLuxPanel();
+}
+
+// ═══════════════════════════════════════════════════
+//  التحليلات
+// ═══════════════════════════════════════════════════
+function updateAnalytics() {
+    const hours = new Array(24).fill(0);
+    sessions.forEach(s => { if (s.hour >= 0 && s.hour < 24) hours[s.hour] += s.duration; });
+
+    let maxHour = -1, maxVal = 0;
+    hours.forEach((val, i) => { if (val > maxVal) { maxVal = val; maxHour = i; } });
+
+    let timeLabel = 'لا توجد بيانات كافية';
+    if (maxHour >= 0 && maxVal > 0) {
+        const period = maxHour < 12 ? '🌅 الصباح' : maxHour < 18 ? '☀️ الظهيرة' : '🌙 الليل';
+        timeLabel = period + ' (الساعة ' + maxHour + ':00)';
+    }
+    document.getElementById('bestTimeInsight').innerText = timeLabel;
+
+    const totalMins = sessions.reduce((sum, s) => sum + s.duration, 0);
+    document.getElementById('avgSession').innerText    = sessions.length > 0 ? Math.round(totalMins / sessions.length) : 0;
+    document.getElementById('totalHours').innerText   = (totalMins / 60).toFixed(1);
+    document.getElementById('totalSessions').innerText= sessions.length;
+
+    updateStreak(false);
+    renderWeeklyChart();
+    renderSubjectAnalysis();
+    updateStatsUI();
+}
+
+// ═══════════════════════════════════════════════════
+//  الرسم البياني الأسبوعي — FIX 5 مصحَّح
+// ═══════════════════════════════════════════════════
+function renderWeeklyChart() {
+    const container = document.getElementById('weeklyChart');
+    container.innerHTML = '';
+
+    const dayNames  = ['أحد','إثنين','ثلاثاء','أربعاء','خميس','جمعة','سبت'];
+    const weekData  = [0, 0, 0, 0, 0, 0, 0];
+    const todayDay  = new Date().getDay();
+
+    // ✅ FIX 5: نحسب بداية الأسبوع بالتاريخ المحلي فقط
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const weekStart = new Date(today);
+    weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+
+    sessions.forEach(s => {
+        const sDate    = new Date(s.date);
+        const sDateKey = toDateKey(sDate);
+        const sDay     = sDate.getDay();
+
+        // نحسب بداية أسبوع الجلسة
+        const sWeekStart = new Date(sDate);
+        sWeekStart.setHours(0, 0, 0, 0);
+        sWeekStart.setDate(sWeekStart.getDate() - sWeekStart.getDay());
+
+        if (toDateKey(sWeekStart) === toDateKey(weekStart)) {
+            weekData[sDay] += s.duration;
+        }
+    });
+
+    const maxVal    = Math.max(...weekData, 1);
+    const maxHeight = 120;
+
+    dayNames.forEach((day, idx) => {
+        const height  = Math.round((weekData[idx] / maxVal) * maxHeight);
+        const isToday = idx === todayDay;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'chart-bar-wrapper';
+
+        const bar = document.createElement('div');
+        bar.className = 'chart-bar' + (isToday ? ' today-bar' : '');
+        bar.style.height = height + 'px';
+
+        if (weekData[idx] > 0) {
+            const valLabel = document.createElement('span');
+            valLabel.className = 'chart-value';
+            valLabel.innerText = weekData[idx] + 'د';
+            bar.appendChild(valLabel);
+        }
+
+        const label = document.createElement('div');
+        label.className = 'chart-label';
+        label.innerText = day;
+        if (isToday) label.style.color = 'var(--accent)';
+
+        wrapper.appendChild(bar);
+        wrapper.appendChild(label);
+        container.appendChild(wrapper);
+    });
+}
+
+// ═══════════════════════════════════════════════════
+//  تحليل المواد
+// ═══════════════════════════════════════════════════
+function renderSubjectAnalysis() {
+    const container = document.getElementById('subjectAnalysis');
+    container.innerHTML = '';
+
+    const subjectStats = {};
+    sessions.forEach(s => {
+        const sub = s.subject || 'عام';
+        subjectStats[sub] = (subjectStats[sub] || 0) + s.duration;
+    });
+
+    const sorted = Object.entries(subjectStats).sort((a, b) => b[1] - a[1]);
+
+    if (sorted.length === 0) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-chart-pie"></i><p>لا توجد بيانات بعد</p></div>';
+        return;
+    }
+
+    const top      = sorted[0];
+    container.innerHTML += `
+        <div class="insight-card green">
+            <div class="insight-title">🏆 الأكثر دراسة</div>
+            <div class="insight-value">${top[0]} — ${top[1]} دقيقة (${(top[1]/60).toFixed(1)} ساعة)</div>
+        </div>`;
+
+    if (subjects.length > 0) {
+        const studiedNames = sorted.map(s => s[0]);
+        const neglected    = subjects.filter(sub => !studiedNames.includes(sub.name));
+        if (neglected.length > 0) {
+            container.innerHTML += `
+                <div class="insight-card warning">
+                    <div class="insight-title">⚠️ مواد تحتاج اهتمام</div>
+                    <div class="insight-value">${neglected.map(s => s.name).join(' · ')}</div>
+                </div>`;
+        }
+    }
+
+    const total = sorted.reduce((sum, e) => sum + e[1], 0);
+    sorted.forEach(([name, mins]) => {
+        const color = subjects.find(s => s.name === name)?.color || '#6B7280';
+        const pct   = total > 0 ? Math.round((mins / total) * 100) : 0;
+        container.innerHTML += `
+            <div style="margin-bottom:12px;">
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                    <span style="font-weight:600;">${name}</span>
+                    <span style="color:var(--text-light);font-size:0.85rem;">${mins} د (${pct}%)</span>
+                </div>
+                <div class="goal-bar-bg">
+                    <div class="goal-bar-fill" style="width:${pct}%;background:${color};"></div>
+                </div>
+            </div>`;
+    });
+}
+
+// ═══════════════════════════════════════════════════
+//  التقويم — FIX 4: streak-day مصحَّح
+// ═══════════════════════════════════════════════════
+function renderCalendar() {
+    const grid       = document.getElementById('calendarGrid');
+    const monthLabel = document.getElementById('calendarMonth');
+    grid.innerHTML   = '';
+
+    const monthNames = ['يناير','فبراير','مارس','أبريل','مايو','يونيو',
+                        'يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+    const dayNames   = ['أحد','إثنين','ثلاثاء','أربعاء','خميس','جمعة','سبت'];
+
+    monthLabel.innerText = monthNames[currentCalendarDate.getMonth()] + ' ' + currentCalendarDate.getFullYear();
+
+    dayNames.forEach(d => {
+        const el = document.createElement('div');
+        el.className = 'calendar-day-name';
+        el.innerText = d;
+        grid.appendChild(el);
+    });
+
+    const year      = currentCalendarDate.getFullYear();
+    const month     = currentCalendarDate.getMonth();
+    const firstDay  = new Date(year, month, 1).getDay();
+    const daysCount = new Date(year, month + 1, 0).getDate();
+    const today     = new Date();
+
+    // جمع أيام الدراسة
+    const studyDaysMap = {};
+    sessions.forEach(s => {
+        const key = toDateKey(new Date(s.date));
+        studyDaysMap[key] = (studyDaysMap[key] || 0) + 1;
+    });
+    const studyDaysSet = new Set(Object.keys(studyDaysMap));
+
+    // فراغات قبل اليوم الأول
+    for (let i = 0; i < firstDay; i++) {
+        grid.appendChild(document.createElement('div'));
+    }
+
+    for (let day = 1; day <= daysCount; day++) {
+        const cell    = document.createElement('div');
+        cell.className = 'calendar-day';
+        cell.innerText = day;
+
+        const dateKey = toDateKey(new Date(year, month, day));
+
+        if (isSameDay(new Date(year, month, day), today)) {
+            cell.classList.add('today');
+        }
+
+        const count = studyDaysMap[dateKey] || 0;
+        if (count > 0) {
+            cell.classList.add('has-study');
+            if (count >= 3) cell.classList.add('many');
+        }
+
+        // ✅ FIX 4: كل يوم موجود في studyDaysSet يُعدّ ضمن الـ streak
+        if (studyDaysSet.has(dateKey)) {
+            cell.classList.add('streak-day');
+        }
+
+        grid.appendChild(cell);
+    }
+}
+
+function changeMonth(dir) {
+    currentCalendarDate.setMonth(currentCalendarDate.getMonth() + dir);
+    renderCalendar();
+}
+
+// ═══════════════════════════════════════════════════
+//  المواد
+// ═══════════════════════════════════════════════════
+function renderSubjects() {
+    const container = document.getElementById('subjectTagsContainer');
+    const noMsg     = document.getElementById('noSubjectsMsg');
+    const statsContainer = document.getElementById('subjectStatsContainer');
+    if (container) container.innerHTML = '';
+    if (statsContainer) statsContainer.innerHTML = '';
+
+    if (subjects.length === 0) {
+        if (noMsg) noMsg.style.display = 'block';
+    } else {
+        if (noMsg) noMsg.style.display = 'none';
+        subjects.forEach((sub, index) => {
+            // شارة المادة مع زر تعديل اللون وحذف
+            const tag = document.createElement('div');
+            tag.className = 'subject-tag';
+            tag.style.backgroundColor = sub.color;
+            tag.style.position = 'relative';
+            tag.innerHTML =
+                '<span style="font-weight:700;">' + sub.name + '</span>' +
+                '<label title="تغيير اللون" style="cursor:pointer;margin-right:4px;display:inline-flex;align-items:center;">' +
+                    '<i class="fas fa-palette" style="font-size:0.75rem;opacity:0.8;"></i>' +
+                    '<input type="color" value="' + sub.color + '" style="position:absolute;width:0;height:0;opacity:0;" onchange="changeSubjectColor(' + index + ', this.value)">' +
+                '</label>' +
+                '<span class="remove-sub" onclick="removeSubject(' + index + ')" title="حذف المادة"><i class="fas fa-times"></i></span>';
+            container.appendChild(tag);
+        });
+
+        // بطاقات إحصائيات لكل مادة
+        if (statsContainer) {
+            // احسب الدقائق لكل مادة
+            const subMins = {};
+            const subTasks = {};
+            subjects.forEach(s => { subMins[s.name] = 0; subTasks[s.name] = 0; });
+            sessions.forEach(s => { if (subMins.hasOwnProperty(s.subject)) subMins[s.subject] += s.duration; });
+            tasks.forEach(t => { if (t.subject && subTasks.hasOwnProperty(t.subject)) subTasks[t.subject]++; });
+
+            subjects.forEach(sub => {
+                const mins  = subMins[sub.name] || 0;
+                const hrs   = (mins / 60).toFixed(1);
+                const tCount = subTasks[sub.name] || 0;
+                const card  = document.createElement('div');
+                card.className = 'card';
+                card.style.cssText = 'border-right: 4px solid ' + sub.color + '; margin-bottom: 12px;';
+                card.innerHTML = `
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <div style="width:14px;height:14px;border-radius:50%;background:${sub.color};box-shadow:0 0 8px ${sub.color}88;flex-shrink:0;"></div>
+                            <span style="font-weight:800;font-size:1rem;">${sub.name}</span>
+                        </div>
+                        <div style="display:flex;gap:6px;">
+                            <label title="تغيير اللون" style="cursor:pointer;">
+                                <span style="padding:5px 10px;border-radius:8px;background:var(--primary-soft);font-size:0.75rem;color:var(--primary);display:inline-flex;align-items:center;gap:4px;">
+                                    <i class="fas fa-palette"></i>
+                                    <input type="color" value="${sub.color}" style="position:absolute;width:0;height:0;opacity:0;">
+                                </span>
+                            </label>
+                            <button onclick="removeSubject(${subjects.indexOf(sub)})" style="padding:5px 10px;border:none;border-radius:8px;background:#fee2e2;color:#dc2626;cursor:pointer;font-size:0.75rem;font-family:'Tajawal',sans-serif;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                        <div style="background:var(--primary-soft);border-radius:10px;padding:10px;text-align:center;">
+                            <div style="font-size:1.3rem;font-weight:800;color:var(--primary);">${hrs}</div>
+                            <div style="font-size:0.68rem;color:var(--text-light);">ساعة دراسة</div>
+                        </div>
+                        <div style="background:var(--primary-soft);border-radius:10px;padding:10px;text-align:center;">
+                            <div style="font-size:1.3rem;font-weight:800;color:var(--primary);">${tCount}</div>
+                            <div style="font-size:0.68rem;color:var(--text-light);">مهمة مرتبطة</div>
+                        </div>
+                    </div>`;
+                // Fix index reference
+                card.querySelectorAll('input[type="color"]').forEach(inp => {
+                    inp.addEventListener('change', function() { changeSubjectColor(subjects.indexOf(sub), this.value); });
+                });
+                statsContainer.appendChild(card);
+            });
+        }
+    }
+    updateSubjectSelects();
+}
+
+function addSubjectFromPanel() {
+    const nameInput  = document.getElementById('newSubjectNamePanel');
+    const colorInput = document.getElementById('newSubjectColorPanel');
+    if (!nameInput) return;
+    const name = nameInput.value.trim();
+
+    if (!name) { showNotification('الرجاء إدخال اسم المادة', 'error'); return; }
+    if (subjects.some(s => s.name === name)) { showNotification('هذه المادة موجودة مسبقاً', 'warning'); return; }
+
+    subjects.push({ name, color: colorInput.value });
+    localStorage.setItem('medorus_subjects', JSON.stringify(subjects));
+    nameInput.value = '';
+    renderSubjectsPanel();
+    updateSubjectSelects();
+    showNotification('تمت إضافة المادة: ' + name, 'success');
+}
+
+function renderSubjectsPanel() {
+    const container = document.getElementById('subjectTagsContainerPanel');
+    const noMsg     = document.getElementById('noSubjectsMsgPanel');
+    if (!container) return;
+    container.innerHTML = '';
+
+    if (subjects.length === 0) {
+        if (noMsg) noMsg.style.display = 'block';
+    } else {
+        if (noMsg) noMsg.style.display = 'none';
+        subjects.forEach((sub, index) => {
+            const tag = document.createElement('div');
+            tag.className = 'subject-tag';
+            tag.style.backgroundColor = sub.color;
+            tag.style.position = 'relative';
+            tag.innerHTML =
+                '<span style="font-weight:700;">' + sub.name + '</span>' +
+                '<span class="remove-sub" onclick="removeSubject(' + index + ')" title="حذف المادة"><i class="fas fa-times"></i></span>';
+            container.appendChild(tag);
+        });
+    }
+}
+
+function addSubject() {
+    const nameInput  = document.getElementById('newSubjectName');
+    const colorInput = document.getElementById('newSubjectColor');
+    const name       = nameInput.value.trim();
+
+    if (!name) { showNotification('الرجاء إدخال اسم المادة', 'error'); return; }
+    if (subjects.some(s => s.name === name)) { showNotification('هذه المادة موجودة مسبقاً', 'warning'); return; }
+
+    subjects.push({ name, color: colorInput.value });
+    localStorage.setItem('medorus_subjects', JSON.stringify(subjects));
+    nameInput.value = '';
+    renderSubjects();
+    renderSubjectsPanel();
+    showNotification('تمت إضافة المادة: ' + name, 'success');
+}
+
+function removeSubject(index) {
+    const name = subjects[index].name;
+    if (!confirm('هل تريد حذف مادة "' + name + '"؟')) return;
+    subjects.splice(index, 1);
+    localStorage.setItem('medorus_subjects', JSON.stringify(subjects));
+    renderSubjects();
+    renderSubjectsPanel();
+    updateSubjectSelects();
+    showNotification('تم حذف المادة', 'info');
+}
+
+function changeSubjectColor(index, newColor) {
+    if (index < 0 || index >= subjects.length) return;
+    subjects[index].color = newColor;
+    localStorage.setItem('medorus_subjects', JSON.stringify(subjects));
+    renderSubjects();
+    updateSubjectSelects();
+    showNotification('تم تحديث لون المادة ✅', 'success');
+}
+
+function updateSubjectSelects() {
+    const ids = ['taskSubjectSelect', 'timerSubjectSelect', 'reviewSubjectSelect', 'examSubjectSelect'];
+    const placeholders = {
+        timerSubjectSelect:  'اختر المادة (اختياري)...',
+        taskSubjectSelect:   'اختر المادة (اختياري)...',
+        reviewSubjectSelect: 'المادة...',
+        examSubjectSelect:   'ربط بمادة (اختياري)...',
+    };
+    ids.forEach(id => {
+        const select = document.getElementById(id);
+        if (!select) return;
+        select.innerHTML = '<option value="">' + (placeholders[id] || '') + '</option>';
+        subjects.forEach(sub => {
+            const opt = document.createElement('option');
+            opt.value = sub.name; opt.text = sub.name;
+            select.appendChild(opt);
+        });
+    });
+    updateTimerSubjectBadge();
+}
+
+// ═══════════════════════════════════════════════════
+//  المهام — FIX 9: تحديث فردي عند toggle
+// ═══════════════════════════════════════════════════
+function renderTasks() {
+    const container = document.getElementById('taskListContainer');
+    container.innerHTML = '';
+    updateXpCapNote();
+
+    if (tasks.length === 0) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-clipboard-list"></i><p>لا توجد مهام بعد</p></div>';
+        return;
+    }
+
+    tasks.forEach((task, index) => {
+        const div = document.createElement('div');
+        div.className = 'todo-item ' + (task.completed ? 'completed' : '');
+        div.setAttribute('draggable', 'true');
+        div.dataset.index = index;
+
+        let subjectColor = 'var(--primary-mid)';
+        subjects.forEach(sub => { if (sub.name === task.subject) subjectColor = sub.color; });
+
+        const subjectBadge = task.subject
+            ? '<span class="task-subject" style="background:' + subjectColor + '">' + task.subject + '</span>'
+            : '';
+
+        div.innerHTML =
+            '<span class="drag-handle"><i class="fas fa-grip-vertical"></i></span>' +
+            '<div class="task-info" onclick="toggleTask(' + index + ', this)">' +
+                subjectBadge +
+                '<span class="task-text">' + task.text + '</span>' +
+                (task.createdAt ? '<div style="font-size:0.7rem;color:var(--text-light);margin-top:3px;">' + task.createdAt + '</div>' : '') +
+            '</div>' +
+            '<button class="btn-icon" onclick="deleteTask(' + index + ')" style="color:#dc2626;flex-shrink:0;"><i class="fas fa-trash"></i></button>';
+
+        // Drag & Drop
+        div.addEventListener('dragstart', e => {
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', index);
+            setTimeout(() => div.classList.add('dragging'), 0);
+        });
+        div.addEventListener('dragend', () => {
+            div.classList.remove('dragging');
+            container.querySelectorAll('.todo-item').forEach(el => el.classList.remove('drag-over'));
+        });
+        div.addEventListener('dragover', e => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            container.querySelectorAll('.todo-item').forEach(el => el.classList.remove('drag-over'));
+            div.classList.add('drag-over');
+        });
+        div.addEventListener('dragleave', () => div.classList.remove('drag-over'));
+        div.addEventListener('drop', e => {
+            e.preventDefault();
+            div.classList.remove('drag-over');
+            const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
+            const toIndex   = parseInt(div.dataset.index);
+            if (fromIndex === toIndex) return;
+            const moved = tasks.splice(fromIndex, 1)[0];
+            tasks.splice(toIndex, 0, moved);
+            localStorage.setItem('medorus_tasks', JSON.stringify(tasks));
+            renderTasks();
+        });
+
+        container.appendChild(div);
+    });
+}
+
+function addTask() {
+    const text    = document.getElementById('taskInput')?.value.trim();
+    const subject = document.getElementById('taskSubjectSelect')?.value || '';
+    if (!text) { showNotification('الرجاء إدخال نص المهمة', 'error'); return; }
+
+    tasks.unshift({ text, subject, completed: false, createdAt: new Date().toLocaleDateString('ar-DZ') });
+    document.getElementById('taskInput').value = '';
+    localStorage.setItem('medorus_tasks', JSON.stringify(tasks));
+    renderTasks();
+
+    // ✅ FIX 11: حد يومي للـ XP من المهام
+    const todayXP = getTodayTaskXP();
+    if (todayXP < DAILY_TASK_XP_LIMIT) {
+        addXP(10);
+        addTodayTaskXP(10);
+        showNotification('تمت إضافة المهمة +10 نقاط ✅', 'success');
+    } else {
+        showNotification('تمت إضافة المهمة ✅ (وصلت للحد اليومي للنقاط)', 'info');
+    }
+
+    updateTaskStats();
+}
+
+// ✅ FIX 9: تحديث العنصر الفردي بدلاً من إعادة رسم القائمة كاملة
+// ✅ FIX XP: خصم نقاط عند إلغاء إكمال المهمة لمنع التلاعب
+function toggleTask(index) {
+    const isNowCompleted = !tasks[index].completed;
+    tasks[index].completed = isNowCompleted;
+    localStorage.setItem('medorus_tasks', JSON.stringify(tasks));
+
+    // تحديث العنصر مباشرةً
+    const item = document.querySelector('.todo-item[data-index="' + index + '"]');
+    if (item) {
+        item.classList.toggle('completed', isNowCompleted);
+    }
+
+    if (isNowCompleted) {
+        // ✅ FIX 11: حد يومي للـ XP من إكمال المهام + تتبع XP المكسوب لكل مهمة
+        const todayXP = getTodayTaskXP();
+        if (todayXP < DAILY_TASK_XP_LIMIT) {
+            addXP(15);
+            addTodayTaskXP(15);
+            tasks[index].xpEarned = 15; // ✅ تتبع الـ XP المكتسب من هذه المهمة تحديداً
+            localStorage.setItem('medorus_tasks', JSON.stringify(tasks));
+            showNotification('أحسنت! +15 نقطة 🎯', 'success');
+        } else {
+            tasks[index].xpEarned = 0; // لم تُضف نقاط (حد يومي)
+            localStorage.setItem('medorus_tasks', JSON.stringify(tasks));
+            showNotification('أحسنت! 🎯', 'success');
+        }
+    } else {
+        // ✅ خصم فقط ما كُسب فعلاً من هذه المهمة بالذات (دقيق وعادل)
+        const earned = tasks[index].xpEarned || 0;
+        if (earned > 0) {
+            addXP(-earned);
+            addTodayTaskXP(-Math.min(earned, getTodayTaskXP()));
+        }
+        tasks[index].xpEarned = 0;
+        localStorage.setItem('medorus_tasks', JSON.stringify(tasks));
+        showNotification('تم إلغاء الإنجاز', 'info');
+    }
+    updateXpCapNote();
+    refreshKnowledgeTree(); // 🌳 تحديث شجرة المعرفة عند إنجاز مهمة
+    if (isNowCompleted) { trackChallengeTaskDone(); nouriOnTaskDone(); } // ⚔️🐇
+}
+
+function deleteTask(index) {
+    if (!confirm('هل تريد حذف هذه المهمة؟')) return;
+    tasks.splice(index, 1);
+    localStorage.setItem('medorus_tasks', JSON.stringify(tasks));
+    renderTasks();
+}
+
+// ═══════════════════════════════════════════════════
+//  الملاحظات
+// ═══════════════════════════════════════════════════
+function renderNotes() {
+    const container = document.getElementById('notesListContainer');
+    container.innerHTML = '';
+
+    if (notes.length === 0) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-sticky-note"></i><p>لا توجد ملاحظات بعد</p></div>';
+        return;
+    }
+
+    notes.forEach((note, index) => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.style.borderRight = '4px solid var(--accent)';
+        div.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+                <div>
+                    <p style="line-height:1.6;">${note.text.replace(/\n/g, '<br>')}</p>
+                    <small style="color:var(--text-light);margin-top:6px;display:block;">${note.date}</small>
+                </div>
+                <button class="btn-icon" onclick="deleteNote(${index})" style="color:#ef4444;flex-shrink:0;">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>`;
+        container.appendChild(div);
+    });
+
+    localStorage.setItem('medorus_notes', JSON.stringify(notes));
+}
+
+function sanitizeHTML(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+function addNote() {
+    const rawText = document.getElementById('noteInput').value.trim();
+    if (!rawText) { showNotification('الرجاء كتابة ملاحظة', 'error'); return; }
+
+    // ✅ تعقيم الإدخال لمنع ثغرة XSS
+    const text = sanitizeHTML(rawText);
+    notes.unshift({ text, date: new Date().toLocaleDateString('ar-DZ') });
+    document.getElementById('noteInput').value = '';
+    localStorage.removeItem('medorus_draft_note');
+    renderNotes();
+    showNotification('تم حفظ الملاحظة ✅', 'success');
+}
+
+function deleteNote(index) {
+    if (!confirm('هل تريد حذف هذه الملاحظة؟')) return;
+    notes.splice(index, 1);
+    renderNotes();
+}
+
+// ═══════════════════════════════════════════════════
+//  المراجعة المتباعدة
+// ═══════════════════════════════════════════════════
+function addReviewItem() {
+    const topic    = document.getElementById('reviewTopicInput').value.trim();
+    const subject  = document.getElementById('reviewSubjectSelect').value;
+    const interval = parseInt(document.getElementById('reviewIntervalSelect').value);
+
+    if (!topic) { showNotification('الرجاء إدخال اسم الموضوع', 'error'); return; }
+
+    const nextDate = new Date();
+    nextDate.setDate(nextDate.getDate() + interval);
+
+    reviewItems.push({
+        id:       Date.now(),
+        topic,
+        subject,
+        interval,
+        nextDate: toDateKey(nextDate),
+        addedDate: getTodayKey(),
+        done: false
+    });
+
+    localStorage.setItem('medorus_reviews', JSON.stringify(reviewItems));
+    document.getElementById('reviewTopicInput').value = '';
+    renderReviews();
+    showNotification('تمت الإضافة للمراجعة ✅', 'success');
+}
+
+function markReviewDone(id) {
+    const item = reviewItems.find(r => r.id === id);
+    if (!item) return;
+
+    // ضع موعداً للمراجعة التالية
+    const next = new Date();
+    next.setDate(next.getDate() + item.interval);
+    item.nextDate = toDateKey(next);
+    item.done     = false;
+
+    addXP(5);
+    localStorage.setItem('medorus_reviews', JSON.stringify(reviewItems));
+    renderReviews();
+    showNotification('✅ مراجعة ناجحة! +5 نقاط', 'success');
+}
+
+function deleteReviewItem(id) {
+    reviewItems = reviewItems.filter(r => r.id !== id);
+    localStorage.setItem('medorus_reviews', JSON.stringify(reviewItems));
+    renderReviews();
+}
+
+function renderReviews() {
+    const dueEl      = document.getElementById('reviewDueList');
+    const upcomingEl = document.getElementById('reviewUpcomingList');
+    if (!dueEl || !upcomingEl) return;
+    dueEl.innerHTML      = '';
+    upcomingEl.innerHTML = '';
+
+    const today = getTodayKey();
+    const due   = [];
+    const upcoming = [];
+
+    reviewItems.forEach(item => {
+        if (item.nextDate <= today) due.push(item);
+        else upcoming.push(item);
+    });
+
+    if (due.length === 0 && upcoming.length === 0) {
+        dueEl.innerHTML = '<div class="empty-state"><i class="fas fa-rotate"></i><p>لا توجد مراجعات بعد</p></div>';
+        return;
+    }
+
+    if (due.length > 0) {
+        const header = document.createElement('h3');
+        header.style.cssText = 'margin:0 0 10px;font-size:0.95rem;color:var(--danger);display:flex;align-items:center;gap:8px;';
+        header.innerHTML = '<i class="fas fa-bell"></i> مستحقة الآن (' + due.length + ')';
+        dueEl.appendChild(header);
+
+        due.forEach(item => {
+            const isOverdue = item.nextDate < today;
+            const div = document.createElement('div');
+            div.className = 'review-item ' + (isOverdue ? 'due-today' : '');
+            const color = subjects.find(s => s.name === item.subject)?.color || 'var(--primary-mid)';
+
+            div.innerHTML = `
+                <div style="flex:1;">
+                    <div style="font-weight:700;">${item.topic}</div>
+                    ${item.subject ? '<span style="font-size:0.75rem;padding:2px 8px;border-radius:50px;background:' + color + ';color:white;">' + item.subject + '</span>' : ''}
+                    <div style="font-size:0.75rem;color:var(--text-light);margin-top:3px;">كل ${item.interval} أيام</div>
+                </div>
+                <div class="review-actions">
+                    <span class="review-badge ${isOverdue ? 'overdue' : 'today'}">${isOverdue ? 'متأخرة' : 'اليوم'}</span>
+                    <button class="review-btn" onclick="markReviewDone(${item.id})"
+                        style="background:var(--success);color:white;">✓ تمت</button>
+                    <button class="review-btn" onclick="deleteReviewItem(${item.id})"
+                        style="background:#fee2e2;color:#dc2626;">✕</button>
+                </div>`;
+            dueEl.appendChild(div);
+        });
+    }
+
+    if (upcoming.length > 0) {
+        const header = document.createElement('h3');
+        header.style.cssText = 'margin:16px 0 10px;font-size:0.95rem;color:var(--primary);display:flex;align-items:center;gap:8px;';
+        header.innerHTML = '<i class="fas fa-clock"></i> مراجعات قادمة (' + upcoming.length + ')';
+        upcomingEl.appendChild(header);
+
+        upcoming.sort((a, b) => a.nextDate.localeCompare(b.nextDate)).forEach(item => {
+            const daysLeft = Math.ceil((new Date(item.nextDate) - new Date()) / 86400000);
+            const div      = document.createElement('div');
+            div.className  = 'review-item';
+            const color    = subjects.find(s => s.name === item.subject)?.color || 'var(--primary-mid)';
+
+            div.innerHTML = `
+                <div style="flex:1;">
+                    <div style="font-weight:700;">${item.topic}</div>
+                    ${item.subject ? '<span style="font-size:0.75rem;padding:2px 8px;border-radius:50px;background:' + color + ';color:white;">' + item.subject + '</span>' : ''}
+                </div>
+                <div class="review-actions">
+                    <span class="review-badge upcoming">بعد ${daysLeft} يوم</span>
+                    <button class="review-btn" onclick="deleteReviewItem(${item.id})"
+                        style="background:#fee2e2;color:#dc2626;">✕</button>
+                </div>`;
+            upcomingEl.appendChild(div);
+        });
+    }
+}
+
+// ═══════════════════════════════════════════════════
+//  حاسبة الامتحانات
+// ═══════════════════════════════════════════════════
+function addExam() {
+    const name    = document.getElementById('examNameInput').value.trim();
+    const date    = document.getElementById('examDateInput').value;
+    const hours   = parseFloat(document.getElementById('examHoursInput').value);
+    const subject = document.getElementById('examSubjectSelect').value;
+
+    if (!name)             { showNotification('الرجاء إدخال اسم الامتحان', 'error'); return; }
+    if (!date)             { showNotification('الرجاء إدخال تاريخ الامتحان', 'error'); return; }
+    if (!hours || hours<1) { showNotification('الرجاء إدخال ساعات الدراسة', 'error'); return; }
+
+    const examDate = new Date(date);
+    if (examDate < new Date()) { showNotification('تاريخ الامتحان يجب أن يكون في المستقبل', 'warning'); return; }
+
+    examItems.push({ id: Date.now(), name, date, hours, subject, addedDate: getTodayKey() });
+    localStorage.setItem('medorus_exams', JSON.stringify(examItems));
+
+    document.getElementById('examNameInput').value  = '';
+    document.getElementById('examDateInput').value  = '';
+    document.getElementById('examHoursInput').value = '';
+
+    renderExams();
+    renderCalendar();
+    showNotification('تمت إضافة الامتحان ✅', 'success');
+}
+
+function deleteExam(id) {
+    if (!confirm('هل تريد حذف هذا الامتحان؟')) return;
+    examItems = examItems.filter(e => e.id !== id);
+    localStorage.setItem('medorus_exams', JSON.stringify(examItems));
+    renderExams();
+    renderCalendar();
+}
+
+function renderExams() {
+    const container = document.getElementById('examsList');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const today = new Date(); today.setHours(0,0,0,0);
+    const future = examItems.filter(e => new Date(e.date) >= today);
+    future.sort((a,b) => new Date(a.date) - new Date(b.date));
+
+    if (future.length === 0) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-calendar-check"></i><p>لا توجد امتحانات مضافة</p></div>';
+        return;
+    }
+
+    future.forEach(exam => {
+        const examDate  = new Date(exam.date); examDate.setHours(0,0,0,0);
+        const daysLeft  = Math.ceil((examDate - today) / 86400000);
+        const dailyHrs  = daysLeft > 0 ? (exam.hours / daysLeft).toFixed(1) : exam.hours;
+        const studied   = sessions.filter(s => s.subject === exam.subject).reduce((sum,s) => sum + s.duration/60, 0);
+        const pct       = Math.min((studied / exam.hours) * 100, 100);
+
+        const countClass = daysLeft <= 3 ? '' : daysLeft <= 7 ? 'warn' : 'safe';
+        const color = subjects.find(s => s.name === exam.subject)?.color || 'var(--primary-mid)';
+
+        const div = document.createElement('div');
+        div.className = 'exam-item';
+        div.innerHTML = `
+            <div class="exam-header">
+                <div>
+                    <div class="exam-name">${exam.name}
+                        ${exam.subject ? '<span style="font-size:0.75rem;padding:2px 8px;border-radius:50px;background:'+color+';color:white;margin-right:6px;">'+exam.subject+'</span>' : ''}
+                    </div>
+                    <div class="exam-detail">${exam.date} · ${exam.hours} ساعة مطلوبة</div>
+                </div>
+                <div style="text-align:center;">
+                    <div class="exam-countdown ${countClass}">${daysLeft}</div>
+                    <div style="font-size:0.68rem;color:var(--text-light);">يوم متبقي</div>
+                </div>
+            </div>
+            <div class="exam-daily-hours">⏱ ${dailyHrs} ساعة/يوم</div>
+            <div style="margin-top:10px;">
+                <div class="goal-label">
+                    <span>التقدم: ${studied.toFixed(1)} / ${exam.hours} ساعة</span>
+                    <span>${Math.round(pct)}%</span>
+                </div>
+                <div class="goal-bar-bg" style="margin-top:5px;">
+                    <div class="exam-progress-fill" style="width:${pct}%;background:${color};"></div>
+                </div>
+            </div>
+            <div style="text-align:left;margin-top:10px;">
+                <button class="review-btn" onclick="deleteExam(${exam.id})" style="background:#fee2e2;color:#dc2626;">🗑 حذف</button>
+            </div>`;
+        container.appendChild(div);
+    });
+}
+
+// ═══════════════════════════════════════════════════
+//  التوازن الدراسي
+// ═══════════════════════════════════════════════════
+function renderBalance() {
+    const container = document.getElementById('balanceContent');
+    if (!container) return;
+    container.innerHTML = '';
+
+    if (!subjects || subjects.length < 2) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-scale-balanced"></i><p>أضف مادتين على الأقل لرؤية التوازن</p></div>';
+        return;
+    }
+
+    const subjectMins = {};
+    subjects.forEach(s => { subjectMins[s.name] = 0; });
+    sessions.forEach(s => {
+        if (subjectMins.hasOwnProperty(s.subject)) {
+            subjectMins[s.subject] += s.duration;
+        }
+    });
+
+    const total      = Object.values(subjectMins).reduce((a,b) => a+b, 0);
+    const ideal      = 100 / subjects.length;
+    const actualPcts = {};
+    subjects.forEach(s => { actualPcts[s.name] = total > 0 ? (subjectMins[s.name] / total) * 100 : 0; });
+
+    // حساب درجة التوازن (0-100)
+    const deviations = subjects.map(s => Math.abs(actualPcts[s.name] - ideal));
+    const avgDev     = deviations.reduce((a,b) => a+b, 0) / deviations.length;
+    const score      = Math.max(0, Math.round(100 - avgDev * 2));
+
+    let scoreClass, scoreLabel;
+    if      (score >= 80) { scoreClass = 'excellent'; scoreLabel = '⚖️ توازن ممتاز!'; }
+    else if (score >= 60) { scoreClass = 'good';      scoreLabel = '📊 توازن جيد'; }
+    else if (score >= 40) { scoreClass = 'fair';      scoreLabel = '⚠️ توازن متوسط'; }
+    else                  { scoreClass = 'poor';      scoreLabel = '❗ يحتاج تحسيناً'; }
+
+    container.innerHTML = `
+        <div class="balance-score-card ${scoreClass}">
+            <div class="balance-score-num">${score}</div>
+            <div class="balance-score-label">${scoreLabel}</div>
+        </div>`;
+
+    // شريط لكل مادة
+    subjects.forEach(s => {
+        const pct  = Math.round(actualPcts[s.name]);
+        const diff = pct - Math.round(ideal);
+        let alertClass, alertMsg;
+
+        if      (Math.abs(diff) <= 5)  { alertClass = 'perfect'; alertMsg = '✅ متوازن'; }
+        else if (diff > 5)             { alertClass = 'over';    alertMsg = '▲ مفرط +' + diff + '%'; }
+        else                           { alertClass = 'under';   alertMsg = '▼ ناقص ' + diff + '%'; }
+
+        container.innerHTML += `
+            <div class="balance-subject-row">
+                <span class="balance-subject-name">${s.name}</span>
+                <div class="balance-subject-bar-bg">
+                    <div class="balance-subject-bar-fill" style="width:${pct}%;background:${s.color};"></div>
+                </div>
+                <span class="balance-subject-pct">${pct}%</span>
+            </div>
+            <div class="balance-alert ${alertClass}" style="margin-bottom:12px;">
+                <span>${alertMsg}</span>
+                <span style="margin-right:auto;font-size:0.75rem;">${subjectMins[s.name]} دقيقة</span>
+            </div>`;
+    });
+}
+
+// ═══════════════════════════════════════════════════
+//  تصدير / استيراد / حذف — FIX 16 مصحَّح
+// ═══════════════════════════════════════════════════
+function exportData() {
+    try {
+    const data = {
+        version: '8.0', xp: xp || 0, subjects: subjects || [], tasks: tasks || [],
+        notes: notes || [], sessions: sessions || [], stats: stats || {},
+        streak: streak || 0, lastStudyDate: lastStudyDate || '',
+        dailyGoal: dailyGoal || 0, reviewItems: reviewItems || [], examItems: examItems || [],
+        theme: localStorage.getItem('medorus_theme') || 'light',
+        exportedAt: new Date().toISOString()
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'nourium-backup-' + toDateKey(new Date()) + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    showNotification('تم تصدير البيانات ✅', 'success');
+    } catch(error) {
+        showNotification('حدث خطأ أثناء تصدير البيانات', 'error');
+        console.error('Export error:', error);
+    }
+}
+
+// ✅ FIX 16: التحقق الصارم من صحة ملف الاستيراد
+function isValidBackup(data) {
+    return data !== null &&
+           typeof data === 'object' &&
+           Array.isArray(data.sessions) &&
+           Array.isArray(data.subjects) &&
+           typeof data.xp === 'number' &&
+           typeof data.version === 'string'; // ✅ إضافة التحقق من الإصدار
+}
+
+function importData() {
+    const input    = document.createElement('input');
+    input.type     = 'file';
+    input.accept   = '.json';
+    input.onchange = function(e) {
+        const file   = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            try {
+                const data = JSON.parse(ev.target.result);
+
+                // ✅ التحقق الصارم من البنية
+                if (!isValidBackup(data)) {
+                    showNotification('الملف لا يبدو نسخة احتياطية من Nourium', 'error');
+                    return;
+                }
+
+                const defaults = {
+                    medorus_xp:              data.xp ?? 0,
+                    medorus_subjects:        JSON.stringify(data.subjects    || []),
+                    medorus_tasks:           JSON.stringify(data.tasks       || []),
+                    medorus_notes:           JSON.stringify(data.notes       || []),
+                    medorus_sessions:        JSON.stringify(data.sessions    || []),
+                    medorus_streak:          data.streak ?? 0,
+                    medorus_last_study_date: data.lastStudyDate || '',
+                    medorus_daily_goal:      data.dailyGoal ?? 0,
+                    medorus_reviews:         JSON.stringify(data.reviewItems || []),
+                    medorus_exams:           JSON.stringify(data.examItems   || []),
+                    medorus_stats:           JSON.stringify(data.stats || {
+                        sessions: { daily:0, weekly:0, monthly:0 },
+                        tasks:    { daily:0, weekly:0, monthly:0 },
+                        minutes:  { daily:0, weekly:0, monthly:0 },
+                        lastUpdate: new Date().toISOString()
+                    }),
+                };
+                if (data.theme) defaults['medorus_theme'] = data.theme;
+
+                Object.entries(defaults).forEach(([k, v]) => localStorage.setItem(k, String(v)));
+
+                showNotification('تم الاستيراد ✅ — جاري إعادة التحميل...', 'success');
+                setTimeout(() => location.reload(), 1000);
+
+            } catch(err) {
+                showNotification('خطأ في قراءة الملف — تأكد من صحته', 'error');
+            }
+        };
+        reader.readAsText(file);
+    };
+    input.click();
+}
+
+function clearAllData() {
+    if (!confirm('⚠️ تحذير نهائي: سيتم حذف كل بيانات Nourium بشكل دائم!\n\nهل أنت متأكد؟')) return;
+    if (!confirm('تأكيد أخير: هل أنت متأكد 100%؟ لا يمكن التراجع عن هذا الإجراء.')) return;
+
+    // ✅ حذف مفاتيح التطبيق فقط بدلاً من localStorage.clear() الخطير
+    const appKeys = [
+        'medorus_xp', 'medorus_subjects', 'medorus_tasks', 'medorus_notes',
+        'medorus_sessions', 'medorus_streak', 'medorus_last_study_date',
+        'medorus_daily_goal', 'medorus_reviews', 'medorus_exams', 'medorus_stats',
+        'medorus_theme', 'nourium_mood_logs', 'nourium_challenges',
+        'nourium_tree_flowers', 'nourium_spirit_track', 'nourium_thikr_v3',
+        'medorus_draft_note', 'nourium_yaseen_shown'
+    ];
+    // حذف مفاتيح task_xp_ القديمة أيضاً
+    Object.keys(localStorage).filter(k => k.startsWith('task_xp_')).forEach(k => localStorage.removeItem(k));
+    appKeys.forEach(key => localStorage.removeItem(key));
+
+    xp = 0; subjects = []; tasks = []; notes = []; sessions = [];
+    streak = 0; lastStudyDate = null; dailyGoal = 0;
+    reviewItems = []; examItems = [];
+    stats = {
+        sessions: { daily:0, weekly:0, monthly:0 },
+        tasks:    { daily:0, weekly:0, monthly:0 },
+        minutes:  { daily:0, weekly:0, monthly:0 },
+        lastUpdate: new Date().toISOString()
+    };
+    timeLeft = 25 * 60; currentDuration = 25; timerMode = 'focus';
+    sessionCompleted = false;
+
+    updateLevelUI(); updateStatsUI(); updateStreak(false);
+    renderSubjects(); updateSubjectSelects();
+    renderTasks(); renderNotes(); renderReviews(); renderExams();
+    updateTimerDisplay(); renderCalendar(); updateGoalProgress();
+    updateLuxPanel(); checkStorageUsage();
+
+    showNotification('تم حذف جميع البيانات', 'info');
+}
+
+// ═══════════════════════════════════════════════════
+//  الدليل الروحي لطالب الطب
+// ═══════════════════════════════════════════════════
+
+function initSpiritualGuide() {
+    // تحقق من تذكير اليوم
+    if (yaseenReminderOn) {
+        const lastShown = localStorage.getItem('nourium_yaseen_shown');
+        const today     = new Date().toDateString();
+        if (lastShown !== today) {
+            const card = document.getElementById('yaseenCard');
+            if (card) card.style.display = 'block';
+        }
+    }
+    renderSpiritContent('before');
+}
+
+function dismissYaseenReminder() {
+    localStorage.setItem('nourium_yaseen_shown', new Date().toDateString());
+    const card = document.getElementById('yaseenCard');
+    if (card) { card.style.animation = 'none'; card.style.opacity = '0'; card.style.transform = 'translateY(-10px)'; card.style.transition = '0.3s'; setTimeout(() => card.style.display = 'none', 300); }
+}
+
+function switchSpiritTab(tab, el) {
+    spiritCurrentTab = tab;
+    document.querySelectorAll('.spirit-nav-btn').forEach(t => t.classList.remove('active'));
+    if (el) el.classList.add('active');
+    if (tab === 'favs') renderFavoriteDuas();
+    else renderSpiritContent(tab);
+}
+
+function renderSpiritContent(tab) {
+    const container = document.getElementById('spiritContent');
+    if (!container) return;
+    const data = DUAS_DATA[tab];
+    if (!data) return;
+    container.innerHTML = '';
+
+    // رأس القسم — مبسّط
+    const header = document.createElement('div');
+    header.className = 'spirit-section-header';
+    header.innerHTML = `
+        <div class="spirit-section-icon">${data.icon}</div>
+        <div>
+            <div class="spirit-section-title">${data.title}</div>
+            <div class="spirit-section-sub">${data.subtitle}</div>
+        </div>`;
+    container.appendChild(header);
+
+    // بطاقات الأدعية
+    data.duas.forEach(dua => {
+        container.appendChild(buildDuaCard(dua, data.color));
+    });
+}
+
+function renderFavoriteDuas() {
+    const container = document.getElementById('spiritContent');
+    if (!container) return;
+    container.innerHTML = '';
+
+    if (favoriteDuas.length === 0) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-star"></i><p>لا توجد أدعية مفضلة بعد</p><p style="font-size:0.78rem;margin-top:6px;">اضغط ⭐ على أي دعاء لحفظه هنا</p></div>';
+        return;
+    }
+
+    const header = document.createElement('div');
+    header.className = 'spirit-section-header';
+    header.innerHTML = '<div class="spirit-section-icon">⭐</div><div><div class="spirit-section-title">أدعيتي المفضلة</div><div class="spirit-section-sub">' + favoriteDuas.length + ' دعاء محفوظ</div></div>';
+    container.appendChild(header);
+
+    // اجمع كل الأدعية من جميع الأقسام
+    const allDuas = {};
+    Object.values(DUAS_DATA).forEach(cat => cat.duas.forEach(d => { allDuas[d.id] = { ...d, color: cat.color }; }));
+
+    favoriteDuas.forEach(id => {
+        if (allDuas[id]) container.appendChild(buildDuaCard(allDuas[id], allDuas[id].color));
+    });
+}
+
+function buildDuaCard(dua, accentColor) {
+    const isFav = favoriteDuas.includes(dua.id);
+    const card  = document.createElement('div');
+    card.className = 'dua-card';
+    card.id = 'duacard-' + dua.id;
+    card.innerHTML = `
+        <div class="dua-header" onclick="toggleDuaText('${dua.id}')" style="cursor:pointer;">
+            <div class="dua-icon">🤲</div>
+            <div style="flex:1;">
+                <div class="dua-reveal-hint" id="duahint-${dua.id}" style="font-size:0.82rem;color:var(--text-muted);font-style:italic;">اضغط لإظهار الدعاء...</div>
+                <div class="dua-text" id="duatext-${dua.id}" style="display:none;">${dua.text}</div>
+            </div>
+        </div>
+        <div class="dua-actions" id="duaactions-${dua.id}" style="display:none;">
+            <button class="dua-action-btn ${isFav ? 'fav-active' : ''}" onclick="toggleDuaFav('${dua.id}', this)">
+                <i class="fas fa-star"></i> ${isFav ? 'محفوظ' : 'احفظ'}
+            </button>
+            <button class="dua-action-btn" onclick="copyDua('${dua.id}')">
+                <i class="fas fa-copy"></i> نسخ
+            </button>
+        </div>`;
+    return card;
+}
+
+function toggleDuaText(id) {
+    const hint    = document.getElementById('duahint-' + id);
+    const text    = document.getElementById('duatext-' + id);
+    const actions = document.getElementById('duaactions-' + id);
+    if (!text) return;
+    const isVisible = text.style.display !== 'none';
+    text.style.display    = isVisible ? 'none' : 'block';
+    actions.style.display = isVisible ? 'none' : 'flex';
+    hint.style.display    = isVisible ? 'block' : 'none';
+}
+
+function toggleDuaFav(id, btn) {
+    const idx = favoriteDuas.indexOf(id);
+    if (idx === -1) {
+        favoriteDuas.push(id);
+        btn.classList.add('fav-active');
+        btn.innerHTML = '<i class="fas fa-star"></i> محفوظ';
+        showNotification('⭐ تمت الإضافة للمفضلة', 'success');
+    } else {
+        favoriteDuas.splice(idx, 1);
+        btn.classList.remove('fav-active');
+        btn.innerHTML = '<i class="fas fa-star"></i> احفظ';
+        showNotification('تمت الإزالة من المفضلة', 'info');
+        if (spiritCurrentTab === 'favs') renderFavoriteDuas();
+    }
+    localStorage.setItem('nourium_fav_duas', JSON.stringify(favoriteDuas));
+}
+
+function getDuaTextById(id) {
+    for (const cat of Object.values(DUAS_DATA)) {
+        const found = cat.duas.find(d => d.id === id);
+        if (found) return found.text;
+    }
+    return '';
+}
+
+function copyDua(id) {
+    const text = getDuaTextById(id);
+    if (!text) return;
+    safeCopy(text, '✅ تم نسخ الدعاء');
+}
+
+function shareDua(id) {
+    const text = getDuaTextById(id);
+    if (!text) return;
+    const shareText = text + '\n\n📱 من تطبيق Nourium — منارة طالب الطب';
+    if (navigator.share) {
+        navigator.share({ text: shareText }).catch(() => safeCopy(shareText, '✅ نُسخ للمشاركة'));
+    } else {
+        safeCopy(shareText, '✅ نُسخ للمشاركة');
+    }
+}
+
+function showEmergencyDuas() {
+    const old = document.getElementById('emergencyOverlay');
+    if (old) old.remove();
+
+    const data = DUAS_DATA.emergency;
+    const overlay = document.createElement('div');
+    overlay.className = 'share-overlay';
+    overlay.id = 'emergencyOverlay';
+    overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
+
+    let duasHtml = data.duas.map(d => `
+        <div class="dua-card">
+            <div class="dua-header">
+                <div class="dua-icon">⚡</div>
+                <div class="dua-text">${d.text}</div>
+            </div>
+            <div class="dua-actions">
+                <button class="dua-action-btn" onclick="copyDua('${d.id}')"><i class="fas fa-copy"></i> نسخ</button>
+            </div>
+        </div>`).join('');
+
+    overlay.innerHTML = `
+        <div class="share-modal" style="max-height:85vh;overflow-y:auto;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <div>
+                    <div style="font-weight:800;font-size:1rem;color:var(--danger);">أدعية عند النسيان ⚡</div>
+                    <div style="font-size:0.78rem;color:var(--text-muted);margin-top:2px;">تنفس بهدوء وردد بخشوع 🤍</div>
+                </div>
+                <button onclick="document.getElementById('emergencyOverlay').remove()" style="background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text-muted);">&times;</button>
+            </div>
+            <div style="height:1px;background:var(--border);margin:12px 0;"></div>
+            ${duasHtml}
+        </div>`;
+
+    document.body.appendChild(overlay);
+}
+
+// ربط init الدليل الروحي بـ switchTab
+
+function toggleYaseenReminder() {
+    yaseenReminderOn = !yaseenReminderOn;
+    localStorage.setItem('nourium_yaseen_reminder', yaseenReminderOn ? 'on' : 'off');
+    const statusEl = document.getElementById('yaseenStatus');
+    if (statusEl) statusEl.innerText = yaseenReminderOn ? 'مفعّل' : 'معطّل';
+    showNotification(yaseenReminderOn ? '🔔 تذكير يس مفعّل' : '🔕 تذكير يس معطّل', 'info');
+}
+
+function updateYaseenToggleUI() {
+    const statusEl = document.getElementById('yaseenStatus');
+    if (statusEl) statusEl.innerText = yaseenReminderOn ? 'مفعّل' : 'معطّل';
+}
+
+
+// ═══════════════════════════════════════════════════
+//  أدوات مساعدة إضافية
+// ═══════════════════════════════════════════════════
+
+// ✅ دالة آمنة للحصول على عناصر DOM
+function safeGetElement(id) {
+    const element = document.getElementById(id);
+    if (!element) {
+        console.warn(`⚠️ العنصر "${id}" غير موجود في DOM`);
+    }
+    return element;
+}
+
+// ✅ debounce لتحسين أداء التحديثات المتكررة
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+const debouncedUpdateLuxPanel = debounce(updateLuxPanel, 300);
+
+// ✅ معالج عام للأخطاء غير المتوقعة
+window.addEventListener('error', function(e) {
+    console.error('❌ خطأ في التطبيق:', e.error || e.message);
+});
+
+window.addEventListener('unhandledrejection', function(e) {
+    console.error('❌ Promise مرفوض:', e.reason);
+});
+
+// ✅ FIX: تنظيف جميع المؤقتات عند إغلاق الصفحة لمنع memory leaks
+window.addEventListener('beforeunload', function() {
+    if (typeof timerInterval !== 'undefined' && timerInterval)     clearInterval(timerInterval);
+    if (typeof verseInterval !== 'undefined' && verseInterval)     clearInterval(verseInterval);
+    if (typeof nouriIdleTimer !== 'undefined' && nouriIdleTimer)   clearInterval(nouriIdleTimer);
+    if (typeof nouriAutoInterval !== 'undefined' && nouriAutoInterval) clearInterval(nouriAutoInterval);
+    if (typeof orbBreathInterval !== 'undefined' && orbBreathInterval) clearTimeout(orbBreathInterval);
+});
+
+// ✅ FIX: تنظيف مفاتيح task_xp_ القديمة لمنع تراكم localStorage
+function cleanupOldTaskXP() {
+    const today = getTodayKey();
+    Object.keys(localStorage)
+        .filter(k => k.startsWith('task_xp_'))
+        .forEach(key => {
+            const date = key.replace('task_xp_', '');
+            if (date < today) localStorage.removeItem(key);
+        });
+}
+
+// ═══════════════════════════════════════════════════
+//  (تم حذف نظام الإشعارات)
+// ═══════════════════════════════════════════════════
+function initNotifSystem() {}
+function requestNotifPermission() {}
+function updateNotifPermissionBanner() {}
+function updateNotifStatusBar() {}
+function saveNotifSettings() {}
+function loadNotifSettingsUI() {}
+function scheduleAllNotifs() {}
+function sendSmartNotif() {}
+function queueSmartBanner() {}
+function showNextBanner() {}
+function dismissSmartBanner() {}
+function sendSessionDoneNotif() {}
+
+// ═══════════════════════════════════════════════════
+//  ميزة مشاركة الإنجاز
+// ═══════════════════════════════════════════════════
+function getShareData() {
+    const level      = getCurrentLevel();
+    const totalMins  = sessions.reduce((s, x) => s + x.duration, 0);
+    const totalHrs   = (totalMins / 60).toFixed(1);
+    const doneTasks  = tasks.filter(t => t.completed).length;
+
+    // اختر إنجازاً بارزاً للعرض
+    let achievement = '', achievementLabel = '';
+    if (streak >= 30)        { achievement = '💎'; achievementLabel = streak + ' يوماً متتالياً!'; }
+    else if (streak >= 14)   { achievement = '🔥'; achievementLabel = streak + ' يوماً متتالياً!'; }
+    else if (streak >= 7)    { achievement = '⚡'; achievementLabel = streak + ' أيام متتالية!'; }
+    else if (xp >= 3000)     { achievement = '🏆'; achievementLabel = 'مستوى: ' + level.name; }
+    else if (totalHrs >= 100){ achievement = '💯'; achievementLabel = totalHrs + ' ساعة دراسة!'; }
+    else if (doneTasks >= 50){ achievement = '✅'; achievementLabel = doneTasks + ' مهمة منجزة!'; }
+    else                     { achievement = level.icon; achievementLabel = 'مستوى: ' + level.name; }
+
+    return { level, totalHrs, doneTasks, achievement, achievementLabel };
+}
+
+function openShareModal() {
+    // إغلاق أي modal مفتوح
+    const old = document.getElementById('shareOverlay');
+    if (old) old.remove();
+
+    const d = getShareData();
+
+    const overlay = document.createElement('div');
+    overlay.className = 'share-overlay';
+    overlay.id = 'shareOverlay';
+    overlay.onclick = function(e) { if (e.target === overlay) closeShareModal(); };
+
+    overlay.innerHTML = `
+        <div class="share-modal">
+            <h2 style="margin-bottom:16px;font-size:1rem;"><i class="fas fa-share-alt" style="color:var(--primary-mid);"></i> شارك إنجازك</h2>
+
+            <!-- معاينة البطاقة -->
+            <div class="share-card-preview" id="shareCardPreview">
+                <div class="share-logo">✦ NOURIUM ✦</div>
+                <div class="share-achievement">${d.achievement}</div>
+                <div class="share-title">${d.achievementLabel}</div>
+                <div class="share-subtitle">${d.level.name}</div>
+                <div class="share-stats-row">
+                    <div class="share-stat-item">
+                        <div class="share-stat-val">${d.totalHrs}</div>
+                        <div class="share-stat-lbl">ساعة دراسة</div>
+                    </div>
+                    <div class="share-stat-item">
+                        <div class="share-stat-val">${xp}</div>
+                        <div class="share-stat-lbl">نقطة XP</div>
+                    </div>
+                    <div class="share-stat-item">
+                        <div class="share-stat-val">${streak}</div>
+                        <div class="share-stat-lbl">يوم متتالي 🔥</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- أزرار المشاركة -->
+            <div class="share-btns" style="grid-template-columns:1fr 1fr;">
+                <button class="share-btn share-btn-copy" onclick="shareAsText()">
+                    <i class="fas fa-copy"></i> نسخ النص
+                </button>
+                <button class="share-btn share-btn-img" onclick="shareAsImage()">
+                    <i class="fas fa-image"></i> حفظ صورة
+                </button>
+                <button class="share-btn share-btn-close" onclick="closeShareModal()">
+                    <i class="fas fa-times"></i> إغلاق
+                </button>
+            </div>
+        </div>`;
+
+    document.body.appendChild(overlay);
+}
+
+// ═══════════════════════════════════════════════════
+//  Accordion
+// ═══════════════════════════════════════════════════
+function toggleAccordion(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.toggle('open');
+}
+
+// ═══════════════════════════════════════════════════
+//  Panel Tabs
+// ═══════════════════════════════════════════════════
+function switchPanelTab(tabId, btn) {
+    document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel-tab-content').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    const content = document.getElementById('panelTab-' + tabId);
+    if (content) content.classList.add('active');
+    if (tabId === 'subjects') renderSubjectsPanel();
+}
+
+// ═══════════════════════════════════════════════════
+//  MOOD TRACKER — تتبع الحالة النفسية
+// ═══════════════════════════════════════════════════
+
+// ── Data ──
+const MOODS = [
+    { score: 5, emoji: '🤩', label: 'ممتاز',  color: '#22c55e' },
+    { score: 4, emoji: '😊', label: 'جيد',    color: '#84cc16' },
+    { score: 3, emoji: '😐', label: 'عادي',   color: '#f59e0b' },
+    { score: 2, emoji: '😔', label: 'متعب',   color: '#f97316' },
+    { score: 1, emoji: '😞', label: 'صعب',   color: '#ef4444' },
+];
+
+const MOOD_TIPS = [
+    {
+        id: 'box_breathing',
+        icon: '🌬️', color: '#6366f1',
+        title: 'تنفس الصندوق',
+        duration: '4 دقائق',
+        desc: 'تقنية علمية لتهدئة الجهاز العصبي وتخفيف القلق قبل الامتحانات',
+        steps: [
+            'استنشق ببطء لمدة 4 ثوانٍ',
+            'احبس النفس 4 ثوانٍ',
+            'أخرج الهواء ببطء 4 ثوانٍ',
+            'احبس 4 ثوانٍ — كرر 4 مرات',
+        ]
+    },
+    {
+        id: 'gratitude',
+        icon: '🙏', color: '#f59e0b',
+        title: 'لحظة الشكر',
+        duration: '3 دقائق',
+        desc: 'اكتب 3 أشياء تشعر بالامتنان لها — يُثبت العلم أنها ترفع المزاج',
+        steps: [
+            'خذ ورقة أو فتح الملاحظات',
+            'اكتب 3 أشياء جيدة حدثت اليوم ولو صغيرة',
+            'اكتب لماذا أنت ممتن لكل منها',
+            'اقرأها بصوت هادئ',
+        ]
+    },
+    {
+        id: 'movement',
+        icon: '🚶', color: '#22c55e',
+        title: 'حركة سريعة',
+        duration: '5 دقائق',
+        desc: 'الحركة تُطلق الإندورفين وتكسر التعب الذهني بعد جلسة مكثفة',
+        steps: [
+            'قف وتمدّد للأعلى 10 مرات',
+            'امشِ 20 خطوة في الغرفة',
+            'افعل 10 قرفصاء بطيئة',
+            'مدّ رقبتك يميناً ويساراً 5 مرات',
+        ]
+    },
+    {
+        id: 'grounding',
+        icon: '🌿', color: '#06b6d4',
+        title: 'تمرين التأريض 5-4-3-2-1',
+        duration: '3 دقائق',
+        desc: 'يُعيد التركيز للحظة الحالية ويُهدّئ القلق والتوتر بسرعة',
+        steps: [
+            'انظر حولك: حدّد 5 أشياء تراها',
+            'حدّد 4 أشياء تستطيع لمسها',
+            'حدّد 3 أصوات تسمعها الآن',
+            'حدّد رائحتين — ثم طعماً واحداً',
+        ]
+    },
+    {
+        id: 'dua_relax',
+        icon: '🤲', color: '#8b5cf6',
+        title: 'دعاء التفريج',
+        duration: '2 دقيقة',
+        desc: 'ربط الحالة النفسية بالذكر الإلهي يمنح طمأنينة حقيقية ومستدامة',
+        steps: [
+            'توضأ إن أمكن',
+            'اجلس بهدوء وأغمض عينيك',
+            'كرر: «اللهم لا سهل إلا ما جعلته سهلا» 10 مرات',
+            'ثم: «حسبي الله ونعم الوكيل» 7 مرات بتأمل',
+        ]
+    },
+    {
+        id: 'cold_water',
+        icon: '💧', color: '#0ea5e9',
+        title: 'ماء بارد على الوجه',
+        duration: '1 دقيقة',
+        desc: 'يُفعّل غريزة الغوص ويبطّئ ضربات القلب فوراً — مجرّب علمياً',
+        steps: [
+            'اذهب للحمام',
+            'اغسل وجهك بالماء البارد 3 مرات',
+            'أو ضع كيس ثلج على رسغيك 30 ثانية',
+            'خذ نفساً عميقاً واحداً بعدها',
+        ]
+    },
+];
+
+let moodLogs = JSON.parse(localStorage.getItem('nourium_mood_logs') || '[]');
+let moodSelectedScore = null;
+
+function saveMoodLogs() {
+    localStorage.setItem('nourium_mood_logs', JSON.stringify(moodLogs));
+}
+
+// ── Modal ──
+function openMoodModal(sessionLabel) {
+    closeMoodModal();
+    moodSelectedScore = null;
+    const label = sessionLabel || 'سجّل مزاجك الآن';
+
+    const overlay = document.createElement('div');
+    overlay.className = 'mood-overlay';
+    overlay.id = 'moodOverlay';
+    overlay.onclick = e => { if (e.target === overlay) closeMoodModal(); };
+
+    overlay.innerHTML = `
+    <div class="mood-sheet">
+        <div class="mood-handle"></div>
+        <div class="mood-sheet-title">🧠 ${label}</div>
+        <div class="mood-sheet-sub">كيف كانت حالتك النفسية؟</div>
+
+        <div class="mood-emoji-row" id="moodEmojiRow">
+            ${MOODS.map(m => `
+            <button class="mood-emoji-btn" onclick="selectMoodEmoji(${m.score}, this)"
+                    data-score="${m.score}" title="${m.label}">
+                <div class="mood-emoji-icon">${m.emoji}</div>
+                <div class="mood-emoji-label">${m.label}</div>
+            </button>`).join('')}
+        </div>
+
+        <div class="mood-slider-row">
+            <div class="mood-slider-hdr">
+                <span>⚡ مستوى الطاقة</span>
+                <span class="mood-slider-val" id="moodEnergyVal">5</span>
+            </div>
+            <input type="range" class="mood-slider" id="moodEnergySlider"
+                   min="1" max="10" value="5"
+                   oninput="document.getElementById('moodEnergyVal').textContent=this.value">
+        </div>
+
+        <div class="mood-slider-row">
+            <div class="mood-slider-hdr">
+                <span>🎯 مستوى التركيز</span>
+                <span class="mood-slider-val" id="moodFocusVal">5</span>
+            </div>
+            <input type="range" class="mood-slider" id="moodFocusSlider"
+                   min="1" max="10" value="5"
+                   oninput="document.getElementById('moodFocusVal').textContent=this.value">
+        </div>
+
+        <textarea class="mood-note" id="moodNoteInput" rows="2"
+                  placeholder="ملاحظة اختيارية... (ما الذي أثّر على مزاجك؟)"></textarea>
+
+        <button class="mood-save-btn" onclick="saveMoodEntry()">
+            حفظ المزاج
+        </button>
+    </div>`;
+
+    document.body.appendChild(overlay);
+}
+
+function selectMoodEmoji(score, btn) {
+    moodSelectedScore = score;
+    document.querySelectorAll('.mood-emoji-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+}
+
+function closeMoodModal() {
+    const el = document.getElementById('moodOverlay');
+    if (el) el.remove();
+}
+
+function saveMoodEntry() {
+    if (!moodSelectedScore) {
+        showNotification('اختر مزاجك أولاً 😊', 'warning');
+        return;
+    }
+    const energy = parseInt(document.getElementById('moodEnergySlider').value);
+    const focus  = parseInt(document.getElementById('moodFocusSlider').value);
+    const note   = document.getElementById('moodNoteInput').value.trim();
+    const mood   = MOODS.find(m => m.score === moodSelectedScore);
+
+    const entry = {
+        id:        Date.now(),
+        date:      new Date().toISOString(),
+        score:     moodSelectedScore,
+        emoji:     mood.emoji,
+        label:     mood.label,
+        color:     mood.color,
+        energy,
+        focus,
+        note,
+    };
+
+    moodLogs.unshift(entry);
+    // Keep last 90 entries
+    if (moodLogs.length > 90) moodLogs = moodLogs.slice(0, 90);
+    saveMoodLogs();
+
+    closeMoodModal();
+    showNotification('تم حفظ مزاجك ✅', 'success');
+    nouriOnMoodSaved(moodSelectedScore); // 🐇
+
+    // Re-render if on mood tab
+    if (document.getElementById('mood-section')?.classList.contains('active')) {
+        renderMoodSection();
+    }
+}
+
+// ── Auto-prompt after session ──
+function promptMoodAfterSession() {
+    setTimeout(() => {
+        // Only if no mood logged this session (within 2 min)
+        const twoMinAgo = Date.now() - 2 * 60 * 1000;
+        const recent = moodLogs.find(l => new Date(l.date).getTime() > twoMinAgo);
+        if (!recent) openMoodModal('كيف كانت جلسة الدراسة؟');
+    }, 1800); // after banner appears
+}
+
+// ── Render Section ──
+function renderMoodSection() {
+    renderMoodHero();
+    renderMoodChart();
+    renderMoodCorrelation();
+    renderMoodTips();
+    renderMoodLog();
+}
+
+function renderMoodHero() {
+    const todayLogs = moodLogs.filter(l => toDateKey(new Date(l.date)) === getTodayKey());
+    const latest    = todayLogs[0];
+
+    const emojiEl = document.getElementById('moodTodayEmoji');
+    const labelEl = document.getElementById('moodTodayLabel');
+    const timeEl  = document.getElementById('moodTodayTime');
+    if (!emojiEl) return;
+
+    if (latest) {
+        emojiEl.textContent = latest.emoji;
+        labelEl.textContent = latest.label;
+        timeEl.textContent  = new Date(latest.date).toLocaleTimeString('ar', { hour: '2-digit', minute: '2-digit' });
+    } else {
+        emojiEl.textContent = '—';
+        labelEl.textContent = 'لم تسجّل بعد اليوم';
+        timeEl.textContent  = '';
+    }
+}
+
+function renderMoodChart() {
+    const wrap = document.getElementById('moodChart7Days');
+    if (!wrap) return;
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+        const d = new Date(); d.setDate(d.getDate() - i);
+        days.push(d);
+    }
+    const dayNames = ['أح','ن','ث','ر','خ','ج','س'];
+
+    wrap.innerHTML = days.map(d => {
+        const key  = toDateKey(d);
+        const logs = moodLogs.filter(l => toDateKey(new Date(l.date)) === key);
+        const avg  = logs.length ? Math.round(logs.reduce((s, l) => s + l.score, 0) / logs.length) : 0;
+        const mood = MOODS.find(m => m.score === avg);
+        const pct  = avg ? (avg / 5 * 100) : 8;
+        const isToday = i => i === 0;
+        const dayName  = dayNames[d.getDay()];
+        const isToday_ = toDateKey(d) === getTodayKey();
+
+        return `<div class="mood-bar-col">
+            <div class="mood-bar-emoji">${mood ? mood.emoji : '⬜'}</div>
+            <div class="mood-bar" style="height:${pct}%;background:${mood ? mood.color : 'var(--border)'};${isToday_ ? 'box-shadow:0 0 8px ' + (mood ? mood.color : '#ccc') + '88;' : ''}"></div>
+            <div class="mood-bar-day" style="${isToday_ ? 'color:var(--primary);font-weight:800;' : ''}">${dayName}</div>
+        </div>`;
+    }).join('');
+}
+
+function renderMoodCorrelation() {
+    const cont = document.getElementById('moodCorrContent');
+    if (!cont) return;
+    if (moodLogs.length < 3) return;
+
+    // Group mood logs by date, correlate with session duration on same day
+    const dateMap = {};
+    moodLogs.forEach(l => {
+        const key = toDateKey(new Date(l.date));
+        if (!dateMap[key]) dateMap[key] = { moods: [], energy: [], focus: [], sessionMins: 0 };
+        dateMap[key].moods.push(l.score);
+        dateMap[key].energy.push(l.energy);
+        dateMap[key].focus.push(l.focus);
+    });
+    sessions.forEach(s => {
+        const key = toDateKey(new Date(s.date));
+        if (dateMap[key]) dateMap[key].sessionMins += s.duration || 0;
+    });
+
+    const rows = Object.values(dateMap).filter(d => d.sessionMins > 0);
+    if (!rows.length) {
+        cont.innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:0.83rem;padding:10px 0;">سجّل مزاجك في أيام دراسة لرؤية التحليل</div>';
+        return;
+    }
+
+    // Average by mood bucket
+    const byMood = {};
+    MOODS.forEach(m => { byMood[m.score] = { sessionMins: [], energy: [], focus: [] }; });
+    Object.values(dateMap).forEach(d => {
+        const avgMood = Math.round(d.moods.reduce((a, b) => a + b, 0) / d.moods.length);
+        if (byMood[avgMood]) {
+            byMood[avgMood].sessionMins.push(d.sessionMins);
+            byMood[avgMood].energy.push(d.energy.reduce((a, b) => a + b, 0) / d.energy.length);
+            byMood[avgMood].focus.push(d.focus.reduce((a, b) => a + b, 0) / d.focus.length);
+        }
+    });
+
+    // Best mood for study
+    let bestMood = null, bestMins = 0;
+    MOODS.forEach(m => {
+        const arr = byMood[m.score].sessionMins;
+        if (!arr.length) return;
+        const avg = arr.reduce((a, b) => a + b, 0) / arr.length;
+        if (avg > bestMins) { bestMins = avg; bestMood = m; }
+    });
+
+    // Average energy / focus per mood score
+    const avgEnergy = moodLogs.reduce((s, l) => s + l.energy, 0) / moodLogs.length;
+    const avgFocus  = moodLogs.reduce((s, l) => s + l.focus, 0) / moodLogs.length;
+
+    cont.innerHTML = `
+        ${bestMood ? `<div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:10px;padding:10px 13px;margin-bottom:12px;font-size:0.8rem;color:var(--text);">
+            💡 <strong>نمط مكتشف:</strong> إنتاجيتك أعلى عندما مزاجك <strong>${bestMood.emoji} ${bestMood.label}</strong> — اجعل هذا الشعور هدفاً قبل الدراسة
+        </div>` : ''}
+        <div class="mood-corr-row">
+            <div class="mood-corr-label">⚡ الطاقة</div>
+            <div class="mood-corr-bg"><div class="mood-corr-fill" style="width:${avgEnergy * 10}%;background:#f59e0b;"></div></div>
+            <div class="mood-corr-val">${avgEnergy.toFixed(1)}/10</div>
+        </div>
+        <div class="mood-corr-row">
+            <div class="mood-corr-label">🎯 التركيز</div>
+            <div class="mood-corr-bg"><div class="mood-corr-fill" style="width:${avgFocus * 10}%;background:#6366f1;"></div></div>
+            <div class="mood-corr-val">${avgFocus.toFixed(1)}/10</div>
+        </div>
+        <div class="mood-corr-row">
+            <div class="mood-corr-label">📖 متوسط الجلسة</div>
+            <div class="mood-corr-bg"><div class="mood-corr-fill" style="width:${Math.min(100, bestMins / 1.5)}%;background:#22c55e;"></div></div>
+            <div class="mood-corr-val">${(bestMins / 60).toFixed(1)}h</div>
+        </div>`;
+}
+
+function renderMoodTips() {
+    const cont = document.getElementById('moodTipsList');
+    if (!cont) return;
+
+    // Prioritize tips based on recent mood
+    const recentMood = moodLogs[0];
+    let tips = [...MOOD_TIPS];
+    // If feeling stressed/tired, push calming tips first
+    if (recentMood && recentMood.score <= 2) {
+        tips = [
+            MOOD_TIPS.find(t => t.id === 'box_breathing'),
+            MOOD_TIPS.find(t => t.id === 'dua_relax'),
+            MOOD_TIPS.find(t => t.id === 'cold_water'),
+            ...MOOD_TIPS.filter(t => !['box_breathing','dua_relax','cold_water'].includes(t.id))
+        ].filter(Boolean);
+    }
+
+    cont.innerHTML = tips.map(tip => `
+    <div class="mood-tip-card" id="tip_${tip.id}" onclick="toggleMoodTip('${tip.id}')">
+        <div class="mood-tip-accent" style="background:${tip.color};"></div>
+        <div class="mood-tip-top">
+            <div class="mood-tip-icon">${tip.icon}</div>
+            <div class="mood-tip-title">${tip.title}</div>
+            <div class="mood-tip-dur">${tip.duration}</div>
+        </div>
+        <div class="mood-tip-desc">${tip.desc}</div>
+        <div class="mood-tip-steps" id="tipSteps_${tip.id}">
+            ${tip.steps.map(s => `<div class="mood-tip-step">${s}</div>`).join('')}
+        </div>
+    </div>`).join('');
+}
+
+function toggleMoodTip(id) {
+    const el = document.getElementById('tipSteps_' + id);
+    if (el) el.classList.toggle('open');
+}
+
+function renderMoodLog() {
+    const cont = document.getElementById('moodLogList');
+    if (!cont) return;
+    if (!moodLogs.length) {
+        cont.innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:0.83rem;padding:14px 0;">لا يوجد سجل بعد — سجّل مزاجك بعد كل جلسة 🌱</div>';
+        return;
+    }
+    cont.innerHTML = moodLogs.slice(0, 20).map(l => {
+        const d = new Date(l.date);
+        const dateStr = d.toLocaleDateString('ar-EG', { weekday: 'long', month: 'short', day: 'numeric' });
+        const timeStr = d.toLocaleTimeString('ar', { hour: '2-digit', minute: '2-digit' });
+        return `<div class="mood-log-item">
+            <div class="mood-log-emoji">${l.emoji}</div>
+            <div class="mood-log-info">
+                <div class="mood-log-top">
+                    <div class="mood-log-label">${l.label}</div>
+                    <div class="mood-log-date">${dateStr} · ${timeStr}</div>
+                </div>
+                ${l.note ? `<div class="mood-log-note">${l.note}</div>` : ''}
+                <div class="mood-log-pills">
+                    <span class="mood-log-pill">⚡ طاقة ${l.energy}/10</span>
+                    <span class="mood-log-pill">🎯 تركيز ${l.focus}/10</span>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function initMoodSection() {
+    renderMoodSection();
+}
+
+// ═══════════════════════════════════════════════════
+//  CHALLENGES SYSTEM — نظام التحديات
+// ═══════════════════════════════════════════════════
+
+// ── State ──
+let chState = JSON.parse(localStorage.getItem('nourium_challenges') || 'null') || {
+    dailyClaimed:  [],   // ids claimed today
+    weeklyClaimed: [],   // ids claimed this week
+    totalXp:       0,
+    lastDayKey:    '',
+    lastWeekKey:   '',
+};
+
+function saveChState() {
+    localStorage.setItem('nourium_challenges', JSON.stringify(chState));
+}
+
+function getWeekKey() {
+    const d = new Date();
+    // Week starts Saturday (day 6). Get Saturday of this week.
+    const day = d.getDay(); // 0=Sun
+    const diff = (day >= 6) ? 0 : day + 1;
+    const sat = new Date(d); sat.setDate(d.getDate() - diff);
+    return sat.toISOString().slice(0, 10);
+}
+
+function resetChIfNeeded() {
+    const todayKey = getTodayKey();
+    const weekKey  = getWeekKey();
+    if (chState.lastDayKey !== todayKey) {
+        chState.dailyClaimed  = [];
+        chState.lastDayKey    = todayKey;
+    }
+    if (chState.lastWeekKey !== weekKey) {
+        chState.weeklyClaimed = [];
+        chState.lastWeekKey   = weekKey;
+    }
+    saveChState();
+}
+
+// ── Challenge Definitions ──
+function getDailyChallenges() {
+    const todaySessions = sessions.filter(s => {
+        const d = new Date(s.date);
+        return toDateKey(d) === getTodayKey() && !(s.isBreak);
+    });
+    const todayMins   = todaySessions.reduce((sum, s) => sum + (s.duration || 0), 0);
+    const todayHours  = todayMins / 60;
+    const doneTodayTasks = (() => {
+        const key = 'ch_done_tasks_' + getTodayKey();
+        return parseInt(localStorage.getItem(key) || '0');
+    })();
+
+    return [
+        {
+            id:      'daily_4h',
+            icon:    '📖',
+            color:   '#6366f1',
+            bgColor: 'rgba(99,102,241,0.1)',
+            title:   'ماراثون التركيز',
+            desc:    'أكمل 4 ساعات دراسة اليوم',
+            reward:  50,
+            current: Math.min(todayHours, 4),
+            target:  4,
+            unit:    'ساعة',
+            fmt:     v => v.toFixed(1),
+        },
+        {
+            id:      'daily_tasks',
+            icon:    '✅',
+            color:   '#22c55e',
+            bgColor: 'rgba(34,197,94,0.1)',
+            title:   'قاهر المهام',
+            desc:    'أكمل 5 مهام اليوم',
+            reward:  30,
+            current: Math.min(doneTodayTasks, 5),
+            target:  5,
+            unit:    'مهام',
+            fmt:     v => Math.floor(v),
+        },
+        {
+            id:      'daily_streak',
+            icon:    '🔥',
+            color:   '#f97316',
+            bgColor: 'rgba(249,115,22,0.1)',
+            title:   'سلسلة لا تنكسر',
+            desc:    'حافظ على streak اليوم (جلسة واحدة تكفي)',
+            reward:  20,
+            current: todaySessions.length > 0 ? 1 : 0,
+            target:  1,
+            unit:    'جلسة',
+            fmt:     v => Math.floor(v),
+        },
+    ];
+}
+
+function getWeeklyChallenges() {
+    const weekKey  = getWeekKey();
+    const weekStart = new Date(weekKey);
+    const weekSessions = sessions.filter(s => new Date(s.date) >= weekStart);
+
+    // Most studied subject this week
+    const subHours = {};
+    subjects.forEach(s => { subHours[s.name] = 0; });
+    weekSessions.forEach(s => {
+        if (s.subject && subHours[s.subject] !== undefined)
+            subHours[s.subject] += (s.duration || 0) / 60;
+        else if (s.subject)
+            subHours[s.subject] = (subHours[s.subject] || 0) + (s.duration || 0) / 60;
+    });
+    const topSubject = Object.entries(subHours).sort((a, b) => b[1] - a[1]);
+
+    // Commitment: days studied this week / 7
+    const studiedDays = new Set(weekSessions.map(s => toDateKey(new Date(s.date)))).size;
+    const commitPct   = Math.round((studiedDays / 7) * 100);
+
+    // Weekly hours total
+    const weekHours = weekSessions.reduce((s, x) => s + (x.duration || 0), 0) / 60;
+
+    return [
+        {
+            id:      'weekly_top',
+            icon:    '🏆',
+            color:   '#f59e0b',
+            bgColor: 'rgba(245,158,11,0.1)',
+            title:   'الإمبراطور الأكاديمي',
+            desc:    'ادرس 15 ساعة هذا الأسبوع',
+            reward:  100,
+            current: Math.min(weekHours, 15),
+            target:  15,
+            unit:    'ساعة',
+            fmt:     v => v.toFixed(1),
+            extra: topSubject.length
+                ? { type: 'subjects', data: topSubject.slice(0, 4) }
+                : null,
+        },
+        {
+            id:      'weekly_commit',
+            icon:    '📊',
+            color:   '#8b5cf6',
+            bgColor: 'rgba(139,92,246,0.1)',
+            title:   'نسبة الالتزام',
+            desc:    'ادرس 5 أيام من أصل 7 هذا الأسبوع',
+            reward:  80,
+            current: Math.min(studiedDays, 5),
+            target:  5,
+            unit:    'أيام',
+            fmt:     v => Math.floor(v),
+            extra: { type: 'days', studiedDays, commitPct },
+        },
+    ];
+}
+
+// ── Rendering ──
+function renderChallenges() {
+    resetChIfNeeded();
+    const daily  = getDailyChallenges();
+    const weekly = getWeeklyChallenges();
+
+    // Hero stats
+    const dDone = daily.filter(c  => chState.dailyClaimed.includes(c.id)  || c.current >= c.target).length;
+    const wDone = weekly.filter(c => chState.weeklyClaimed.includes(c.id) || c.current >= c.target).length;
+    document.getElementById('chDoneToday').textContent  = dDone;
+    document.getElementById('chTotalToday').textContent = daily.length;
+    document.getElementById('chDoneWeek').textContent   = wDone;
+    document.getElementById('chTotalWeek').textContent  = weekly.length;
+    document.getElementById('chTotalXpEarned').textContent = chState.totalXp;
+
+    // Render daily
+    document.getElementById('chDailyList').innerHTML =
+        daily.map(c => buildChCard(c, 'daily')).join('');
+
+    // Render weekly
+    document.getElementById('chWeeklyList').innerHTML =
+        weekly.map(c => buildChWeeklyCard(c)).join('');
+}
+
+function buildChCard(c, type) {
+    const claimed   = (type === 'daily'
+        ? chState.dailyClaimed
+        : chState.weeklyClaimed).includes(c.id);
+    const completed = c.current >= c.target;
+    const pct       = Math.min(100, Math.round((c.current / c.target) * 100));
+    const isDone    = claimed || completed;
+
+    return `<div class="ch-card ${isDone ? 'ch-done' : ''}" id="chcard_${c.id}">
+        <div class="ch-card-accent" style="background:${c.color};"></div>
+        <div class="ch-top">
+            <div class="ch-icon-wrap" style="background:${c.bgColor};">${c.icon}</div>
+            <div class="ch-info">
+                <div class="ch-title">${c.title}</div>
+                <div class="ch-desc">${c.desc}</div>
+            </div>
+            <div class="ch-reward">⭐ ${c.reward} XP</div>
+        </div>
+        ${isDone
+            ? `<div class="ch-done-badge">✅ مكتمل — تم استلام ${c.reward} XP</div>`
+            : `<div class="ch-progress-row">
+                <div class="ch-bar-bg">
+                    <div class="ch-bar-fill ${pct >= 100 ? 'done' : ''}"
+                         style="width:${pct}%;background:${c.color};"></div>
+                </div>
+                <div class="ch-pct">${pct}%</div>
+               </div>
+               <div style="font-size:0.72rem;color:var(--text-muted);margin-top:5px;">
+                   ${c.fmt(c.current)} / ${c.fmt(c.target)} ${c.unit}
+               </div>
+               ${completed && !claimed
+                   ? `<button class="ch-claim-btn" onclick="claimChallenge('${c.id}','${type}',${c.reward},this)">
+                         <i class="fas fa-gift"></i> استلم المكافأة
+                      </button>`
+                   : ''
+               }`
+        }
+    </div>`;
+}
+
+function buildChWeeklyCard(c) {
+    const claimed   = chState.weeklyClaimed.includes(c.id);
+    const completed = c.current >= c.target;
+    const pct       = Math.min(100, Math.round((c.current / c.target) * 100));
+    const isDone    = claimed || completed;
+
+    let extraHtml = '';
+
+    if (c.extra?.type === 'subjects' && c.extra.data.length) {
+        const maxH = Math.max(...c.extra.data.map(([,h]) => h), 0.1);
+        extraHtml = `<div class="ch-weekly-body">
+            ${c.extra.data.map(([name, h]) => {
+                const sub = subjects.find(s => s.name === name);
+                const col = sub?.color || 'var(--primary-mid)';
+                const w   = Math.round((h / maxH) * 100);
+                return `<div class="ch-weekly-subject-row">
+                    <div class="ch-weekly-dot" style="background:${col};"></div>
+                    <div class="ch-weekly-name">${name}</div>
+                    <div class="ch-weekly-bar-bg"><div class="ch-weekly-bar-fill" style="width:${w}%;background:${col};"></div></div>
+                    <div class="ch-weekly-val">${h.toFixed(1)}h</div>
+                </div>`;
+            }).join('')}
+        </div>`;
+    }
+
+    if (c.extra?.type === 'days') {
+        const { studiedDays, commitPct } = c.extra;
+        // last 7 days grid
+        const days = [];
+        for (let i = 6; i >= 0; i--) {
+            const d = new Date(); d.setDate(d.getDate() - i);
+            const key = toDateKey(d);
+            const studied = sessions.some(s => toDateKey(new Date(s.date)) === key);
+            const isToday = i === 0;
+            const label   = d.toLocaleDateString('ar', { weekday: 'narrow' });
+            days.push(`<div class="ch-ring-day ${studied ? 'studied' : 'empty'} ${isToday ? 'today' : ''}" title="${label}">${label}</div>`);
+        }
+        extraHtml = `<div class="ch-weekly-body">
+            <div class="ch-ring-wrap">
+                <svg class="ch-ring-svg" width="72" height="72" viewBox="0 0 72 72">
+                    <circle cx="36" cy="36" r="30" fill="none" stroke="var(--border)" stroke-width="7"/>
+                    <circle cx="36" cy="36" r="30" fill="none" stroke="${c.color}" stroke-width="7"
+                        stroke-dasharray="${Math.round(commitPct * 1.885)} 188.5"
+                        stroke-linecap="round"
+                        transform="rotate(-90 36 36)"
+                        style="transition:stroke-dasharray 0.8s ease;"/>
+                    <text x="36" y="41" text-anchor="middle" font-size="14" font-weight="800"
+                        fill="var(--text)" font-family="Tajawal,sans-serif">${commitPct}%</text>
+                </svg>
+                <div>
+                    <div class="ch-ring-pct">${studiedDays} / 7</div>
+                    <div class="ch-ring-label">أيام الدراسة هذا الأسبوع</div>
+                    <div class="ch-ring-days">${days.join('')}</div>
+                </div>
+            </div>
+        </div>`;
+    }
+
+    return `<div class="ch-weekly-card ${isDone ? 'ch-done' : ''}" id="chcard_${c.id}">
+        <div class="ch-weekly-header">
+            <div class="ch-weekly-icon" style="background:${c.bgColor};">${c.icon}</div>
+            <div>
+                <div class="ch-weekly-title">${c.title}</div>
+                <div class="ch-weekly-sub">${c.desc}</div>
+            </div>
+            <div class="ch-reward" style="margin-right:auto;">⭐ ${c.reward} XP</div>
+        </div>
+        ${extraHtml}
+        <div style="padding:0 18px 14px;">
+            ${isDone
+                ? `<div class="ch-done-badge">✅ مكتمل — تم استلام ${c.reward} XP</div>`
+                : `<div class="ch-progress-row">
+                    <div class="ch-bar-bg">
+                        <div class="ch-bar-fill ${pct >= 100 ? 'done' : ''}"
+                             style="width:${pct}%;background:${c.color};"></div>
+                    </div>
+                    <div class="ch-pct">${pct}%</div>
+                   </div>
+                   <div style="font-size:0.72rem;color:var(--text-muted);margin-top:5px;">
+                       ${c.fmt(c.current)} / ${c.fmt(c.target)} ${c.unit}
+                   </div>
+                   ${completed && !claimed
+                       ? `<button class="ch-claim-btn" onclick="claimChallenge('${c.id}','weekly',${c.reward},this)">
+                              <i class="fas fa-gift"></i> استلم المكافأة
+                          </button>`
+                       : ''
+                   }`
+            }
+        </div>
+    </div>`;
+}
+
+// ── Claim ──
+function claimChallenge(id, type, xpAmount, btn) {
+    if (type === 'daily' && !chState.dailyClaimed.includes(id)) {
+        chState.dailyClaimed.push(id);
+    } else if (type === 'weekly' && !chState.weeklyClaimed.includes(id)) {
+        chState.weeklyClaimed.push(id);
+    }
+    chState.totalXp += xpAmount;
+    saveChState();
+    addXP(xpAmount);
+
+    // Confetti burst
+    const rect = btn.getBoundingClientRect();
+    const emojis = ['🎉','⭐','🏆','✨','🌟','💫'];
+    for (let i = 0; i < 8; i++) {
+        const el = document.createElement('div');
+        el.className = 'ch-confetti';
+        el.textContent = emojis[i % emojis.length];
+        el.style.cssText = `left:${rect.left + Math.random()*rect.width}px;top:${rect.top}px;`;
+        el.style.animationDelay = (i * 0.08) + 's';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 2200);
+    }
+
+    showNotification(`🎉 +${xpAmount} XP مكافأة التحدي!`, 'success');
+    setTimeout(renderChallenges, 400);
+}
+
+// ── Track daily task completions for the challenges ──
+function trackChallengeTaskDone() {
+    const key = 'ch_done_tasks_' + getTodayKey();
+    const cur = parseInt(localStorage.getItem(key) || '0');
+    localStorage.setItem(key, cur + 1);
+    // Auto-check challenges if tab is open
+    if (document.getElementById('challenges')?.classList.contains('active')) {
+        renderChallenges();
+    }
+}
+
+// ── Hook into tab switch ──
+function initChallenges() {
+    resetChIfNeeded();
+    renderChallenges();
+}
+
+// ═══════════════════════════════════════════════════
+//  KNOWLEDGE TREE — شجرة المعرفة
+// ═══════════════════════════════════════════════════
+
+const TREE_LEVELS = [
+    { name: 'بذرة',       icon: '🌱', minH: 0,   maxH: 5,   nextLabel: '5 ساعات للبراعم'     },
+    { name: 'براعم',      icon: '🌿', minH: 5,   maxH: 15,  nextLabel: '15 ساعة للشتلة'      },
+    { name: 'شتلة',       icon: '🌳', minH: 15,  maxH: 30,  nextLabel: '30 ساعة للشجرة'       },
+    { name: 'شجرة',       icon: '🌲', minH: 30,  maxH: 60,  nextLabel: '60 ساعة للغابة'       },
+    { name: 'غابة',       icon: '🏕️', minH: 60,  maxH: 100, nextLabel: '100 ساعة للجنة'      },
+    { name: 'جنة المعرفة', icon: '✨', minH: 100, maxH: 100, nextLabel: 'وصلت القمة!'         },
+];
+
+const FLOWER_DEFS = [
+    { id: 'f_first_task',    emoji: '🌸', label: 'أول مهمة',     cond: d => d.doneTasks >= 1  },
+    { id: 'f_ten_tasks',     emoji: '🌺', label: '10 مهام',       cond: d => d.doneTasks >= 10 },
+    { id: 'f_first_session', emoji: '🌼', label: 'أول جلسة',     cond: d => d.totalHours >= 0.25 },
+    { id: 'f_five_hours',    emoji: '🌻', label: '5 ساعات',       cond: d => d.totalHours >= 5  },
+    { id: 'f_twenty_hours',  emoji: '🌹', label: '20 ساعة',       cond: d => d.totalHours >= 20 },
+    { id: 'f_fifty_hours',   emoji: '💐', label: '50 ساعة',       cond: d => d.totalHours >= 50 },
+    { id: 'f_streak3',       emoji: '🔥', label: '3 أيام متتالية', cond: d => d.streak >= 3    },
+    { id: 'f_streak7',       emoji: '⚡', label: '7 أيام',         cond: d => d.streak >= 7    },
+    { id: 'f_streak30',      emoji: '🌠', label: '30 يوم',         cond: d => d.streak >= 30   },
+    { id: 'f_allsubjects',   emoji: '🌈', label: 'كل المواد',     cond: d => d.subjectCount >= 3 },
+    { id: 'f_review_done',   emoji: '🍀', label: 'مراجعة متباعدة', cond: d => d.reviewDone >= 1 },
+    { id: 'f_hundred_xp',   emoji: '⭐',  label: '100 XP',         cond: d => d.xp >= 100      },
+    { id: 'f_five_hundred',  emoji: '🏆', label: '500 XP',         cond: d => d.xp >= 500      },
+];
+
+let treeAnimFrame = null;
+let treeGrowth = 0; // 0–1 animation progress
+let treeAnimating = false;
+let treeUnlockedFlowers = JSON.parse(localStorage.getItem('nourium_tree_flowers') || '[]');
+
+function getTreeData() {
+    const totalMinutes = sessions.reduce((s, x) => s + (x.duration || 0), 0);
+    const totalHours   = totalMinutes / 60;
+    const doneTasks    = tasks.filter(t => t.completed).length;
+    const reviewDone   = reviewItems.filter(r => r.done).length;
+    return { totalHours, doneTasks, streak, subjectCount: subjects.length, xp, reviewDone };
+}
+
+function getTreeLevel(hours) {
+    for (let i = TREE_LEVELS.length - 1; i >= 0; i--) {
+        if (hours >= TREE_LEVELS[i].minH) return i;
+    }
+    return 0;
+}
+
+function renderTreeHeader() {
+    const d = getTreeData();
+    const lvlIdx = getTreeLevel(d.totalHours);
+    const lvl = TREE_LEVELS[lvlIdx];
+    const next = TREE_LEVELS[Math.min(lvlIdx + 1, TREE_LEVELS.length - 1)];
+    const pct = lvlIdx === TREE_LEVELS.length - 1
+        ? 100
+        : Math.min(100, ((d.totalHours - lvl.minH) / (next.minH - lvl.minH)) * 100);
+
+    document.getElementById('treeLevelIcon').textContent  = lvl.icon;
+    document.getElementById('treeLevelName').textContent  = lvl.name;
+    document.getElementById('treeLevelSub').textContent   = `${d.totalHours.toFixed(1)} ساعة دراسة`;
+    document.getElementById('treeHoursFill').style.width  = pct + '%';
+    document.getElementById('treeNextGoal').textContent   = lvl.nextLabel;
+}
+
+function renderTreeBranches() {
+    const grid = document.getElementById('treeBranchesGrid');
+    if (!subjects.length) {
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--text-muted);font-size:0.85rem;">أضف موادك الدراسية من تبويب "مواد" لتظهر فروع شجرتك 🌿</div>';
+        return;
+    }
+    const subHours = {};
+    subjects.forEach(s => { subHours[s.id] = 0; });
+    sessions.forEach(sess => {
+        if (sess.subjectId && subHours[sess.subjectId] !== undefined)
+            subHours[sess.subjectId] += (sess.duration || 0) / 60;
+    });
+    const maxH = Math.max(...subjects.map(s => subHours[s.id] || 0), 1);
+
+    grid.innerHTML = subjects.map(s => {
+        const h = (subHours[s.id] || 0).toFixed(1);
+        const pct = Math.min(100, ((subHours[s.id] || 0) / maxH) * 100);
+        const flowers = Math.floor(subHours[s.id] / 2); // زهرة كل ساعتين
+        const flowerStr = '🌸'.repeat(Math.min(flowers, 5)) || '—';
+        const icon = getBranchIcon(s.name);
+        return `<div class="branch-card">
+            <div class="branch-card-color" style="background:${s.color};"></div>
+            <div class="branch-icon">${icon}</div>
+            <div class="branch-name">${s.name}</div>
+            <div class="branch-hours">${h} ساعة</div>
+            <div class="branch-flowers">${flowerStr}</div>
+            <div class="branch-bar-bg"><div class="branch-bar-fill" style="width:${pct}%;background:${s.color};"></div></div>
+        </div>`;
+    }).join('');
+}
+
+function getBranchIcon(name) {
+    const n = name.toLowerCase();
+    if (n.includes('تشريح') || n.includes('anatomy')) return '🦴';
+    if (n.includes('فسيولوجيا') || n.includes('physio')) return '💓';
+    if (n.includes('كيمياء') || n.includes('biochem')) return '🧪';
+    if (n.includes('ميكروب') || n.includes('micro')) return '🦠';
+    if (n.includes('باثولوج') || n.includes('pathol')) return '🔬';
+    if (n.includes('فارما') || n.includes('pharma')) return '💊';
+    if (n.includes('جراح') || n.includes('surgery')) return '🔪';
+    if (n.includes('نفس') || n.includes('psych')) return '🧠';
+    if (n.includes('طوارئ') || n.includes('emergency')) return '🚑';
+    if (n.includes('أطفال') || n.includes('pediatr')) return '👶';
+    return '📚';
+}
+
+function renderTreeFlowers() {
+    const d = getTreeData();
+    const grid = document.getElementById('treeFlowersGrid');
+    const newlyUnlocked = [];
+
+    FLOWER_DEFS.forEach(fl => {
+        const unlocked = fl.cond(d);
+        const wasLocked = !treeUnlockedFlowers.includes(fl.id);
+        if (unlocked && wasLocked) {
+            newlyUnlocked.push(fl);
+            treeUnlockedFlowers.push(fl.id);
+        }
+    });
+
+    if (newlyUnlocked.length) {
+        localStorage.setItem('nourium_tree_flowers', JSON.stringify(treeUnlockedFlowers));
+        newlyUnlocked.forEach(fl => spawnFlowerParticle(fl.emoji));
+    }
+
+    grid.innerHTML = FLOWER_DEFS.map(fl => {
+        const unlocked = fl.cond(d);
+        return `<div class="flower-badge ${unlocked ? '' : 'locked'}">
+            <div class="flower-emoji">${fl.emoji}</div>
+            <div class="flower-label">${fl.label}</div>
+        </div>`;
+    }).join('');
+}
+
+function spawnFlowerParticle(emoji) {
+    const el = document.createElement('div');
+    el.className = 'flower-particle';
+    el.textContent = emoji;
+    el.style.cssText = `left:${30 + Math.random() * 40}vw; top:${30 + Math.random() * 30}vh;`;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3000);
+}
+
+function renderTreeMilestones() {
+    const d = getTreeData();
+    const cont = document.getElementById('treeMilestones');
+    cont.innerHTML = TREE_LEVELS.map((lvl, i) => {
+        const done    = d.totalHours >= lvl.minH;
+        const current = getTreeLevel(d.totalHours) === i;
+        const dotCls  = done ? (current ? 'current' : 'done') : '';
+        return `<div class="milestone-item">
+            <div class="milestone-dot ${dotCls}"></div>
+            <div>
+                <div class="milestone-text">${lvl.icon} ${lvl.name}</div>
+                <div class="milestone-sub">${lvl.minH === 0 ? 'البداية' : lvl.minH + ' ساعة دراسة'}</div>
+                ${done ? `<span class="milestone-badge">✅ مكتمل</span>` : `<span class="milestone-badge" style="background:var(--bg);color:var(--text-muted);">${lvl.minH} ساعة مطلوبة</span>`}
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// ── Canvas Tree Drawing ──
+function drawKnowledgeTree(growth) {
+    const canvas = document.getElementById('knowledgeTreeCanvas');
+    if (!canvas) return;
+    const dpr = window.devicePixelRatio || 1;
+    const W = canvas.offsetWidth || 360;
+    const H = 320;
+    canvas.width  = W * dpr;
+    canvas.height = H * dpr;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+
+    const isDark = document.body.classList.contains('dark-mode');
+    const bgColor = isDark ? '#11183A' : '#f0fdf4';
+    const skyTop  = isDark ? '#0A0F1F' : '#e0f2fe';
+
+    // Sky gradient
+    const sky = ctx.createLinearGradient(0, 0, 0, H);
+    sky.addColorStop(0, skyTop);
+    sky.addColorStop(1, bgColor);
+    ctx.fillStyle = sky;
+    ctx.fillRect(0, 0, W, H);
+
+    // Stars / sparkles (dark mode)
+    if (isDark && growth > 0.3) {
+        ctx.fillStyle = 'rgba(255,255,255,0.6)';
+        [[0.1,0.1],[0.85,0.15],[0.2,0.35],[0.75,0.3],[0.5,0.08],[0.92,0.4]].forEach(([rx,ry]) => {
+            const px = rx * W, py = ry * H * growth;
+            ctx.beginPath();
+            ctx.arc(px, py, 1, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    }
+
+    // Ground
+    const gnd = ctx.createLinearGradient(0, H - 40, 0, H);
+    gnd.addColorStop(0, isDark ? '#14532d' : '#86efac');
+    gnd.addColorStop(1, isDark ? '#052e16' : '#4ade80');
+    ctx.fillStyle = gnd;
+    ctx.fillRect(0, H - 40, W, 40);
+
+    // Trunk
+    const cx = W / 2;
+    const groundY = H - 40;
+    const trunkH = Math.min(growth * 220, 180);
+    const trunkW = 14 + growth * 12;
+
+    const trunkGrad = ctx.createLinearGradient(cx - trunkW, 0, cx + trunkW, 0);
+    trunkGrad.addColorStop(0, '#78350f');
+    trunkGrad.addColorStop(0.5, '#a16207');
+    trunkGrad.addColorStop(1, '#78350f');
+    ctx.fillStyle = trunkGrad;
+    ctx.beginPath();
+    ctx.moveTo(cx - trunkW / 2, groundY);
+    ctx.quadraticCurveTo(cx - trunkW / 2 - 4, groundY - trunkH / 2,
+                         cx, groundY - trunkH);
+    ctx.quadraticCurveTo(cx + trunkW / 2 + 4, groundY - trunkH / 2,
+                         cx + trunkW / 2, groundY);
+    ctx.closePath();
+    ctx.fill();
+
+    // ✅ FIX: حالة افتراضية (بذرة) عند انعدام البيانات
+    if (growth < 0.05) {
+        ctx.font = '48px serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('🌱', W/2, groundY - 30);
+        ctx.font = 'bold 14px Tajawal, sans-serif';
+        ctx.fillStyle = isDark ? 'rgba(165,212,255,0.7)' : '#475569';
+        ctx.fillText('ابدأ جلستك الأولى لتنمو شجرتك!', W/2, groundY - 8);
+        return;
+    }
+
+    // Branches and foliage
+    const d = getTreeData();
+    const subColors = subjects.length
+        ? subjects.map(s => s.color)
+        : ['#22c55e', '#3b82f6', '#f59e0b', '#ec4899'];
+
+    const branchCount = Math.max(3, Math.min(subjects.length || 3, 6));
+    const topY = groundY - trunkH;
+
+    // Draw branch clusters
+    for (let b = 0; b < branchCount; b++) {
+        const angle = (Math.PI / (branchCount + 1)) * (b + 1);
+        const branchLen = (50 + Math.random() * 30) * growth;
+        const bx = cx + Math.cos(Math.PI - angle) * branchLen;
+        const by = topY + Math.sin(Math.PI - angle) * branchLen * 0.5;
+
+        // Branch line
+        ctx.strokeStyle = '#92400e';
+        ctx.lineWidth = 4 * growth;
+        ctx.beginPath();
+        ctx.moveTo(cx, topY);
+        ctx.quadraticCurveTo(cx + Math.cos(Math.PI - angle) * branchLen * 0.5, topY - 20 * growth, bx, by);
+        ctx.stroke();
+
+        // Foliage blob
+        const col = subColors[b % subColors.length];
+        const r = (28 + b * 4) * growth;
+        const folGrad = ctx.createRadialGradient(bx, by, 0, bx, by, r);
+        folGrad.addColorStop(0, col + 'cc');
+        folGrad.addColorStop(1, col + '44');
+        ctx.fillStyle = folGrad;
+        ctx.beginPath();
+        ctx.arc(bx, by, r, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Subject label on branch (if has name)
+        if (subjects[b] && growth > 0.7) {
+            ctx.fillStyle = isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.75)';
+            ctx.font = `bold ${10 * growth}px Tajawal, sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.fillText(subjects[b].name.slice(0, 6), bx, by + 4);
+        }
+    }
+
+    // Central crown
+    const crownR = (50 + growth * 40) * growth;
+    const crownGrad = ctx.createRadialGradient(cx, topY, 0, cx, topY, crownR);
+    crownGrad.addColorStop(0, '#4ade80cc');
+    crownGrad.addColorStop(0.6, '#22c55e88');
+    crownGrad.addColorStop(1, '#15803d33');
+    ctx.fillStyle = crownGrad;
+    ctx.beginPath();
+    ctx.arc(cx, topY, crownR, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Flowers on crown
+    if (growth > 0.5) {
+        const flowerEmojis = treeUnlockedFlowers.slice(0, 6);
+        flowerEmojis.forEach((fid, i) => {
+            const fl = FLOWER_DEFS.find(f => f.id === fid);
+            if (!fl) return;
+            const fAngle = (Math.PI * 2 / flowerEmojis.length) * i;
+            const fr = crownR * 0.7;
+            const fx = cx + Math.cos(fAngle) * fr;
+            const fy = topY + Math.sin(fAngle) * fr * 0.6;
+            ctx.font = `${14 * growth}px serif`;
+            ctx.textAlign = 'center';
+            ctx.fillText(fl.emoji, fx, fy);
+        });
+    }
+
+    // Glow at tip (if high growth)
+    if (growth > 0.8) {
+        const glow = ctx.createRadialGradient(cx, topY - crownR * 0.3, 0, cx, topY - crownR * 0.3, 30);
+        glow.addColorStop(0, 'rgba(250,204,21,0.3)');
+        glow.addColorStop(1, 'rgba(250,204,21,0)');
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(cx, topY - crownR * 0.3, 30, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+function animateTreeGrow() {
+    if (treeAnimating) return;
+    treeAnimating = true;
+    const d = getTreeData();
+    const target = Math.min(1, d.totalHours / 30); // full at 30h
+    const startG = treeGrowth;
+    let startTime = null;
+    const duration = 1400;
+
+    function step(ts) {
+        if (!startTime) startTime = ts;
+        const prog = Math.min(1, (ts - startTime) / duration);
+        const ease = 1 - Math.pow(1 - prog, 3);
+        treeGrowth = startG + (target - startG) * ease;
+        drawKnowledgeTree(treeGrowth);
+        if (prog < 1) {
+            treeAnimFrame = requestAnimationFrame(step);
+        } else {
+            treeGrowth = target;
+            treeAnimating = false;
+            document.getElementById('treeCanvasHint').textContent = 'اضغط لتجديد الأنيميشن 🌿';
+        }
+    }
+    treeAnimFrame = requestAnimationFrame(step);
+}
+
+function initKnowledgeTree() {
+    const canvas = document.getElementById('knowledgeTreeCanvas');
+    if (!canvas) return;
+
+    renderTreeHeader();
+    renderTreeBranches();
+    renderTreeFlowers();
+    renderTreeMilestones();
+
+    // Initial static draw
+    const d = getTreeData();
+    treeGrowth = Math.min(1, d.totalHours / 30);
+    drawKnowledgeTree(treeGrowth);
+
+    canvas.addEventListener('click', animateTreeGrow);
+    canvas.addEventListener('touchend', (e) => { e.preventDefault(); animateTreeGrow(); });
+
+    // Animate on first open
+    setTimeout(animateTreeGrow, 300);
+}
+
+// Re-render tree when sessions change (hook into existing session save)
+function refreshKnowledgeTree() {
+    if (document.getElementById('tree-section')?.classList.contains('active')) {
+        renderTreeHeader();
+        renderTreeBranches();
+        renderTreeFlowers();
+        renderTreeMilestones();
+        const d = getTreeData();
+        treeGrowth = Math.min(1, d.totalHours / 30);
+        drawKnowledgeTree(treeGrowth);
+    }
+}
+
+// Hook into tab switch
+const _origSwitchTab = window.switchTab;
+document.addEventListener('DOMContentLoaded', function() {
+    const origSwitchTab = switchTab;
+    window.switchTab = function(tab, el) {
+        origSwitchTab(tab, el);
+        if (tab === 'tree-section') {
+            setTimeout(initKnowledgeTree, 50);
+        }
+        if (tab === 'challenges') {
+            setTimeout(initChallenges, 50);
+        }
+        if (tab === 'mood-section') {
+            setTimeout(initMoodSection, 50);
+        }
+        if (tab === 'spiritual') {
+            setTimeout(function() { initSpiritV3(); }, 50);
+        }
+    };
+    // Re-draw on resize
+    window.addEventListener('resize', () => {
+        if (document.getElementById('tree-section')?.classList.contains('active')) {
+            drawKnowledgeTree(treeGrowth);
+        }
+    });
+});
+
+
+
+
+// ═══════════════════════════════════════════════════
+//  🌙 SPIRITUAL REGULATION SYSTEM — عالم الروح
+// ═══════════════════════════════════════════════════
+
+// ── Extended Duas Data (mood-based) ──
+const SPIRIT_DUAS = {
+    study: {
+        label: 'قبل المذاكرة', color: '#4338ca',
+        duas: [
+            { id: 'sp_s1', text: 'اللهم إني أسألك فهم النبيين وحفظ المرسلين وإلهام الملائكة المقربين.' },
+            { id: 'sp_s2', text: 'رب اشرح لي صدري ويسر لي أمري واحلل عقدة من لساني يفقهوا قولي.' },
+            { id: 'sp_s3', text: 'اللهم انفعني بما علمتني وعلمني ما ينفعني وزدني علماً.' },
+            { id: 'sp_s4', text: 'اللهم اجعل هذا العلم خالصاً لوجهك الكريم.' },
+            { id: 'sp_s5', text: 'يا معلم إبراهيم علمني، ويا مفهم سليمان فهمني.' },
+        ]
+    },
+    tired: {
+        label: 'عند الإرهاق', color: '#7c3aed',
+        duas: [
+            { id: 'sp_t1', text: 'اللهم إني أعوذ بك من العجز والكسل والجبن والبخل والهرم وعذاب القبر.' },
+            { id: 'sp_t2', text: 'اللهم اجعل عبادتك أحب الأشياء إليّ وطاعتك أسهل الأمور عليّ.' },
+            { id: 'sp_t3', text: 'حسبي الله ونعم الوكيل نعم المولى ونعم النصير.' },
+            { id: 'sp_t4', text: 'اللهم قوّني واشرح صدري للعلم وأمدّني بالطاقة والصبر.' },
+        ]
+    },
+    anxiety: {
+        label: 'قلق الامتحان', color: '#0369a1',
+        duas: [
+            { id: 'sp_a1', text: 'اللهم لا سهل إلا ما جعلته سهلاً وأنت تجعل الحزن إذا شئت سهلاً.' },
+            { id: 'sp_a2', text: 'أعوذ بكلمات الله التامات من شر ما خلق.' },
+            { id: 'sp_a3', text: 'اللهم إني أتوكل عليك وأفوّض أمري إليك وأستعين بك.' },
+            { id: 'sp_a4', text: 'يا حي يا قيوم برحمتك أستغيث أصلح لي شأني كله ولا تكلني إلى نفسي طرفة عين.' },
+            { id: 'sp_a5', text: 'اللهم اكتب لي التوفيق واكشف عني الهم والغم والقلق.' },
+        ]
+    },
+    motivation: {
+        label: 'فقدان الدافع', color: '#065f46',
+        duas: [
+            { id: 'sp_m1', text: 'اللهم أعني على ذكرك وشكرك وحسن عبادتك.' },
+            { id: 'sp_m2', text: 'اللهم حبّب إليّ العلم وزيّنه في قلبي.' },
+            { id: 'sp_m3', text: 'اللهم اجعل لي في كل علم نصيباً وفي كل خير حظاً.' },
+            { id: 'sp_m4', text: 'اللهم ارزقني الهمة العالية والطموح الصادق في طلب العلم.' },
+        ]
+    },
+    frustrated: {
+        label: 'عند الإحباط', color: '#9a3412',
+        duas: [
+            { id: 'sp_f1', text: 'اللهم إني أسألك روحاً من عندك ورحمة واسعة وفرجاً قريباً.' },
+            { id: 'sp_f2', text: 'إنا لله وإنا إليه راجعون، اللهم أجرني في مصيبتي واخلف لي خيراً منها.' },
+            { id: 'sp_f3', text: 'اللهم لا تجعل الدنيا أكبر همي ولا مبلغ علمي.' },
+            { id: 'sp_f4', text: 'وعسى أن تكرهوا شيئاً وهو خير لكم — أحسن الظن بالله.' },
+        ]
+    },
+    after: {
+        label: 'بعد الجلسة', color: '#1e1b6b',
+        duas: [
+            { id: 'sp_af1', text: 'الحمد لله الذي بنعمته تتم الصالحات.' },
+            { id: 'sp_af2', text: 'اللهم بارك لي فيما تعلمت وثبّته في قلبي.' },
+            { id: 'sp_af3', text: 'اللهم اجعل هذا العلم حجة لي لا عليّ.' },
+            { id: 'sp_af4', text: 'اللهم اجعل عملي هذا في ميزان حسناتي.' },
+        ]
+    },
+    doctor: {
+        label: 'دعاء الطبيب', color: '#065f46',
+        duas: [
+            { id: 'sp_dr1', text: 'اللهم ارزقني الإخلاص في تعلم الطب وخدمة المرضى.' },
+            { id: 'sp_dr2', text: 'اللهم اجعلني طبيباً رحيماً تجعل يديّ أداة شفاء بإذنك.' },
+            { id: 'sp_dr3', text: 'اللهم اكتب لي أجر كل مريض أداويه وكل ألم أخففه.' },
+            { id: 'sp_dr4', text: 'اللهم علمني من علمك ما ينفع عبادك واجعل علمي نوراً لهم.' },
+            { id: 'sp_dr5', text: 'اللهم اجعلني سبب شفاء لا سبب ألم، وسبب رحمة لا سبب معاناة.' },
+        ]
+    },
+};
+
+// ── Spiritual Tracker State ──
+let spiritTrack = JSON.parse(localStorage.getItem('nourium_spirit_track') || 'null') || {
+    day: '', verse: false, thikr: false, prayer: false, tranq: 3
+};
+let spiritTrackHistory = JSON.parse(localStorage.getItem('nourium_spirit_history') || '[]');
+let spiritFavs = JSON.parse(localStorage.getItem('nourium_spirit_favs') || '[]');
+let spiritCat  = 'study';
+let sosMuteUntil = 0;
+
+function saveSpiritTrack() {
+    localStorage.setItem('nourium_spirit_track', JSON.stringify(spiritTrack));
+}
+function saveSpiritHistory() {
+    localStorage.setItem('nourium_spirit_history', JSON.stringify(spiritTrackHistory));
+}
+
+// ── Init ──
+function initSpiritualGuide() {
+    // Reset daily tracker if new day
+    var today = getTodayKey();
+    if (spiritTrack.day !== today) {
+        // Archive yesterday
+        if (spiritTrack.day) {
+            spiritTrackHistory.unshift({ date: spiritTrack.day, tranq: spiritTrack.tranq, verse: spiritTrack.verse, thikr: spiritTrack.thikr, prayer: spiritTrack.prayer });
+            if (spiritTrackHistory.length > 30) spiritTrackHistory = spiritTrackHistory.slice(0, 30);
+            saveSpiritHistory();
+        }
+        spiritTrack = { day: today, verse: false, thikr: false, prayer: false, tranq: 3 };
+        saveSpiritTrack();
+    }
+
+    renderSpiritHero();
+    renderSpiritContextBanner();
+    renderSpiritDuas('study');
+    renderSpiritTracker();
+    renderSpiritTranqChart();
+
+    // Yaseen reminder
+    if (yaseenReminderOn) {
+        var lastShown = localStorage.getItem('nourium_yaseen_shown');
+        if (lastShown !== new Date().toDateString()) {
+            var card = document.getElementById('yaseenCard');
+            if (card) card.style.display = 'block';
+        }
+    }
+}
+
+// ── Hero Verse (daily rotation) ──
+function renderSpiritHero() {
+    var dayIdx = new Date().getDate() % QURAN_VERSES.length;
+    var v = QURAN_VERSES[dayIdx];
+    var vEl = document.getElementById('spiritHeroVerse');
+    var rEl = document.getElementById('spiritHeroRef');
+    if (vEl) vEl.textContent = v.text;
+    if (rEl) rEl.textContent = v.ref;
+
+    // Tranquility in hero pill
+    var tEl = document.getElementById('spiritTranqLabel');
+    if (tEl) {
+        var emojis = ['', '😔', '😐', '🙂', '😊', '🤩'];
+        tEl.textContent = 'الطمأنينة: ' + emojis[spiritTrack.tranq];
+    }
+    // Summary pill
+    var sEl = document.getElementById('spiritTrackerSummary');
+    if (sEl) {
+        var done = [spiritTrack.verse, spiritTrack.thikr, spiritTrack.prayer].filter(Boolean).length;
+        sEl.textContent = done === 3 ? '✅ أكملت يومياتك الروحية' : done + '/3 من اليومية';
+    }
+}
+
+// ── Context Banner: smart linking ──
+function renderSpiritContextBanner() {
+    var banner = document.getElementById('spiritContextBanner');
+    if (!banner) return;
+
+    var todaySessions = sessions.filter(function(s) { return toDateKey(new Date(s.date)) === getTodayKey(); });
+    var todayMins = todaySessions.reduce(function(sum, s) { return sum + (s.duration || 0); }, 0);
+
+    var msg = null;
+    if (todayMins === 0) {
+        msg = { icon: '🌱', title: 'يومك بدأ', text: 'لم تدرس بعد اليوم. كل رحلة ألف ميل تبدأ بخطوة.', dua: '«رب اشرح لي صدري ويسر لي أمري»' };
+    } else if (todayMins >= 240) {
+        msg = { icon: '🏆', title: 'ما شاء الله عليك!', text: 'أربع ساعات أو أكثر اليوم — هذا جهد مبارك.', dua: '«الحمد لله الذي بنعمته تتم الصالحات»' };
+    } else if (streak === 0) {
+        msg = { icon: '🤍', title: 'كل يوم بداية جديدة', text: 'لا بأس — كل لحظة صالحة للبدء. الله يعلم نيتك.', dua: '«توبوا إلى الله توبة نصوحاً»' };
+    } else if (streak >= 7) {
+        msg = { icon: '🔥', title: streak + ' أيام متتالية!', text: 'استمراريتك دليل على عزيمة حقيقية.', dua: '«اللهم أعني على ذكرك وشكرك»' };
+    }
+
+    if (msg) {
+        banner.classList.remove('hidden');
+        document.getElementById('scbIcon').textContent  = msg.icon;
+        document.getElementById('scbTitle').textContent = msg.title;
+        document.getElementById('scbText').textContent  = msg.text;
+        document.getElementById('scbDua').textContent   = msg.dua;
+    } else {
+        banner.classList.add('hidden');
+    }
+}
+
+// ── Dua Library ──
+function switchSpiritCat(cat, btn) {
+    spiritCat = cat;
+    document.querySelectorAll('.spirit-cat-pill').forEach(function(b) { b.classList.remove('active'); });
+    if (btn) btn.classList.add('active');
+    renderSpiritDuas(cat);
+}
+
+function renderSpiritDuas(cat) {
+    var list = document.getElementById('spiritDuaList');
+    if (!list) return;
+    if (cat === 'favs') { renderSpiritFavs(); return; }
+    var data = SPIRIT_DUAS[cat];
+    if (!data) return;
+
+    list.innerHTML = '';
+    data.duas.forEach(function(d) {
+        var isFav = spiritFavs.includes(d.id);
+        var preview = d.text.slice(0, 50) + (d.text.length > 50 ? '...' : '');
+
+        var card = document.createElement('div');
+        card.className = 'sdua-card';
+        card.id = 'sduac_' + d.id;
+
+        var accent = document.createElement('div');
+        accent.className = 'sdua-accent';
+        accent.style.background = data.color;
+
+        var topRow = document.createElement('div');
+        topRow.style.cssText = 'display:flex;align-items:center;gap:8px;';
+        topRow.innerHTML = '<div class="sdua-emoji">🤲</div>' +
+            '<div class="sdua-preview">' + preview + '</div>' +
+            '<span class="sdua-expand-icon">▼</span>';
+
+        var body = document.createElement('div');
+        body.className = 'sdua-body';
+
+        var textEl = document.createElement('div');
+        textEl.className = 'sdua-text';
+        textEl.textContent = d.text;
+
+        var actions = document.createElement('div');
+        actions.className = 'sdua-actions';
+
+        var favBtn = document.createElement('button');
+        favBtn.className = 'sdua-btn' + (isFav ? ' fav-on' : '');
+        favBtn.innerHTML = '<i class="fas fa-star"></i> ' + (isFav ? 'محفوظ' : 'حفظ');
+        favBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleSpiritFav(d.id, favBtn);
+        });
+
+        var copyBtn = document.createElement('button');
+        copyBtn.className = 'sdua-btn';
+        copyBtn.innerHTML = '<i class="fas fa-copy"></i> نسخ';
+        copyBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            copySpiritDuaById(d.id);
+        });
+
+        actions.appendChild(favBtn);
+        actions.appendChild(copyBtn);
+        body.appendChild(textEl);
+        body.appendChild(actions);
+        card.appendChild(accent);
+        card.appendChild(topRow);
+        card.appendChild(body);
+
+        card.addEventListener('click', function(e) {
+            toggleSpiritDua(d.id, e);
+        });
+
+        list.appendChild(card);
+    });
+}
+
+function toggleSpiritDua(id, event) {
+    var card = document.getElementById('sduac_' + id);
+    if (!card) return;
+    var wasExpanded = card.classList.contains('expanded');
+    document.querySelectorAll('.sdua-card.expanded').forEach(function(c) { c.classList.remove('expanded'); });
+    if (!wasExpanded) {
+        card.classList.add('expanded');
+        var rect = card.getBoundingClientRect();
+        var cx = rect.left + rect.width / 2;
+        var cy = rect.top + 30;
+        var emojis = ['✨','🤲','🌙','💫','⭐','🌟'];
+        for (var i = 0; i < 6; i++) {
+            (function(idx) {
+                var el = document.createElement('div');
+                el.className = 'dua-sparkle';
+                el.textContent = emojis[idx];
+                var angle = (Math.PI * 2 / 6) * idx;
+                var dist = 45 + Math.random() * 25;
+                el.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+                el.style.setProperty('--ty', (Math.sin(angle) * dist - 15) + 'px');
+                el.style.left = cx + 'px';
+                el.style.top = cy + 'px';
+                el.style.animationDelay = (idx * 0.06) + 's';
+                document.body.appendChild(el);
+                setTimeout(function() { el.remove(); }, 950);
+            })(i);
+        }
+    }
+}
+
+function renderSpiritFavs() {
+    var list = document.getElementById('spiritDuaList');
+    if (!list) return;
+    if (!spiritFavs.length) {
+        list.innerHTML = '<div class="empty-state"><i class="fas fa-star"></i><p>لا توجد أدعية محفوظة بعد</p><p style="font-size:0.78rem;margin-top:6px;">اضغط ⭐ على أي دعاء لحفظه</p></div>';
+        return;
+    }
+    var allDuas = {};
+    Object.values(SPIRIT_DUAS).forEach(function(cat) {
+        cat.duas.forEach(function(d) { allDuas[d.id] = { text: d.text, color: cat.color }; });
+    });
+    list.innerHTML = spiritFavs.map(function(id) {
+        var d = allDuas[id];
+        if (!d) return '';
+        return '<div class="sdua-card">' +
+            '<div class="sdua-accent" style="background:' + d.color + ';"></div>' +
+            '<div class="sdua-emoji">🤲</div>' +
+            '<div class="sdua-text">' + d.text + '</div>' +
+            '<div class="sdua-actions">' +
+                '<button class="sdua-btn fav-on" onclick="toggleSpiritFav(\'' + id + '\',this)">' +
+                    '<i class="fas fa-star"></i> محفوظ' +
+                '</button>' +
+                '<button class="sdua-btn" data-id="' + id + '" onclick="copySpiritDuaById(this.dataset.id)">' +
+                    '<i class="fas fa-copy"></i> نسخ' +
+                '</button>' +
+            '</div>' +
+        '</div>';
+    }).join('');
+}
+
+function toggleSpiritFav(id, btn) {
+    var idx = spiritFavs.indexOf(id);
+    if (idx === -1) {
+        spiritFavs.push(id);
+        btn.classList.add('fav-on');
+        btn.innerHTML = '<i class="fas fa-star"></i> محفوظ';
+        showNotification('⭐ تمت الإضافة للمفضلة', 'success');
+    } else {
+        spiritFavs.splice(idx, 1);
+        btn.classList.remove('fav-on');
+        btn.innerHTML = '<i class="fas fa-star"></i> حفظ';
+    }
+    localStorage.setItem('nourium_spirit_favs', JSON.stringify(spiritFavs));
+}
+
+function copySpiritDua(text) {
+    safeCopy(text, '✅ تم نسخ الدعاء');
+}
+function copySpiritDuaById(id) {
+    var allDuas = {};
+    Object.values(SPIRIT_DUAS).forEach(function(cat) {
+        cat.duas.forEach(function(d) { allDuas[d.id] = d.text; });
+    });
+    var text = allDuas[id];
+    if (text) safeCopy(text, '✅ تم نسخ الدعاء');
+}
+
+// ── Tracker ──
+function renderSpiritTracker() {
+    var items = ['verse', 'thikr', 'prayer'];
+    items.forEach(function(k) {
+        var el = document.getElementById('st_' + k);
+        if (!el) return;
+        if (spiritTrack[k]) { el.classList.add('done'); el.textContent = '✓'; }
+        else { el.classList.remove('done'); el.textContent = ''; }
+    });
+    var slider = document.getElementById('spiritTranqSlider');
+    if (slider) slider.value = spiritTrack.tranq;
+    var valEl = document.getElementById('spiritTranqVal');
+    if (valEl) {
+        var emojis = ['', '😔', '😐', '🙂', '😊', '🤩'];
+        valEl.textContent = emojis[spiritTrack.tranq];
+    }
+}
+
+function toggleSpiritTrack(key, el) {
+    spiritTrack[key] = !spiritTrack[key];
+    if (spiritTrack[key]) { el.classList.add('done'); el.textContent = '✓'; }
+    else { el.classList.remove('done'); el.textContent = ''; }
+    saveSpiritTrack();
+    renderSpiritHero();
+    showNotification(spiritTrack[key] ? '✅ تم التسجيل' : 'تم الإلغاء', 'success');
+}
+
+function onTranqChange(val) {
+    spiritTrack.tranq = parseInt(val);
+    saveSpiritTrack();
+    var emojis = ['', '😔', '😐', '🙂', '😊', '🤩'];
+    var valEl = document.getElementById('spiritTranqVal');
+    if (valEl) valEl.textContent = emojis[spiritTrack.tranq];
+    renderSpiritHero();
+}
+
+// ── Tranquility Chart ──
+function renderSpiritTranqChart() {
+    var wrap = document.getElementById('spiritTranqChart');
+    if (!wrap) return;
+    var days = [];
+    for (var i = 6; i >= 0; i--) {
+        var d = new Date(); d.setDate(d.getDate() - i);
+        days.push(d);
+    }
+    var dayNames = ['أح','ن','ث','ر','خ','ج','س'];
+    wrap.innerHTML = days.map(function(d) {
+        var key = toDateKey(d);
+        var isToday = key === getTodayKey();
+        var tranq = isToday ? spiritTrack.tranq : 0;
+        if (!isToday) {
+            var hist = spiritTrackHistory.find(function(h) { return h.date === key; });
+            if (hist) tranq = hist.tranq;
+        }
+        var pct = tranq ? (tranq / 5 * 100) : 6;
+        var colors = ['', '#ef4444','#f97316','#f59e0b','#84cc16','#22c55e'];
+        return '<div class="stchart-col">' +
+            '<div class="stchart-bar" style="height:' + pct + '%;background:' + (tranq ? colors[tranq] : 'var(--border)') + ';"></div>' +
+            '<div class="stchart-day" style="' + (isToday ? 'color:var(--primary);font-weight:800;' : '') + '">' + dayNames[d.getDay()] + '</div>' +
+        '</div>';
+    }).join('');
+}
+
+// ── Now Mode Actions ──
+function startBreathingExercise() {
+    var overlay = document.createElement('div');
+    overlay.id = 'breathOverlay';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:500;background:rgba(4,8,16,0.92);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;';
+    var phases = [
+        { label: 'استنشق...', cls: 'inhale', dur: 4 },
+        { label: 'احبس...', cls: 'hold', dur: 4 },
+        { label: 'أخرج الهواء...', cls: 'exhale', dur: 4 },
+        { label: 'توقف...', cls: 'hold', dur: 4 },
+    ];
+    var cycle = 0, phase = 0, secs = 0;
+    overlay.innerHTML = '<div style="color:rgba(199,210,254,0.5);font-size:0.75rem;margin-bottom:24px;">تنفس الصندوق · 30 ثانية</div>' +
+        '<div id="breathRing" class="sos-breath-ring"><div style="font-size:2rem;" id="breathEmoji">🌬️</div></div>' +
+        '<div class="sos-breath-label" id="breathLabel">استنشق...</div>' +
+        '<div class="sos-step-label" id="breathCount">4</div>' +
+        '<button onclick="document.getElementById("breathOverlay").remove()" style="margin-top:32px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:50px;padding:10px 24px;color:rgba(199,210,254,0.6);cursor:pointer;font-family:Tajawal,sans-serif;font-size:0.85rem;">إنهاء</button>';
+    document.body.appendChild(overlay);
+
+    var interval = setInterval(function() {
+        secs++;
+        var p = phases[phase];
+        var remaining = p.dur - (secs % p.dur || p.dur);
+        var lEl = overlay.querySelector('#breathLabel');
+        var cEl = overlay.querySelector('#breathCount');
+        if (lEl) lEl.textContent = p.label;
+        if (cEl) cEl.textContent = remaining;
+        if (secs % p.dur === 0) { phase = (phase + 1) % phases.length; if (phase === 0) cycle++; }
+        if (secs >= 30) { clearInterval(interval); setTimeout(function() { overlay.remove(); }, 1000); }
+    }, 1000);
+}
+
+function showQuickThikr() {
+    var thikrs = ['سبحان الله وبحمده (100 مرة)', 'لا إله إلا الله وحده لا شريك له', 'استغفر الله العظيم وأتوب إليه', 'سبحان الله، الحمد لله، الله أكبر'];
+    var t = thikrs[Math.floor(Math.random() * thikrs.length)];
+    showSpiritQuickModal('📿 ذكر سريع', t, 'رددها بتأمل وحضور قلب');
+}
+
+function showRefocusDua() {
+    showSpiritQuickModal('🎯 إعادة تركيز', 'اللهم لا سهل إلا ما جعلته سهلاً وأنت تجعل الحزن إذا شئت سهلاً', 'خذ نفساً عميقاً ثم ردد هذا الدعاء');
+}
+
+function showPreStudyDua() {
+    showSpiritQuickModal('📖 دعاء المذاكرة', 'رب اشرح لي صدري ويسر لي أمري واحلل عقدة من لساني يفقهوا قولي', 'قلها بنية صادقة قبل الشروع في الدراسة');
+}
+
+function closeSpiritQuickModal() { var el = document.getElementById('spiritQuickModal'); if (el) el.remove(); }
+
+function showSpiritQuickModal(title, text, hint) {
+    var old = document.getElementById('spiritQuickModal');
+    if (old) old.remove();
+    var el = document.createElement('div');
+    el.id = 'spiritQuickModal';
+    el.style.cssText = 'position:fixed;inset:0;z-index:800;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);display:flex;align-items:flex-end;justify-content:center;';
+    el.onclick = function(e) { if (e.target === el) el.remove(); };
+    el.innerHTML = '<div style="background:var(--card-bg);border-radius:24px 24px 0 0;padding:24px 20px 36px;width:100%;max-width:480px;box-shadow:0 -8px 40px rgba(0,0,0,0.25);animation:moodSlideUp 0.3s ease;">' +
+        '<div style="width:40px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 16px;"></div>' +
+        '<div style="font-size:1rem;font-weight:800;color:var(--text);text-align:center;margin-bottom:14px;">' + title + '</div>' +
+        '<div style="font-size:1rem;font-weight:700;color:var(--text);line-height:1.9;direction:rtl;text-align:center;background:var(--bg);border-radius:14px;padding:16px 14px;margin-bottom:12px;">' + text + '</div>' +
+        '<div style="font-size:0.76rem;color:var(--text-muted);text-align:center;margin-bottom:16px;">' + hint + '</div>' +
+        '<button onclick="closeSpiritQuickModal()" style="width:100%;padding:12px;border:none;border-radius:50px;background:var(--primary);color:white;font-size:0.9rem;font-weight:800;cursor:pointer;font-family:Tajawal,sans-serif;">تم 🤍</button>' +
+    '</div>';
+    document.body.appendChild(el);
+}
+
+// ── ملجئي — SOS ──
+function openSpiritSOS() {
+    var old = document.getElementById('spiritSOSOverlay');
+    if (old) old.remove();
+
+    var el = document.createElement('div');
+    el.id = 'spiritSOSOverlay';
+    el.className = 'spirit-sos-overlay';
+    el.style.cssText = 'position:fixed;inset:0;z-index:2000;background:linear-gradient(175deg,#040810 0%,#0a0f1e 50%,#0f1630 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;animation:sosFadeIn 0.4s ease;';
+
+    el.innerHTML =
+        '<button onclick="closeSpiritSOS()" style="position:absolute;top:20px;left:20px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:50%;width:38px;height:38px;color:rgba(255,255,255,0.6);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">✕</button>' +
+
+        '<div style="font-size:0.6rem;letter-spacing:3px;color:rgba(199,210,254,0.35);text-transform:uppercase;margin-bottom:32px;">ملجئي</div>' +
+
+        '<div id="sosBreathRing" style="width:110px;height:110px;border-radius:50%;border:1.5px solid rgba(99,102,241,0.3);display:flex;align-items:center;justify-content:center;margin-bottom:10px;position:relative;">' +
+            '<div style="font-size:1.8rem;">🤍</div>' +
+        '</div>' +
+        '<div id="sosBreathLabel" style="font-size:0.95rem;font-weight:700;color:#c7d2fe;margin-bottom:4px;">استنشق...</div>' +
+        '<div id="sosBreathCount" style="font-size:0.75rem;color:rgba(199,210,254,0.4);margin-bottom:36px;">4</div>' +
+
+        '<div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:18px 22px;text-align:center;width:100%;margin-bottom:14px;">' +
+            '<div style="font-size:1rem;font-weight:700;color:#e0e7ff;line-height:1.9;direction:rtl;">﴿ حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ ﴾</div>' +
+            '<div style="font-size:0.62rem;color:rgba(199,210,254,0.35);margin-top:6px;">سورة آل عمران – 173</div>' +
+        '</div>' +
+
+        '<div style="background:rgba(99,102,241,0.07);border:1px solid rgba(99,102,241,0.15);border-radius:14px;padding:16px 20px;text-align:center;width:100%;margin-bottom:28px;">' +
+            '<div style="font-size:0.9rem;font-weight:700;color:#a5b4fc;line-height:1.9;direction:rtl;">«اللهم إني أسألك السكينة والطمأنينة في قلبي»</div>' +
+        '</div>' +
+
+        '<button onclick="closeSpiritSOS()" style="width:100%;padding:14px;border:1px solid rgba(99,102,241,0.3);border-radius:50px;background:rgba(99,102,241,0.12);color:#a5b4fc;font-size:0.9rem;font-weight:800;cursor:pointer;font-family:Tajawal,sans-serif;">عدت إليك يا رب 🕊️</button>';
+
+    document.body.appendChild(el);
+    sosMuteUntil = Date.now() + 20 * 60 * 1000;
+
+    var p = 0, s = 0;
+    var phases = ['inhale','hold','exhale','hold'];
+    var phaseLabels = ['استنشق...','احبس...','أخرج الهواء...','اسكن...'];
+    var labelEl = document.getElementById('sosBreathLabel');
+    var countEl = document.getElementById('sosBreathCount');
+    var bInterval = setInterval(function() {
+        s++;
+        var remaining = 4 - (s % 4 || 4);
+        if (countEl) countEl.textContent = remaining;
+        if (s % 4 === 0) { p = (p+1) % phases.length; if (labelEl) labelEl.textContent = phaseLabels[p]; }
+        if (!document.getElementById('spiritSOSOverlay')) clearInterval(bInterval);
+    }, 1000);
+}
+
+function closeSpiritSOS() {
+    var el = document.getElementById('spiritSOSOverlay');
+    if (el) { el.style.opacity = '0'; el.style.transition = 'opacity 0.4s'; setTimeout(function() { el.remove(); }, 400); }
+}
+
+// ── Smart Spiritual Triggers ──
+function triggerSpiritAfterSession(durationMins) {
+    if (durationMins >= 90) {
+        setTimeout(function() {
+            showSpiritQuickModal('🏆 ما شاء الله!', 'الحمد لله الذي بنعمته تتم الصالحات', 'جلسة استثنائية — ' + durationMins + ' دقيقة من العطاء');
+        }, 3000);
+    }
+}
+
+function isSpiritMuted() {
+    return Date.now() < sosMuteUntil;
+}
+
+
+// ═══════════════════════════════════════════════════
+//  SPIRIT WORLD v2 — نظام الاستقرار النفسي
+// ═══════════════════════════════════════════════════
+
+// ── Breath Orb ──
+var orbBreathingActive = false;
+var orbBreathInterval  = null;
+
+function startOrbBreathing() {
+    if (orbBreathingActive) { stopOrbBreathing(); return; }
+    orbBreathingActive = true;
+
+    var orb      = document.getElementById('spiritOrb');
+    var emojiEl  = document.getElementById('spiritOrbEmoji');
+    var hintEl   = orb ? orb.querySelector('.spirit-orb-hint') : null;
+
+    if (hintEl) hintEl.textContent = 'انقر للإيقاف';
+
+    var phases = [
+        { emoji: '🫁', label: 'استنشق...', dur: 4000,
+          scale: 'scale(1.25)', color: 'rgba(99,102,241,0.3)' },
+        { emoji: '⏸️', label: 'احبس...',   dur: 4000,
+          scale: 'scale(1.25)', color: 'rgba(139,92,246,0.25)' },
+        { emoji: '🌬️', label: 'أخرج...',  dur: 4000,
+          scale: 'scale(0.85)', color: 'rgba(99,102,241,0.1)' },
+        { emoji: '⏸️', label: 'توقف...',  dur: 4000,
+          scale: 'scale(0.85)', color: 'rgba(139,92,246,0.08)' },
+    ];
+    var pIdx = 0;
+
+    function runPhase() {
+        if (!orbBreathingActive) return;
+        var ph = phases[pIdx % phases.length];
+        if (emojiEl)  emojiEl.textContent = ph.emoji;
+        if (orb) {
+            orb.style.transition = 'transform ' + (ph.dur/1000) + 's ease-in-out, background ' + (ph.dur/1000) + 's ease-in-out';
+            orb.style.transform  = ph.scale;
+            orb.style.background = 'radial-gradient(circle at 38% 35%, ' + ph.color + ', rgba(99,102,241,0.04) 55%, transparent 70%)';
+        }
+        // Show phase label near orb
+        var wrap = document.getElementById('spiritOrbWrap');
+        if (wrap) {
+            var existing = wrap.querySelector('.orb-phase-label');
+            if (existing) existing.remove();
+            var lbl = document.createElement('div');
+            lbl.className = 'orb-phase-label';
+            lbl.style.cssText = 'position:absolute;bottom:-32px;left:50%;transform:translateX(-50%);font-size:0.75rem;font-weight:800;color:rgba(199,210,254,0.6);white-space:nowrap;letter-spacing:1px;';
+            lbl.textContent = ph.label;
+            wrap.appendChild(lbl);
+        }
+        pIdx++;
+        orbBreathInterval = setTimeout(runPhase, ph.dur);
+    }
+    runPhase();
+}
+
+function stopOrbBreathing() {
+    orbBreathingActive = false;
+    clearTimeout(orbBreathInterval);
+    var orb     = document.getElementById('spiritOrb');
+    var emojiEl = document.getElementById('spiritOrbEmoji');
+    var hintEl  = orb ? orb.querySelector('.spirit-orb-hint') : null;
+    var wrap    = document.getElementById('spiritOrbWrap');
+
+    if (orb) {
+        orb.style.transition = 'transform 0.8s ease, background 0.8s ease';
+        orb.style.transform  = '';
+        orb.style.background = '';
+    }
+    if (emojiEl) emojiEl.textContent = '🌬️';
+    if (hintEl)  hintEl.textContent  = 'انقر للتنفس';
+    if (wrap) { var lbl = wrap.querySelector('.orb-phase-label'); if (lbl) lbl.remove(); }
+}
+
+// ── Spirit × Productivity Correlation ──
+function renderSpiritProdCorrelation() {
+    var cont = document.getElementById('spiritProdCard');
+    if (!cont) return;
+
+    // Need at least 3 days of tranq data
+    if (!spiritTrackHistory || spiritTrackHistory.length < 3) return;
+
+    // Build day map: date → { tranq, studyMins }
+    var dayMap = {};
+    spiritTrackHistory.forEach(function(h) {
+        dayMap[h.day] = { tranq: h.tranq || 3, studyMins: 0 };
+    });
+    sessions.forEach(function(s) {
+        var key = toDateKey(new Date(s.date));
+        if (dayMap[key]) dayMap[key].studyMins += (s.duration || 0);
+    });
+
+    var rows = Object.values(dayMap).filter(function(d) { return d.studyMins > 0; });
+    if (rows.length < 2) return;
+
+    // Group by tranq score
+    var byTranq = { 1:[], 2:[], 3:[], 4:[], 5:[] };
+    rows.forEach(function(r) { byTranq[r.tranq].push(r.studyMins); });
+
+    var avgByTranq = {};
+    [1,2,3,4,5].forEach(function(t) {
+        if (byTranq[t].length) {
+            avgByTranq[t] = Math.round(byTranq[t].reduce(function(a,b){return a+b;},0) / byTranq[t].length);
+        }
+    });
+
+    // Find best tranq
+    var bestTranq = 3;
+    var bestMins  = 0;
+    Object.keys(avgByTranq).forEach(function(t) {
+        if (avgByTranq[t] > bestMins) { bestMins = avgByTranq[t]; bestTranq = parseInt(t); }
+    });
+
+    var tranqEmojis = { 1:'😔', 2:'😐', 3:'🙂', 4:'😊', 5:'🤩' };
+    var maxMins = Math.max.apply(null, Object.values(avgByTranq).concat([1]));
+
+    var barsHtml = [1,2,3,4,5].map(function(t) {
+        var mins = avgByTranq[t] || 0;
+        var pct  = Math.round((mins / maxMins) * 100);
+        var color = t >= 4 ? '#818cf8' : t === 3 ? '#a78bfa' : 'rgba(199,210,254,0.2)';
+        return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">' +
+            '<div style="font-size:0.62rem;color:rgba(199,210,254,0.45);font-weight:700;">' + (mins ? Math.round(mins/60*10)/10+'h' : '—') + '</div>' +
+            '<div style="width:100%;height:48px;background:rgba(255,255,255,0.04);border-radius:6px;display:flex;align-items:flex-end;overflow:hidden;">' +
+            '<div style="width:100%;height:' + pct + '%;background:' + color + ';border-radius:4px 4px 0 0;transition:height 0.6s ease;"></div>' +
+            '</div>' +
+            '<div style="font-size:1rem;">' + tranqEmojis[t] + '</div>' +
+            '</div>';
+    }).join('');
+
+    cont.innerHTML =
+        '<div style="font-size:0.8rem;font-weight:800;color:rgba(224,231,255,0.8);margin-bottom:6px;">🔗 طمأنينتك × ساعات دراستك</div>' +
+        '<div style="font-size:0.72rem;color:rgba(199,210,254,0.4);margin-bottom:14px;line-height:1.5;">' +
+            'إنتاجيتك أعلى عندما طمأنينتك <strong style="color:#a5b4fc;">' + tranqEmojis[bestTranq] + ' ' + bestTranq + '/5</strong>' +
+        '</div>' +
+        '<div style="display:flex;align-items:flex-end;gap:8px;height:80px;">' + barsHtml + '</div>';
+}
+
+// ── Smart Context Banner v2: يتكيف مع كل حالة ──
+function renderSpiritContextBannerV2() {
+    var banner = document.getElementById('spiritContextBanner');
+    if (!banner) return;
+
+    var todaySessions = sessions.filter(function(s) {
+        return toDateKey(new Date(s.date)) === getTodayKey();
+    });
+    var todayMins = todaySessions.reduce(function(s, x) { return s + (x.duration || 0); }, 0);
+    var streakNow = streak || 0;
+
+    var msg = null;
+
+    // No study today
+    if (todayMins === 0) {
+        msg = { icon:'🌱', title:'اليوم بدأ للتو', text:'كل رحلة تبدأ بخطوة. ابدأ جلسة واحدة صغيرة.', dua:'«وَقُل رَّبِّ زِدْنِي عِلْمًا»' };
+    }
+    // Streak just broke (no session yesterday)
+    else if (streakNow === 0) {
+        msg = { icon:'🤍', title:'لا بأس، كلنا نتعثر', text:'الاستمرار مع العقبات هو الإنجاز الحقيقي. ابدأ من جديد اليوم.', dua:'«إنَّ مَعَ الْعُسْرِ يُسْرًا»' };
+    }
+    // Long session done
+    else if (todayMins >= 90) {
+        msg = { icon:'✨', title:'ما شاء الله!', text:'جلسة ' + Math.round(todayMins/60*10)/10 + ' ساعة — جهد حقيقي يستحق الشكر.', dua:'«الحمد لله الذي بنعمته تتم الصالحات»' };
+    }
+    // Good streak
+    else if (streakNow >= 7) {
+        msg = { icon:'🔥', title:streakNow + ' أيام متتالية!', text:'هذا التزام نادر. نوري فخور بك جداً.', dua:'«من سلك طريقاً يلتمس فيه علماً سهّل الله به طريقاً إلى الجنة»' };
+    }
+
+    if (!msg) { banner.classList.add('hidden'); return; }
+
+    banner.classList.remove('hidden');
+    document.getElementById('scbIcon').textContent  = msg.icon;
+    document.getElementById('scbTitle').textContent = msg.title;
+    document.getElementById('scbText').textContent  = msg.text;
+    document.getElementById('scbDua').textContent   = msg.dua;
+}
+
+// ── Override initSpiritualGuide to call new functions ──
+var _origInitSpirit = typeof initSpiritualGuide === 'function' ? initSpiritualGuide : null;
+function initSpiritualGuideV2() {
+    if (_origInitSpirit) _origInitSpirit();
+    renderSpiritContextBannerV2();
+    renderSpiritProdCorrelation();
+}
+
+// ═══════════════════════════════════════════════════
+//  REDESIGN v2 — New Layout Logic
+// ═══════════════════════════════════════════════════
+
+// ── Snapshot Card ──
+function updateSnapshotCard() {
+    const todaySessions = sessions.filter(s => toDateKey(new Date(s.date)) === getTodayKey());
+    const todayMins  = todaySessions.reduce((sum, s) => sum + (s.duration || 0), 0);
+    const todayHours = (todayMins / 60).toFixed(1);
+    const goalMins   = (dailyGoal || 120);
+    const pct        = Math.min(100, Math.round((todayMins / goalMins) * 100));
+
+    const level = getCurrentLevel ? getCurrentLevel() : { icon: '🎓', name: 'ابدأ' };
+
+    const snapH  = document.getElementById('snapHours');
+    const snapS  = document.getElementById('snapStreak');
+    const snapL  = document.getElementById('snapLevel');
+    const snapLN = document.getElementById('snapLevelName');
+    const snapB  = document.getElementById('snapHoursBar');
+
+    if (snapH)  snapH.textContent  = todayHours;
+    if (snapS)  snapS.textContent  = streak + ' 🔥';
+    if (snapL)  snapL.textContent  = level.icon;
+    if (snapLN) snapLN.textContent = level.name;
+    if (snapB)  snapB.style.width  = pct + '%';
+}
+
+// ── System Collapse ──
+let systemOpen = false;
+function toggleSystemCollapse() {
+    systemOpen = !systemOpen;
+    const body    = document.getElementById('systemBody');
+    const chevron = document.getElementById('systemChevron');
+    if (body)    body.classList.toggle('open', systemOpen);
+    if (chevron) chevron.classList.toggle('open', systemOpen);
+}
+
+// ── More Menu ──
+const MORE_SECTIONS = [
+    { id: 'profile',      icon: '⚙️',  label: 'الإعدادات' },
+    { id: 'notes',        icon: '📝',  label: 'ملاحظات'   },
+    { id: 'subjects',     icon: '📚',  label: 'موادي'     },
+];
+
+function openMoreMenu() {
+    const overlay = document.getElementById('moreMenuOverlay');
+    const grid    = document.getElementById('moreMenuGrid');
+    if (!overlay || !grid) return;
+    grid.innerHTML = MORE_SECTIONS.map(s =>
+        `<div class="more-tile" onclick="closeMoreMenu();switchTab('${s.id}',null)">
+            <div class="more-tile-icon">${s.icon}</div>
+            <div class="more-tile-label">${s.label}</div>
+        </div>`
+    ).join('');
+    overlay.style.display = 'block';
+    requestAnimationFrame(() => {
+        const sheet = document.getElementById('moreMenuSheet');
+        if (sheet) { sheet.style.transform = 'translateY(100%)'; sheet.style.transition = 'transform 0.3s cubic-bezier(.4,0,.2,1)'; }
+        requestAnimationFrame(() => { if (sheet) sheet.style.transform = 'translateY(0)'; });
+    });
+}
+function closeMoreMenu() {
+    const overlay = document.getElementById('moreMenuOverlay');
+    if (overlay) overlay.style.display = 'none';
+}
+
+// ── Override switchTab to handle new nav & growth hub ──
+document.addEventListener('DOMContentLoaded', function() {
+    // Patch the existing switchTab to update snapshot & handle nav
+    const _baseSwitchTab = window.switchTab;
+
+    window.switchTab = function(tab, el) {
+        // Map 'home-center' to 'home'
+        if (tab === 'home-center') tab = 'home';
+
+        // Call the base (which handles sections + tab init)
+        if (typeof _baseSwitchTab === 'function') _baseSwitchTab(tab, el);
+
+        // Update nav active state for 5-tab nav
+        const NAV_MAP = {
+            'home': 0, 'spiritual': 4,
+            'tasks': 1, 'review': 1,
+            'growth': 3, 'analytics': 3, 'tree-section': 3,
+            'challenges': 3, 'mood-section': 3, 'balance': 3,
+            'exams': 3, 'subjects': 3, 'notes': 3,
+            'profile': 3,
+        };
+        const navItems = document.querySelectorAll('.bottom-nav .nav-item');
+        navItems.forEach(n => n.classList.remove('active'));
+        const idx = NAV_MAP[tab];
+        if (idx !== undefined && navItems[idx]) navItems[idx].classList.add('active');
+
+        if (tab === 'home') updateSnapshotCard();
+    };
+
+    // Initial snapshot
+    updateSnapshotCard();
+
+    // Patch updateGoalProgress to also refresh snapshot
+    const _origGoal = window.updateGoalProgress;
+    if (_origGoal) {
+        window.updateGoalProgress = function() {
+            _origGoal();
+            updateSnapshotCard();
+        };
+    }
+});
+
+// ═══════════════════════════════════════════════════
+//  NOURI — الأرنب المرافق 🐇
+// ═══════════════════════════════════════════════════
+
+const NOURI_MSGS = {
+    start: [
+        "بسم الله، لنبدأ! سأكون هنا طوال الجلسة 🤫🐾",
+        "اللهم انفعني بما علمتني — هيا نذاكر! 📖",
+        "كل جلسة دراسة هي خطوة نحو حياة تنقذها 🩺",
+        "ركّز وأنا أراقبك بصمت ✨",
+    ],
+    running: [
+        "كل ساعة دراسة اليوم هي حياة تنقذها غداً 🩺",
+        "التشريح صعب؟ أنت أقوى من أي عضلة في الجسم 💪",
+        "اشرب قليلاً من الماء — عقلك يحتاج الترطيب 💧",
+        "نوري فخور بك جداً، استمر في التألق ✨",
+        "لا تقلق بشأن النتيجة، ركّز على الخطوة القادمة 🏔️",
+        "عقلك مثل العضلة، كلما مرّنته بتركيز أصبح أقوى 🧠",
+        "أنت لا تدرس فقط، أنت تبني طبيباً يعالج الناس 💙",
+        "جلسة واحدة بتركيز تساوي ثلاث جلسات بتشتت 🎯",
+    ],
+    done: [
+        "أحسنت! جلسة رائعة — الحمد لله 🎉",
+        "ما شاء الله عليك! استراحة قصيرة تستحقها 🌟",
+        "أكملت جلسة! هذا استثمار حقيقي في مستقبلك 🏆",
+        "نوري يصفق لك! 👏 استرح قبل الجلسة القادمة",
+    ],
+    break: [
+        "وقت الاستراحة — تنفّس وابتسم 🌿",
+        "هذه الدقائق تشحن عقلك من جديد ⚡",
+        "حرّك جسمك قليلاً، سيساعد على التركيز 🚶",
+    ],
+    task: [
+        "مهمة منجزة! كل خطوة صغيرة تُقرّبك 🎯",
+        "أحسنت! المهام المنجزة تبني الثقة 💪",
+        "ما شاء الله! نوري يحتفل بك 🎊",
+    ],
+    mood_bad: [
+        "أسمعك — الدراسة صعبة أحياناً، لكنك لست وحدك 🤍",
+        "خذ نفساً عميقاً... ثم عُد لو تستطيع 🌬️",
+        "أوقات الصعوبة تصنع أطباء عظماء. ثق بالعملية 💙",
+    ],
+    mood_good: [
+        "هذا الشعور الجيد — استثمره الآن في الدراسة! 🔥",
+        "طاقتك عالية اليوم، هيا نستغلها 🚀",
+        "مزاجك ممتاز = جلسة مثالية! يالله 💫",
+    ],
+    idle: [
+        "هل أنت مستعد لجلسة جديدة؟ 🐾",
+        "نوري ينتظرك! اضغط ابدأ متى تشاء 🌟",
+        "خطوة واحدة للأمام أفضل من الوقوف 🏔️",
+        "﴿ وَقُل رَّبِّ زِدْنِي عِلْمًا ﴾ ✨",
+    ],
+    streak: [
+        " أيام متتالية! أنت استثنائي حقاً 🔥",
+        " يوم متتالي! لا تكسر هذه السلسلة الذهبية 🥇",
+    ],
+};
+
+let nouriSpeakTimer   = null;
+let nouriIdleTimer    = null;
+let nouriAutoInterval = null;
+
+function nouriSpeak(text, duration) {
+    if (!duration) duration = 6000;
+    const bubble = document.getElementById('nouriBubble');
+    const svg    = document.getElementById('nouriSvg');
+    if (!bubble || !svg) return;
+    if (nouriSpeakTimer) clearTimeout(nouriSpeakTimer);
+    bubble.textContent = text;
+    bubble.classList.add('visible');
+    svg.classList.remove('speaking');
+    void svg.offsetWidth;
+    svg.classList.add('speaking');
+    nouriSpeakTimer = setTimeout(function() {
+        bubble.classList.remove('visible');
+        svg.classList.remove('speaking');
+    }, duration);
+}
+
+function nouriPick(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function nouriSpeakManual() {
+    var msg = isRunning ? nouriPick(NOURI_MSGS.running) : nouriPick(NOURI_MSGS.idle);
+    nouriSpeak(msg);
+}
+
+function nouriCelebrate() {
+    var svg = document.getElementById('nouriSvg');
+    if (!svg) return;
+    svg.classList.remove('celebrate');
+    void svg.offsetWidth;
+    svg.classList.add('celebrate');
+    setTimeout(function() { svg.classList.remove('celebrate'); }, 2000);
+}
+
+function nouriSetMoodColor(score) {
+    var fills = document.querySelectorAll('.nouri-body-fill');
+    var colorMap = {
+        5: ['#6ee7b7', '#a7f3d0'],
+        4: ['#a78bfa', '#c4b5fd'],
+        3: ['#fcd34d', '#fde68a'],
+        2: ['#fb923c', '#fdba74'],
+        1: ['#f87171', '#fca5a5'],
+    };
+    var pair = colorMap[score] || colorMap[4];
+    fills.forEach(function(el, i) { el.style.fill = i === 0 ? pair[0] : pair[1]; });
+}
+
+function nouriOnTaskDone() {
+    setTimeout(function() { nouriSpeak(nouriPick(NOURI_MSGS.task)); }, 300);
+}
+
+function nouriOnMoodSaved(score) {
+    var msgs = score <= 2 ? NOURI_MSGS.mood_bad : score >= 4 ? NOURI_MSGS.mood_good : null;
+    if (msgs) setTimeout(function() { nouriSpeak(nouriPick(msgs), 7000); }, 800);
+    nouriSetMoodColor(score);
+}
+
+function nouriOnStreak(days) {
+    if (days > 1) {
+        var msg = days + NOURI_MSGS.streak[days % 2];
+        setTimeout(function() { nouriCelebrate(); nouriSpeak(msg, 8000); }, 600);
+    }
+}
+
+function nouriStartIdleWatch() {
+    if (nouriIdleTimer) clearInterval(nouriIdleTimer);
+    nouriIdleTimer = setInterval(function() {
+        if (!isRunning) nouriSpeak(nouriPick(NOURI_MSGS.idle));
+    }, 3600000);
+}
+
+// Override toggleTimer to hook start
+(function() {
+    var _orig = toggleTimer;
+    toggleTimer = function() {
+        var wasRunning = isRunning;
+        _orig();
+        if (!wasRunning && isRunning) {
+            setTimeout(function() { nouriSpeak(nouriPick(NOURI_MSGS.start)); }, 400);
+            if (nouriAutoInterval) clearInterval(nouriAutoInterval);
+            nouriAutoInterval = setInterval(function() {
+                if (isRunning) nouriSpeak(nouriPick(NOURI_MSGS.running));
+            }, 600000);
+        }
+    };
+})();
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Greet on load
+    setTimeout(function() {
+        var greeting = streak > 2
+            ? streak + NOURI_MSGS.streak[0]
+            : nouriPick(NOURI_MSGS.idle);
+        nouriSpeak(greeting, 7000);
+    }, 2200);
+
+    // Apply mood color from latest log today
+    if (typeof moodLogs !== 'undefined' && moodLogs.length) {
+        var last = moodLogs[0];
+        if (typeof toDateKey === 'function' && toDateKey(new Date(last.date)) === getTodayKey()) {
+            nouriSetMoodColor(last.score);
+        }
+    }
+
+    nouriStartIdleWatch();
+});
+
+
+function enterFocusMode() {
+    document.body.classList.add('focus-mode');
+    // ✅ تفعيل وضع الشاشة الكاملة لتقليل التشتت
+    try {
+        const el = document.documentElement;
+        if (el.requestFullscreen) el.requestFullscreen();
+        else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+        else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
+    } catch(e) {}
+}
+
+function exitFocusMode() {
+    document.body.classList.remove('focus-mode');
+    // ✅ الخروج من وضع الشاشة الكاملة عند انتهاء الجلسة
+    try {
+        if (document.fullscreenElement || document.webkitFullscreenElement) {
+            if (document.exitFullscreen) document.exitFullscreen();
+            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        }
+    } catch(e) {}
+}
+
+function closeShareModal() {
+    const el = document.getElementById('shareOverlay');
+    if (el) el.remove();
+}
+
+function buildShareText() {
+    const d = getShareData();
+    return [
+        '🎓 إنجازي في Nourium',
+        '───────────────',
+        d.achievement + ' ' + d.achievementLabel,
+        '📚 المستوى: ' + d.level.name,
+        '⏱ ساعات الدراسة: ' + d.totalHrs + ' ساعة',
+        '✅ المهام المنجزة: ' + d.doneTasks,
+        '🔥 الأيام المتتالية: ' + streak,
+        '⭐ النقاط: ' + xp + ' XP',
+        '───────────────',
+        '📱 Nourium — منارة طالب الطب'
+    ].join('\n');
+}
+
+function shareAsText() {
+    const text = buildShareText();
+    safeCopy(text, '✅ تم نسخ الإنجاز!');
+    closeShareModal();
+}
+
+function fallbackCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0;';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try { document.execCommand('copy'); showNotification('✅ تم النسخ!', 'success'); }
+    catch(e) { showNotification('تعذّر النسخ — يرجى النسخ يدوياً', 'warning'); }
+    document.body.removeChild(ta);
+    closeShareModal();
+}
+
+// دالة نسخ آمنة موحدة — تعمل في كل البيئات
+function safeCopy(text, successMsg) {
+    const msg = successMsg || '✅ تم النسخ';
+    const doFallback = () => {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0;';
+        document.body.appendChild(ta);
+        ta.focus(); ta.select();
+        try { document.execCommand('copy'); showNotification(msg, 'success'); }
+        catch(e) { showNotification('تعذّر النسخ — انسخ يدوياً', 'warning'); }
+        document.body.removeChild(ta);
+    };
+
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(
+            () => showNotification(msg, 'success'),
+            ()  => doFallback()
+        );
+    } else {
+        doFallback();
+    }
+}
+
+function shareAsImage() {
+    const d       = getShareData();
+    const canvas  = document.getElementById('shareCanvas');
+    const W = 800, H = 480;
+    canvas.width  = W;
+    canvas.height = H;
+    const ctx     = canvas.getContext('2d');
+
+    // خلفية متدرجة
+    const grad = ctx.createLinearGradient(0, 0, W, H);
+    grad.addColorStop(0,   '#0A0F1F');
+    grad.addColorStop(0.5, '#11183A');
+    grad.addColorStop(1,   '#6366F1');
+    ctx.fillStyle = grad;
+    if (ctx.roundRect) {
+        ctx.beginPath(); ctx.roundRect(0, 0, W, H, 32); ctx.fill();
+    } else {
+        ctx.fillRect(0, 0, W, H);
+    }
+
+    // دائرة ضوء علوية
+    const glow = ctx.createRadialGradient(W - 80, 80, 0, W - 80, 80, 220);
+    glow.addColorStop(0, 'rgba(99,102,241,0.25)');
+    glow.addColorStop(1, 'rgba(99,102,241,0)');
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, W, H);
+
+    // شعار
+    ctx.font = 'bold 18px sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.textAlign = 'center';
+    ctx.fillText('✦  NOURIUM  ✦', W / 2, 52);
+
+    // أيقونة الإنجاز
+    ctx.font = '90px sans-serif';
+    ctx.fillText(d.achievement, W / 2, 170);
+
+    // النص الرئيسي
+    ctx.font = 'bold 34px sans-serif';
+    ctx.fillStyle = '#A5B4FC';
+    ctx.fillText(d.achievementLabel, W / 2, 230);
+
+    // المستوى
+    ctx.font = '20px sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.75)';
+    ctx.fillText(d.level.name, W / 2, 268);
+
+    // خط فاصل
+    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(80, 295); ctx.lineTo(W - 80, 295); ctx.stroke();
+
+    // إحصائيات — 3 أعمدة
+    const cols = [
+        { val: d.totalHrs, lbl: 'ساعة دراسة' },
+        { val: xp,         lbl: 'نقطة XP'    },
+        { val: streak,     lbl: 'يوم متتالي 🔥' },
+    ];
+    const colW = W / 3;
+    cols.forEach((c, i) => {
+        const cx = colW * i + colW / 2;
+        ctx.font = 'bold 38px sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.fillText(String(c.val), cx, 358);
+        ctx.font = '15px sans-serif';
+        ctx.fillStyle = 'rgba(255,255,255,0.6)';
+        ctx.fillText(c.lbl, cx, 384);
+    });
+
+    // تذييل
+    ctx.font = '14px sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    ctx.textAlign = 'center';
+    ctx.fillText('Nourium — منارة طالب الطب', W / 2, H - 22);
+
+    // تحميل
+    try {
+        const link = document.createElement('a');
+        link.download = 'nourium-achievement.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        showNotification('✅ الصورة جاهزة — تحقق من مجلد التنزيلات', 'success');
+        closeShareModal();
+    } catch(e) {
+        showNotification('تعذّر توليد الصورة', 'error');
+    }
+}
+
+// ═══════════════════════════════════════════════════
+//  BRAND IDENTITY — Splash Screen
+//  Firebase REST يتحكم بإخفائها
+// ═══════════════════════════════════════════════════
+(function initSplash() {
+    window._splashShownAt = Date.now();
+    // Fallback: أخفِ السبلاش بعد 4 ثوانٍ إذا لم يرد Firebase
+    setTimeout(function() { _hideSplash(); }, 4000);
+})();
+
+// ═══════════════════════════════════════════════════
+//  BRAND — Timer Card Light Wave on Session Start
+// ═══════════════════════════════════════════════════
+// Light wave triggers when timer starts
+const _brandToggleTimer = window.toggleTimer || toggleTimer;
+document.addEventListener('DOMContentLoaded', function() {
+    // Light wave on session start via MutationObserver on timer display class
+    const timerEl = document.getElementById('timer');
+    if (timerEl) {
+        const obs = new MutationObserver(() => {
+            if (timerEl.classList.contains('running')) {
+                const timerCard = document.querySelector('.timer-card');
+                if (timerCard) {
+                    timerCard.classList.remove('session-active');
+                    void timerCard.offsetWidth;
+                    timerCard.classList.add('session-active');
+                }
+            }
+        });
+        obs.observe(timerEl, { attributes: true, attributeFilter: ['class'] });
+    }
+});
+
+// ═══════════════════════════════════════════════════
+//  BRAND — Dark mode on first visit (matches brand identity)
+// ═══════════════════════════════════════════════════
+(function applyDefaultTheme() {
+    const storedTheme = localStorage.getItem('medorus_theme');
+    if (!storedTheme) {
+        // First visit: apply dark mode as brand default
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('medorus_theme', 'dark');
+        const icon = document.getElementById('themeIcon');
+        if (icon) icon.className = 'fas fa-sun';
+    }
+})();
+
+
+// ══════════════════════════════════════════════════
+//  SPIRIT WORLD v3 — الروح الجديدة
+// ══════════════════════════════════════════════════
+
+// ── بيانات النيات ──
+const NIYYA_TEXTS = [
+    'اللهم إني أطلب العلم ابتغاءً لوجهك الكريم',
+    'اللهم اجعل هذا العلم نوراً في قلبي وحجةً لي لا عليّ',
+    'اللهم إني أتعلم لأنفع به أمتي وأرضيك يا رب',
+    'اللهم بارك لي في وقتي وعلمي واجعله خالصاً لك',
+    'اللهم أعني على العلم الذي يُقرّبني منك',
+];
+
+// ── بيانات آيات الأسبوع ──
+const WEEKLY_VERSES = [
+    { text: '﴿ وَقُل رَّبِّ زِدْنِي عِلْمًا ﴾', ref: 'سورة طه – الآية 114', tafsir: 'العلم نور يُضاء به القلب. اجعل طلبك له خالصاً لوجه الله.' },
+    { text: '﴿ يَرْفَعِ اللَّهُ الَّذِينَ آمَنُوا مِنكُمْ وَالَّذِينَ أُوتُوا الْعِلْمَ دَرَجَاتٍ ﴾', ref: 'سورة المجادلة – الآية 11', tafsir: 'رفعة الدرجات في الدنيا والآخرة وعدٌ إلهيٌ لطالب العلم المخلص.' },
+    { text: '﴿ إِنَّ مَعَ الْعُسْرِ يُسْرًا ﴾', ref: 'سورة الشرح – الآية 6', tafsir: 'مع كل صعوبة يمر بك فرجٌ قادم. الله لا يُضيع جهد من جاهد.' },
+    { text: '﴿ وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا ﴾', ref: 'سورة الطلاق – الآية 2', tafsir: 'التقوى مفتاح الفرج. إذا أعييتك المسألة فتذكّر ربك.' },
+    { text: '﴿ فَاذْكُرُونِي أَذْكُرْكُمْ ﴾', ref: 'سورة البقرة – الآية 152', tafsir: 'الذكر في لحظات الدراسة يُنير الذهن ويُثبّت الحفظ.' },
+];
+
+// ── بيانات أدعية طالبة العلم ──
+const STUDY_DUAS_DATA = [
+    {
+        id: 'sd_before', icon: '📖', title: 'قبل المذاكرة', hint: 'انقر لعرض الدعاء',
+        dua: 'اللهم إني أسألك فهماً في القرآن، وحفظاً للعلم، وتيسيراً في الأمر. رب اشرح لي صدري ويسر لي أمري.'
+    },
+    {
+        id: 'sd_forget', icon: '🧠', title: 'عند النسيان', hint: 'انقر لعرض الدعاء',
+        dua: 'اللهم يا معلم آدم علّمني، ويا مفهّم سليمان فهّمني، وأعد ما نسيت إليّ برحمتك يا أرحم الراحمين.'
+    },
+    {
+        id: 'sd_after', icon: '✅', title: 'بعد الانتهاء', hint: 'انقر لعرض الدعاء',
+        dua: 'الحمد لله الذي بنعمته تتم الصالحات. اللهم بارك لي فيما تعلمت وثبّته في قلبي واجعله نوراً يهديني.'
+    },
+    {
+        id: 'sd_hard', icon: '💡', title: 'عند صعوبة الفهم', hint: 'انقر لعرض الدعاء',
+        dua: 'اللهم لا سهل إلا ما جعلته سهلاً، وأنت تجعل الحزن إذا شئت سهلاً. يسّر لي هذا العلم برحمتك.'
+    },
+];
+
+// ── حالة عداد الذكر ──
+let thikrState = JSON.parse(localStorage.getItem('nourium_thikr_v3') || 'null') || {
+    day: '', tasbih: 0, salah: 0
+};
+
+function saveThikrState() {
+    thikrState.day = new Date().toDateString();
+    localStorage.setItem('nourium_thikr_v3', JSON.stringify(thikrState));
+}
+
+function checkThikrDayReset() {
+    if (thikrState.day !== new Date().toDateString()) {
+        thikrState.tasbih = 0;
+        thikrState.salah  = 0;
+        thikrState.day    = new Date().toDateString();
+        saveThikrState();
+    }
+}
+
+function incrementThikr(type) {
+    checkThikrDayReset();
+    thikrState[type]++;
+    saveThikrState();
+    var el = document.getElementById(type === 'tasbih' ? 'thikrTasbih' : 'thikrSalah');
+    if (el) {
+        el.textContent = thikrState[type];
+        el.style.transform = 'scale(1.3)';
+        setTimeout(function() { el.style.transform = 'scale(1)'; }, 150);
+        el.style.transition = 'transform 0.15s ease';
+    }
+}
+
+function resetThikr() {
+    if (!confirm('إعادة تعيين عداد الذكر لهذا اليوم؟')) return;
+    thikrState.tasbih = 0;
+    thikrState.salah  = 0;
+    saveThikrState();
+    renderThikrCounts();
+}
+
+function renderThikrCounts() {
+    checkThikrDayReset();
+    var t = document.getElementById('thikrTasbih');
+    var s = document.getElementById('thikrSalah');
+    if (t) t.textContent = thikrState.tasbih;
+    if (s) s.textContent = thikrState.salah;
+}
+
+// ── النية ──
+let niyyaIndex = parseInt(localStorage.getItem('nourium_niyya_idx') || '0');
+
+function renewNiyya() {
+    niyyaIndex = (niyyaIndex + 1) % NIYYA_TEXTS.length;
+    localStorage.setItem('nourium_niyya_idx', niyyaIndex);
+    var el = document.getElementById('spNiyyaText');
+    if (!el) return;
+    el.style.opacity = '0';
+    setTimeout(function() {
+        el.textContent = NIYYA_TEXTS[niyyaIndex];
+        el.style.opacity = '1';
+    }, 250);
+}
+
+function renderNiyya() {
+    var el = document.getElementById('spNiyyaText');
+    if (el) el.textContent = NIYYA_TEXTS[niyyaIndex];
+}
+
+// ── آية الأسبوع ──
+function renderWeekVerse() {
+    var weekNum = Math.floor(Date.now() / (7 * 24 * 3600 * 1000)) % WEEKLY_VERSES.length;
+    var v = WEEKLY_VERSES[weekNum];
+    var t = document.getElementById('spWeekVerseText');
+    var r = document.getElementById('spWeekVerseRef');
+    var tf = document.getElementById('spWeekVerseTafsir');
+    if (t) t.textContent = v.text;
+    if (r) r.textContent = v.ref;
+    if (tf) tf.textContent = v.tafsir;
+}
+
+// ── زاد طالبة العلم ──
+function renderStudyDuas() {
+    var grid = document.getElementById('spStudyDuasGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    STUDY_DUAS_DATA.forEach(function(d) {
+        var card = document.createElement('div');
+        card.className = 'sp-dua-card';
+        card.id = 'spdua_' + d.id;
+
+        var iconEl = document.createElement('div');
+        iconEl.className = 'sp-dua-icon';
+        iconEl.textContent = d.icon;
+
+        var titleEl = document.createElement('div');
+        titleEl.className = 'sp-dua-title';
+        titleEl.textContent = d.title;
+
+        var hintEl = document.createElement('div');
+        hintEl.className = 'sp-dua-hint';
+        hintEl.textContent = d.hint;
+
+        var body = document.createElement('div');
+        body.className = 'sp-dua-body';
+
+        var textEl = document.createElement('div');
+        textEl.className = 'sp-dua-full-text';
+        textEl.textContent = d.dua;
+
+        var copyBtn = document.createElement('button');
+        copyBtn.className = 'sp-dua-copy-btn';
+        copyBtn.innerHTML = '📋 نسخ';
+        copyBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            safeCopy(d.dua, '✅ تم نسخ الدعاء');
+        });
+
+        body.appendChild(textEl);
+        body.appendChild(copyBtn);
+        card.appendChild(iconEl);
+        card.appendChild(titleEl);
+        card.appendChild(hintEl);
+        card.appendChild(body);
+
+        card.addEventListener('click', function() { toggleStudyDua(d.id, card); });
+        grid.appendChild(card);
+    });
+}
+
+function toggleStudyDua(id, card) {
+    var wasOpen = card.classList.contains('open');
+    document.querySelectorAll('.sp-dua-card.open').forEach(function(c) { c.classList.remove('open'); });
+    if (!wasOpen) {
+        card.classList.add('open');
+        // احتفاء
+        var rect = card.getBoundingClientRect();
+        var cx = rect.left + rect.width / 2, cy = rect.top + 20;
+        ['✨','🤲','💫','🌙'].forEach(function(e, i) {
+            var el = document.createElement('div');
+            el.className = 'sp-dua-sparkle';
+            el.textContent = e;
+            var angle = (Math.PI * 2 / 4) * i;
+            el.style.setProperty('--tx', Math.cos(angle) * 40 + 'px');
+            el.style.setProperty('--ty', (Math.sin(angle) * 35 - 10) + 'px');
+            el.style.left = cx + 'px'; el.style.top = cy + 'px';
+            el.style.animationDelay = (i * 0.07) + 's';
+            document.body.appendChild(el);
+            setTimeout(function() { el.remove(); }, 900);
+        });
+    }
+}
+
+// ── initSpiritV3 ──
+function initSpiritV3() {
+    renderNiyya();
+    renderWeekVerse();
+    renderStudyDuas();
+    renderThikrCounts();
+}
+
+// ── احتساب الأجر ──
+let ihtisabOn = false;
+
+function toggleIhtisab() {
+    ihtisabOn = !ihtisabOn;
+    var check = document.getElementById('ihtisabCheck');
+    var label = document.getElementById('ihtisabLabel');
+    if (check) { check.textContent = ihtisabOn ? '✓' : ''; check.classList.toggle('on', ihtisabOn); }
+    if (label) { label.classList.toggle('on', ihtisabOn); }
+}
+
+function showIhtisabDoneBanner() {
+    if (!ihtisabOn) return;
+    ihtisabOn = false;
+    var check = document.getElementById('ihtisabCheck');
+    var label = document.getElementById('ihtisabLabel');
+    if (check) { check.textContent = ''; check.classList.remove('on'); }
+    if (label) { label.classList.remove('on'); }
+
+    // إظهار البانر أسفل المؤقت
+    var existing = document.getElementById('ihtisabDoneBanner');
+    if (existing) existing.remove();
+    var banner = document.createElement('div');
+    banner.id = 'ihtisabDoneBanner';
+    banner.className = 'ihtisab-done-banner';
+    banner.innerHTML = '<div class="ihtisab-done-text">كتب الله لك أجر نيتك 🤍<br><span style="font-size:0.78rem;opacity:0.7;">وإن شاء الله تُرفع درجتك بما احتسبت</span></div>';
+    var wrap = document.getElementById('ihtisabWrap');
+    if (wrap && wrap.parentNode) {
+        wrap.parentNode.insertBefore(banner, wrap.nextSibling);
+        setTimeout(function() { if (banner.parentNode) banner.remove(); }, 6000);
+    }
+}
+
+</script>
+
+<!-- ══════════════════════════════════════════════════════════
+     🔐 NOURIUM AUTH — Firebase REST API
+     يعمل بدون تحميل أي مكتبة خارجية — مناسب للملفات المحلية
+══════════════════════════════════════════════════════════ -->
+<script>
+(function() {
+'use strict';
+
+// ── إعدادات Firebase ──
+const FB_API_KEY   = "AIzaSyDorbb8nLo4y_YK4o3DGx1aQFS4DmJ6yK4";
+const FB_PROJECT   = "nourium-study-app-8eadd";
+const AUTH_URL     = "https://identitytoolkit.googleapis.com/v1/accounts";
+const FS_URL       = `https://firestore.googleapis.com/v1/projects/${FB_PROJECT}/databases/(default)/documents`;
+
+// ── حالة المستخدم ──
+let _currentUser   = null;   // { uid, email, idToken, refreshToken, displayName }
+let _idTokenExpiry = 0;
+
+// ── تحميل الجلسة المحفوظة ──
+try {
+  const saved = JSON.parse(localStorage.getItem('nourium_session') || 'null');
+  if (saved && saved.uid) {
+    _currentUser = saved;
+    _idTokenExpiry = saved.expiry || 0;
+  }
+} catch(e) {}
+
+// ── تجديد الـ Token تلقائياً ──
+async function _getToken() {
+  if (!_currentUser) return null;
+  if (Date.now() < _idTokenExpiry - 60000) return _currentUser.idToken;
+  // تجديد
+  try {
+    const res = await fetch(
+      `https://securetoken.googleapis.com/v1/token?key=${FB_API_KEY}`,
+      { method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ grant_type:'refresh_token', refresh_token: _currentUser.refreshToken }) }
+    );
+    const d = await res.json();
+    if (d.id_token) {
+      _currentUser.idToken  = d.id_token;
+      _currentUser.refreshToken = d.refresh_token;
+      _idTokenExpiry = Date.now() + parseInt(d.expires_in || 3600) * 1000;
+      _currentUser.expiry = _idTokenExpiry;
+      localStorage.setItem('nourium_session', JSON.stringify(_currentUser));
+      return d.id_token;
+    }
+  } catch(e) { console.error("Token refresh error:", e); }
+  return _currentUser.idToken;
+}
+
+// ── POST مساعد ──
+async function _authPost(endpoint, body) {
+  const res = await fetch(`${AUTH_URL}:${endpoint}?key=${FB_API_KEY}`, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(body)
+  });
+  return res.json();
+}
+
+// ── حفظ الجلسة ──
+function _saveSession(data) {
+  _currentUser = {
+    uid:          data.localId,
+    email:        data.email,
+    idToken:      data.idToken,
+    refreshToken: data.refreshToken,
+    displayName:  data.displayName || data.email?.split('@')[0] || 'مستخدم',
+    expiry:       Date.now() + parseInt(data.expiresIn || 3600) * 1000
+  };
+  _idTokenExpiry = _currentUser.expiry;
+  localStorage.setItem('nourium_session', JSON.stringify(_currentUser));
+}
+
+// ══════════════════════════════════════════
+// 🔐 دوال Auth
+// ══════════════════════════════════════════
+
+window.fbRegister = async function() {
+  const email    = document.getElementById("email")?.value.trim();
+  const password = document.getElementById("password")?.value;
+  if (!email || !password) { showNotification('الرجاء إدخال البريد وكلمة المرور', 'error'); return; }
+  showNotification('⏳ جاري إنشاء الحساب...', 'info');
+  try {
+    const d = await _authPost('signUp', { email, password, returnSecureToken: true });
+    if (d.error) { showNotification('❌ ' + _translateError(d.error.message), 'error'); return; }
+    _saveSession(d);
+    showNotification('🎉 تم إنشاء حسابك بنجاح!', 'success');
+    _updateAuthUI();
+    await _syncToCloud();
+  } catch(e) { showNotification('❌ تحقق من اتصالك بالإنترنت', 'error'); }
+};
+
+window.fbLogin = async function() {
+  const email    = document.getElementById("email")?.value.trim();
+  const password = document.getElementById("password")?.value;
+  if (!email || !password) { showNotification('الرجاء إدخال البريد وكلمة المرور', 'error'); return; }
+  showNotification('⏳ جاري تسجيل الدخول...', 'info');
+  try {
+    const d = await _authPost('signInWithPassword', { email, password, returnSecureToken: true });
+    if (d.error) { showNotification('❌ ' + _translateError(d.error.message), 'error'); return; }
+    _saveSession(d);
+    showNotification('👋 مرحباً بعودتك! جاري مزامنة بياناتك...', 'success');
+    _updateAuthUI();
+    await _loadFromCloud();
+  } catch(e) { showNotification('❌ تحقق من اتصالك بالإنترنت', 'error'); }
+};
+
+window.fbLogout = function() {
+  _syncToCloud().then(() => {
+    _currentUser = null;
+    localStorage.removeItem('nourium_session');
+    showNotification('👋 تم تسجيل الخروج وحفظ بياناتك', 'success');
+    _updateAuthUI();
+  });
+};
+
+window.fbForgotPassword = async function() {
+  const email = document.getElementById("email")?.value.trim();
+  if (!email) { showNotification('📧 اكتب بريدك أولاً في الخانة أعلاه', 'error'); return; }
+  try {
+    const d = await _authPost('sendOobCode', { requestType:'PASSWORD_RESET', email });
+    if (d.error) { showNotification('❌ ' + _translateError(d.error.message), 'error'); return; }
+    showNotification('📧 تم إرسال رابط الاستعادة لبريدك', 'success');
+  } catch(e) { showNotification('❌ تحقق من اتصالك بالإنترنت', 'error'); }
+};
+
+// ══════════════════════════════════════════
+// ☁️ Firestore — مزامنة البيانات
+// ══════════════════════════════════════════
+
+// تحويل البيانات لصيغة Firestore
+function _toFS(val) {
+  if (val === null || val === undefined) return { nullValue: null };
+  if (typeof val === 'number')  return { integerValue: String(Math.round(val)) };
+  if (typeof val === 'boolean') return { booleanValue: val };
+  if (typeof val === 'string')  return { stringValue: val };
+  if (Array.isArray(val))       return { arrayValue: { values: val.map(_toFS) } };
+  if (typeof val === 'object')  return { mapValue: { fields: Object.fromEntries(Object.entries(val).map(([k,v])=>[k,_toFS(v)])) } };
+  return { stringValue: String(val) };
+}
+
+// تحويل صيغة Firestore للبيانات
+function _fromFS(fsVal) {
+  if (!fsVal) return null;
+  if ('nullValue'     in fsVal) return null;
+  if ('integerValue'  in fsVal) return Number(fsVal.integerValue);
+  if ('doubleValue'   in fsVal) return fsVal.doubleValue;
+  if ('booleanValue'  in fsVal) return fsVal.booleanValue;
+  if ('stringValue'   in fsVal) return fsVal.stringValue;
+  if ('arrayValue'    in fsVal) return (fsVal.arrayValue.values || []).map(_fromFS);
+  if ('mapValue'      in fsVal) return Object.fromEntries(Object.entries(fsVal.mapValue.fields || {}).map(([k,v])=>[k,_fromFS(v)]));
+  return null;
+}
+
+async function _syncToCloud() {
+  if (!_currentUser) return;
+  const token = await _getToken();
+  if (!token) return;
+
+  const userData = {
+    xp:            parseInt(localStorage.getItem('medorus_xp'))                      || 0,
+    subjects:      JSON.parse(localStorage.getItem('medorus_subjects')   || '[]'),
+    tasks:         JSON.parse(localStorage.getItem('medorus_tasks')      || '[]'),
+    sessions:      JSON.parse(localStorage.getItem('medorus_sessions')   || '[]'),
+    notes:         JSON.parse(localStorage.getItem('medorus_notes')      || '[]'),
+    reviews:       JSON.parse(localStorage.getItem('medorus_reviews')    || '[]'),
+    exams:         JSON.parse(localStorage.getItem('medorus_exams')      || '[]'),
+    stats:         JSON.parse(localStorage.getItem('medorus_stats')      || 'null') || {},
+    streak:        parseInt(localStorage.getItem('medorus_streak'))                   || 0,
+    lastStudyDate: localStorage.getItem('medorus_last_study_date')                   || '',
+    dailyGoal:     parseInt(localStorage.getItem('medorus_daily_goal'))               || 0,
+    lastUpdate:    new Date().toISOString()
+  };
+
+  try {
+    await fetch(`${FS_URL}/users/${_currentUser.uid}?updateMask.fieldPaths=xp&updateMask.fieldPaths=subjects&updateMask.fieldPaths=tasks&updateMask.fieldPaths=sessions&updateMask.fieldPaths=notes&updateMask.fieldPaths=reviews&updateMask.fieldPaths=exams&updateMask.fieldPaths=stats&updateMask.fieldPaths=streak&updateMask.fieldPaths=lastStudyDate&updateMask.fieldPaths=dailyGoal&updateMask.fieldPaths=lastUpdate`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fields: Object.fromEntries(Object.entries(userData).map(([k,v])=>[k,_toFS(v)])) })
+    });
+    console.log("تمت المزامنة ✅");
+  } catch(e) { console.error("خطأ مزامنة:", e); }
+}
+
+// نجعلها متاحة للـ saveStats
+window.syncToCloud = _syncToCloud;
+
+async function _loadFromCloud() {
+  if (!_currentUser) return;
+  const token = await _getToken();
+  if (!token) return;
+  try {
+    const res = await fetch(`${FS_URL}/users/${_currentUser.uid}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (res.status === 404) {
+      // حساب جديد — ارفع البيانات الحالية
+      await _syncToCloud();
+      return;
+    }
+    const doc = await res.json();
+    if (!doc.fields) return;
+
+    const d = Object.fromEntries(Object.entries(doc.fields).map(([k,v])=>[k,_fromFS(v)]));
+
+    if (d.xp           !== undefined && d.xp !== null) localStorage.setItem('medorus_xp',             d.xp);
+    if (Array.isArray(d.subjects) && d.subjects.length) localStorage.setItem('medorus_subjects',      JSON.stringify(d.subjects));
+    if (Array.isArray(d.tasks)    && d.tasks.length)    localStorage.setItem('medorus_tasks',         JSON.stringify(d.tasks));
+    if (Array.isArray(d.sessions) && d.sessions.length) localStorage.setItem('medorus_sessions',     JSON.stringify(d.sessions));
+    if (Array.isArray(d.notes)    && d.notes.length)    localStorage.setItem('medorus_notes',         JSON.stringify(d.notes));
+    if (Array.isArray(d.reviews)  && d.reviews.length)  localStorage.setItem('medorus_reviews',       JSON.stringify(d.reviews));
+    if (Array.isArray(d.exams)    && d.exams.length)    localStorage.setItem('medorus_exams',         JSON.stringify(d.exams));
+    if (d.stats)                                         localStorage.setItem('medorus_stats',         JSON.stringify(d.stats));
+    if (d.streak       !== undefined && d.streak !== null) localStorage.setItem('medorus_streak',     d.streak);
+    if (d.lastStudyDate)                                 localStorage.setItem('medorus_last_study_date', d.lastStudyDate);
+    if (d.dailyGoal    !== undefined && d.dailyGoal !== null) localStorage.setItem('medorus_daily_goal', d.dailyGoal);
+
+    showNotification('☁️ تم استعادة بياناتك من السحاب', 'success');
+    sessionStorage.setItem('nourium_skip_splash', '1');
+    setTimeout(() => location.reload(), 1500);
+  } catch(e) {
+    console.error("خطأ تحميل:", e);
+    showNotification('⚠️ تعذّر تحميل البيانات السحابية', 'error');
+  }
+}
+
+// ══════════════════════════════════════════
+// 🎨 Auth UI
+// ══════════════════════════════════════════
+function _updateAuthUI() {
+  const box = document.getElementById('authBox');
+  if (!box) return;
+  if (_currentUser) {
+    box.innerHTML = `
+      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;padding:8px 16px;">
+        <span style="font-size:0.83rem;color:var(--text-muted,#475569);font-family:'Tajawal',sans-serif;">
+          👤 ${_currentUser.displayName || _currentUser.email}
+        </span>
+        <button onclick="window.syncToCloud().then(()=>showNotification('☁️ تمت المزامنة','success'))"
+          style="padding:5px 12px;background:var(--primary,#1D4ED8);color:white;border:none;border-radius:8px;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:0.85rem;">☁️ مزامنة</button>
+        <button onclick="fbLogout()"
+          style="padding:5px 12px;background:transparent;color:#DC2626;border:1px solid #DC2626;border-radius:8px;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:0.85rem;">خروج</button>
+      </div>`;
+  } else {
+    box.innerHTML = `
+      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;padding:8px 16px;">
+        <input type="email" id="email" placeholder="البريد الإلكتروني" autocomplete="email"
+          style="padding:7px 10px;border-radius:8px;border:1px solid #E0ECFF;background:var(--bg,#F4F9FF);color:var(--text,#0F172A);font-family:'Tajawal',sans-serif;font-size:0.87rem;min-width:155px;max-width:200px;">
+        <input type="password" id="password" placeholder="كلمة المرور" autocomplete="current-password"
+          style="padding:7px 10px;border-radius:8px;border:1px solid #E0ECFF;background:var(--bg,#F4F9FF);color:var(--text,#0F172A);font-family:'Tajawal',sans-serif;font-size:0.87rem;min-width:125px;max-width:165px;">
+        <button onclick="fbLogin()"    style="padding:6px 14px;background:#1D4ED8;color:white;border:none;border-radius:8px;cursor:pointer;font-family:'Tajawal',sans-serif;font-weight:600;">دخول</button>
+        <button onclick="fbRegister()" style="padding:6px 14px;background:#059669;color:white;border:none;border-radius:8px;cursor:pointer;font-family:'Tajawal',sans-serif;font-weight:600;">إنشاء حساب</button>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;padding:4px 16px 10px;border-top:1px solid #E0ECFF;">
+        <a href="javascript:void(0)" onclick="fbForgotPassword()"
+          style="font-size:0.82rem;color:#1D4ED8;text-decoration:none;font-family:'Tajawal',sans-serif;">🔑 نسيت كلمة المرور؟</a>
+      </div>`;
+  }
+}
+window._updateAuthUI = _updateAuthUI;
+
+// ══════════════════════════════════════════
+// 🚀 Splash Control
+// ══════════════════════════════════════════
+window._hideSplash = function() {
+  const splash = document.getElementById('splashScreen');
+  if (!splash || splash.style.display === 'none') return;
+  splash.classList.add('hiding');
+  setTimeout(() => { splash.style.display = 'none'; }, 650);
+};
+
+function _initAuth() {
+  // إذا أُعيد التحميل بعد مزامنة — أخفِ السبلاش فوراً
+  if (sessionStorage.getItem('nourium_skip_splash') === '1') {
+    sessionStorage.removeItem('nourium_skip_splash');
+    const splash = document.getElementById('splashScreen');
+    if (splash) { splash.style.display = 'none'; }
+    _updateAuthUI();
+    return;
+  }
+
+  // احسب الوقت المتبقي للـ Splash (الحد الأدنى 1.6 ثانية)
+  const elapsed = Date.now() - (window._splashShownAt || Date.now());
+  const wait    = Math.max(0, 1600 - elapsed);
+
+  if (_currentUser) {
+    // مستخدم محفوظ في الجلسة
+    _updateAuthUI();
+    setTimeout(_hideSplash, wait);
+    // تجديد بياناته في الخلفية بصمت
+    _getToken().then(tok => { if(tok) console.log("Token valid ✅"); });
+  } else {
+    // لا مستخدم — أظهر فورم الدخول بعد الـ splash
+    setTimeout(() => {
+      _hideSplash();
+      _updateAuthUI();
+    }, wait);
+  }
+}
+
+// ترجمة رسائل الخطأ
+function _translateError(msg) {
+  const map = {
+    'EMAIL_EXISTS':              'البريد الإلكتروني مستخدم مسبقاً',
+    'INVALID_EMAIL':             'البريد الإلكتروني غير صحيح',
+    'WEAK_PASSWORD':             'كلمة المرور ضعيفة (6 أحرف على الأقل)',
+    'EMAIL_NOT_FOUND':           'البريد غير مسجّل',
+    'INVALID_PASSWORD':          'كلمة المرور غير صحيحة',
+    'INVALID_LOGIN_CREDENTIALS': 'البريد أو كلمة المرور غير صحيحة',
+    'TOO_MANY_ATTEMPTS_TRY_LATER': 'محاولات كثيرة — انتظر قليلاً',
+    'USER_DISABLED':             'هذا الحساب موقوف',
+  };
+  for (const [k, v] of Object.entries(map)) {
+    if (msg && msg.includes(k)) return v;
+  }
+  return msg || 'خطأ غير معروف';
+}
+
+// تشغيل عند تحميل الصفحة
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', _initAuth);
+} else {
+  _initAuth();
+}
+
+})(); // نهاية IIFE
+</script>
+</body>
+</html>
